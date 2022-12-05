@@ -44,6 +44,7 @@ namespace LoopDrawingDataUI
                     ExcelDataLoader excelLoader = new(fileName);
                     var data = excelLoader.GetTagData("LIT-7100");
                     txtDisplayConnection.Text = DictToString(data);
+                    bool nothing = false;
                 }
             }
         }
