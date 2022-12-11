@@ -18,7 +18,8 @@ namespace LoopDataAccessLayer
             this.db = new WTEdgeContext();
         }
 
-        public DBLoopData? GetLoopData(string tag)
+        
+        public DBLoopData GetLoopData(string tag)
         {
             DBLoopData? data = db.Tblindices.Where(t => t.Tag == tag).Select(
                 d => new DBLoopData
@@ -43,7 +44,7 @@ namespace LoopDataAccessLayer
                     HiControl = (d.Tblarss == null) ? "" : d.Tblarss.Highctrl,
                 }).FirstOrDefault();
 
-            return data;
+            return data ?? new DBLoopData();
         }
     }
 

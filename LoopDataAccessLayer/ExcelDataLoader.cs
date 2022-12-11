@@ -23,10 +23,10 @@ namespace LoopDataAccessLayer
             this.JBws = wb.Worksheet("JB Wiring");
         }
 
-        public Dictionary<string, string> GetTagData(string tag)
+        public Dictionary<string, string> GetLoopData(string loop)
         {
-            var ioData = GetIOTagData(tag);
-            var jbData = GetJBTagData(tag);
+            var ioData = GetIOTagData(loop);
+            var jbData = GetJBTagData(loop);
             return ioData.Concat(jbData).ToDictionary(e => e.Key, e => e.Value);
         }
 

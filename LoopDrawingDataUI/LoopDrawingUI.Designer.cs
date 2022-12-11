@@ -32,6 +32,7 @@
             this.btnReadExcel = new System.Windows.Forms.Button();
             this.btnGetData = new System.Windows.Forms.Button();
             this.txtDisplayConnection = new System.Windows.Forms.TextBox();
+            this.btnReadTagData = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnReadData
@@ -73,11 +74,22 @@
             this.txtDisplayConnection.Size = new System.Drawing.Size(590, 557);
             this.txtDisplayConnection.TabIndex = 6;
             // 
+            // btnReadTagData
+            // 
+            this.btnReadTagData.Location = new System.Drawing.Point(4, 209);
+            this.btnReadTagData.Name = "btnReadTagData";
+            this.btnReadTagData.Size = new System.Drawing.Size(125, 38);
+            this.btnReadTagData.TabIndex = 7;
+            this.btnReadTagData.Text = "Read Data\r\nFrom Excel and DB";
+            this.btnReadTagData.UseVisualStyleBackColor = true;
+            this.btnReadTagData.Click += new System.EventHandler(this.btnReadTagData_Click);
+            // 
             // frmLoopUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 643);
+            this.Controls.Add(this.btnReadTagData);
             this.Controls.Add(this.txtDisplayConnection);
             this.Controls.Add(this.btnGetData);
             this.Controls.Add(this.btnReadExcel);
@@ -95,5 +107,6 @@
         private Button btnReadExcel;
         private Button btnGetData;
         private TextBox txtDisplayConnection;
+        private Button btnReadTagData;
     }
 }

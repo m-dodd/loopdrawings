@@ -9,24 +9,24 @@ namespace DataAcessObjects
 
     public class DBLoopData
     {
-        public string Tag { get; set; }
-        public string Description { get; set; }
-        public string Manufacturer { get; set; }
-        public string Model { get; set; }
-        public string JB1Tag { get; set; }
-        public string JB2Tag { get; set; }
-        public int Rack { get; set; }
-        public int Slot { get; set; }
-        public int Channel { get; set; }
-        public string DrawingNumber { get; set; }
-        public decimal MinCalRange { get; set; }
-        public decimal MaxCalRange { get; set; }
-        public string LoLoAlarm { get; set; }
-        public string LoAlarm { get; set; }
-        public string HiAlarm { get; set; }
-        public string HiHiAlarm { get; set; }
-        public string LoControl { get; set; }
-        public string HiControl { get; set; }
+        public string Tag { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Manufacturer { get; set; } = "";
+        public string Model { get; set; } = "";
+        public string JB1Tag { get; set; } = "";
+        public string JB2Tag { get; set; } = "";
+        public int Rack { get; set; } = -99;
+        public int Slot { get; set; } = -99;
+        public int Channel { get; set; } = -99;
+        public string DrawingNumber { get; set; } = "";
+        public decimal MinCalRange { get; set; } = -99;
+        public decimal MaxCalRange { get; set; } = -99; 
+        public string LoLoAlarm { get; set; } = "";
+        public string LoAlarm { get; set; } = "";
+        public string HiAlarm { get; set; } = "";
+        public string HiHiAlarm { get; set; } = "";
+        public string LoControl { get; set; } = "";
+        public string HiControl { get; set; } = "";
 
         public Dictionary<string, string> ToDict()
         {
