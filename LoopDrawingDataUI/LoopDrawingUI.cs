@@ -45,7 +45,6 @@ namespace LoopDrawingDataUI
                     ExcelDataLoader excelLoader = new(fileName);
                     var data = excelLoader.GetLoopData("LIT-7100");
                     txtDisplayConnection.Text = DictToString(data);
-                    bool nothing = false;
                 }
             }
         }
@@ -105,8 +104,9 @@ namespace LoopDrawingDataUI
             // LIT-7100
             // LIT-1910
             string[] tags = { "LIT-7100", "LIT-1910" };
-            loader.GetLoopsData(tags);
+            loader.FetchLoopsData(tags);
             txtDisplayConnection.Text = loader.DataToString();
+            loader.Save("testjson.json");
         }
     }
 }

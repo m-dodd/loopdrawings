@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace LoopDataAccessLayer
 {
-    public class JsonHelper
+    public class JsonHelperFirstAttempt
     {
         public static string WriteToJson(Dictionary<string, object> dictionary)
         {
@@ -65,17 +65,17 @@ namespace LoopDataAccessLayer
     }
 
 
-    public class JsonHelperx
+    public class JsonHelperMaybe
     {
-        public static Dictionary<string, object> FromJson(string json)
-        {
-            return JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-        }
+        //public static Dictionary<string, object> FromJson(string json)
+        //{
+        //    return JsonConvert.DeserializeObject<Dictionary<string, object>>(json) ?? new Dictionary<string, object>();
+        //}
 
-        public static Dictionary<string, object>[] FromJsonArray(string json)
-        {
-            return JsonConvert.DeserializeObject<Dictionary<string, object>[]>(json);
-        }
+        //public static Dictionary<string, object>[] FromJsonArray(string json)
+        //{
+        //    return JsonConvert.DeserializeObject<Dictionary<string, object>[]>(json) ?? new Dictionary<string, object>[]();
+        //}
 
         public static string ToJson(Dictionary<string, object> value)
         {
@@ -85,6 +85,11 @@ namespace LoopDataAccessLayer
         public static string ToJson(Dictionary<string, object>[] array)
         {
             return JsonConvert.SerializeObject(array);
+        }
+
+        public static string ToJson(List<Dictionary<string, object>> list)
+        {
+            return JsonConvert.SerializeObject(list);
         }
     }
 

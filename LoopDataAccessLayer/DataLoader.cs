@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAcessObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,17 +9,22 @@ namespace LoopDataAccessLayer
 {
     public class DataLoader
     {
-        DBDataLoader dbLoader;
-        ExcelDataLoader excelLoader;
-        List<Dictionary<string, string>> data;
+        private readonly DBDataLoader dbLoader;
+        private readonly ExcelDataLoader excelLoader;
+        private readonly List<Dictionary<string, string>> data;
+        //private IFileLoaderSaver loaderSaver;
         public DataLoader(DBDataLoader dbLoader, ExcelDataLoader excelLoader)
+        //public DataLoader(DBDataLoader dbLoader, ExcelDataLoader excelLoader, IFileLoaderSaver fileLoaderSaver)
         { 
             this.dbLoader = dbLoader;
             this.excelLoader = excelLoader;
             this.data = new List<Dictionary<string, string>>();
+            //this.loaderSaver = fileLoaderSaver;
         }
 
-        public Dictionary<string, string> GetLoopData(string loop)
+        public List<Dictionary<string, string>> Data { get { return data; } }
+
+        private Dictionary<string, string> GetLoopData(string loop)
         {
             // loop is not actual tested or designed yet. I've really just been working with a tag, which is a loop
             // with a single value, but what happens when a loop is more complex?
@@ -33,12 +39,22 @@ namespace LoopDataAccessLayer
                 .ToDictionary(e => e.Key, e => e.Value);
         }
 
-        public void GetLoopsData(string[] loops)
+        public string GetLoopDataString(string loop)
+        {
+            return DictToString( GetLoopData(loop) );
+        }
+
+        public void FetchLoopsData(string[] loops)
         {
             foreach(string loop in loops)
             {
                 data.Add(GetLoopData(loop));
             }
+        }
+
+        public void Save(string fileName)
+        {
+            JsonHelper.ToJsonFile(fileName, data);
         }
         public string DataToString()
         {
