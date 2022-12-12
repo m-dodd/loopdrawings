@@ -19,7 +19,6 @@ namespace LoopDataAccessLayer
             this.dbLoader = dbLoader;
             this.excelLoader = excelLoader;
             this.data = new LoopDataCollection();
-            //this.loaderSaver = fileLoaderSaver;
         }
 
         public LoopDataCollection Data { get { return data; } }
@@ -64,23 +63,5 @@ namespace LoopDataAccessLayer
         {
             return data.ToString();
         }
-
-        //public string DataToString()
-        //{
-        //    StringBuilder sb = new StringBuilder();
-        //    foreach(var loop in data)
-        //    {
-        //        sb.Append(DictToString(loop));
-        //        sb.Append(System.Environment.NewLine + System.Environment.NewLine);
-        //    }
-        //    return sb.ToString();
-        //}
-
-        //private string DictToString(Dictionary<string, string> dict)
-        //{
-        //    return string.Join(System.Environment.NewLine, dict.Select(x => x.Key + ": " + x.Value?.ToString()));
-        //}
-
-
     }
 }
