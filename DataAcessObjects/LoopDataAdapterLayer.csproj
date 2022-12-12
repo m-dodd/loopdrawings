@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileLoaderSaver.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="LoopData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
