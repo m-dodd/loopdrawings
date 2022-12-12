@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAcessObjects\DataAcessObjects.csproj" />
+    <ProjectReference Include="..\DataAcessObjects\LoopDataAdapterLayer.csproj" />
     <ProjectReference Include="..\LoopDataAccessLayer\LoopDataAccessLayer.csproj" />
   </ItemGroup>
 
