@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAcessObjects\LoopDataAdapterLayer.csproj" />
+    <ProjectReference Include="..\LoopDataAdapterLayer\LoopDataAdapterLayer.csproj" />
     <ProjectReference Include="..\WTEdgeEntities\WTEdge.Entities.csproj" />
   </ItemGroup>
 

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WTEdge.Entities", "WTEdgeEn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoopDataAccessLayer", "LoopDataAccessLayer\LoopDataAccessLayer.csproj", "{9ED4EFBA-6376-4B54-8E99-CA7EF5AE60C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoopDataAdapterLayer", "DataAcessObjects\LoopDataAdapterLayer.csproj", "{38FD4EE4-AB69-4045-93FB-A0E83023647F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoopDataAdapterLayer", "LoopDataAdapterLayer\LoopDataAdapterLayer.csproj", "{38FD4EE4-AB69-4045-93FB-A0E83023647F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoopDrawingAcadUI", "LoopDrawingAcadUI\LoopDrawingAcadUI.csproj", "{688F9C1E-C196-48D6-8D34-FBF313C6C677}"
 EndProject
