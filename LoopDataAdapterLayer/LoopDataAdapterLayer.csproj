@@ -7,8 +7,8 @@
     <ProjectGuid>{38FD4EE4-AB69-4045-93FB-A0E83023647F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DataAcessObjects</RootNamespace>
-    <AssemblyName>DataAcessObjects</AssemblyName>
+    <RootNamespace>LoopDataAdapterLayer</RootNamespace>
+    <AssemblyName>LoopDataAdapterLayer</AssemblyName>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
