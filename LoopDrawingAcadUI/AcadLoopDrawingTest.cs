@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LoopDataAdapterLayer;
 
 namespace LoopDrawingAcadUI
 {
@@ -100,10 +101,14 @@ namespace LoopDrawingAcadUI
             }
         }
 
-        public void OpenTemplatePopulateBlock()
+        public void OpenTemplatePopulateBlock(string jsonfile)
         {
             string dwgFlpath = TITPathName;
             string savePath = DefaultPathName + @"testing_loop_attribute_updates.dwg";
+            LoopDataCollection loopdata = new LoopDataCollection();
+            loopdata.Load(jsonfile);
+            //IDictionary<string, string> tagdata = TestData.TagDict;
+            IDictionary<string, string> tagdata = loopdata.Data[0].Attributes;
 
             using (Database db = new Database(false, true))
             {
@@ -122,9 +127,10 @@ namespace LoopDrawingAcadUI
                             foreach (ObjectId attributeId in ac)
                             {
                                 AttributeReference ar = tr.GetObject(attributeId, OpenMode.ForWrite) as AttributeReference; // get first attribute reference
-                                string value = "";
-                                _ = TestData.TagDict.TryGetValue(ar.Tag, out value);
-                                ar.TextString = value;
+                                if (tagdata.ContainsKey(ar.Tag))
+                                {
+                                    ar.TextString = tagdata[ar.Tag];
+                                }
                             }
                         }
                     }

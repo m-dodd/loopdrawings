@@ -42,8 +42,6 @@ namespace LoopDataAdapterLayer
         
         public void Load(string filePath)
         {
-            // I probably don't need to do this but I to test this I want to make sure that it truly is empty
-            Data = new List<LoopData>();
             Data = JsonLoopHelper.ReadLoopsFromFile(filePath);
         }
 

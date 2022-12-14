@@ -8,7 +8,7 @@ namespace LoopDrawingAcadUI
 {
     internal class TestData
     {
-        public static Dictionary<string, string> TagDict { get; } =  new Dictionary<string, string>
+        public static IDictionary<string, string> TagDict { get; } =  new Dictionary<string, string>
         {
             {"DESCRIPTION_01", "DESCRIPTION_01"},
                     {"DESCRIPTION_02", "DESCRIPTION_02"},
