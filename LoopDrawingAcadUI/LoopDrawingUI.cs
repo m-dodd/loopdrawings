@@ -23,7 +23,8 @@ namespace LoopDrawingAcadUI
         {
             AcadLoopDrawingTest acadTest = new AcadLoopDrawingTest();
             string DefaultPathName = @"Z:\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\";
-            acadTest.OpenTemplatePopulateBlock(DefaultPathName + @"testjson.json");
+            //acadTest.OpenTemplatePopulateBlock(DefaultPathName + @"testjson.json");
+            acadTest.OpenTemplatePopulateBlock_New(DefaultPathName + @"testjson.json");
         }
 
         private void btnReadBlocks_Click(object sender, EventArgs e)

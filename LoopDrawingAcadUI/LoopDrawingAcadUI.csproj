@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="AcadCommands.cs" />
     <Compile Include="AcadLoopDrawingTest.cs" />
+    <Compile Include="AutoCadHelper.cs" />
     <Compile Include="ChatGPT.cs" />
     <Compile Include="chatgpt2.cs" />
     <Compile Include="LoopDrawingUI.cs">
