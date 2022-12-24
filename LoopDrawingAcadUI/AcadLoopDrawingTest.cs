@@ -101,6 +101,26 @@ namespace LoopDrawingAcadUI
             }
         }
 
+        public void OpenTemplatePopulateBlock_New(string jsonfile)
+        {
+            string dwgFlpath = TITPathName;
+            string savePath = DefaultPathName + @"testing_loop_attribute_updates.dwg";
+            LoopDataCollection loopdata = new LoopDataCollection();
+            loopdata.Load(jsonfile);
+
+            using (DrawingFactory drawingFactory = new DrawingFactory())
+            {
+                using(Drawing drawing = drawingFactory.Open(dwgFlpath) as Drawing)
+                {
+                    using (Block block = drawing.FindBlock("AI_01_1JB_DUCO"))
+                    {
+                        block?.SetValues(loopdata.Data[0].Attributes);
+                        drawing.SaveAs(savePath);
+                    }
+                }
+            }
+        }
+
         public void OpenTemplatePopulateBlock(string jsonfile)
         {
             string dwgFlpath = TITPathName;
