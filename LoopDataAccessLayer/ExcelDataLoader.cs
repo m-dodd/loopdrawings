@@ -71,13 +71,13 @@ namespace LoopDataAccessLayer
 
         private IXLRow? GetIORow(string tag)
         {
-            return IOws.Column(ExcelColumnMaps.IO["Tag"]).CellsUsed(cell => cell.GetString() == tag).FirstOrDefault()?.WorksheetRow();
+            return IOws.Column(ExcelColumnMaps.IO["TAG_01"]).CellsUsed(cell => cell.GetString() == tag).FirstOrDefault()?.WorksheetRow();
         }
 
         private IXLRows? GetJBRows(string tag)
         {
             //var c = IOws.Column(ExcelColumnMaps.IO["Tag"]).CellsUsed(cell => cell.GetString() == tag).ToList();//.FirstOrDefault()?.WorksheetRow();
-            var rows = JBws.RowsUsed(r => r.Cell(ExcelColumnMaps.JB["Tag"]).GetString() == tag);
+            var rows = JBws.RowsUsed(r => r.Cell(ExcelColumnMaps.JB["TAG_01"]).GetString() == tag);
             return rows;
         }
 

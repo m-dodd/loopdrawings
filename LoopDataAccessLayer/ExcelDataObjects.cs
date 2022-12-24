@@ -11,15 +11,15 @@ namespace LoopDataAccessLayer
     {
         internal static readonly Dictionary<string, int> IO = new Dictionary<string, int>()
         {
-            {"ModuleTerminal1", 4},
-            {"ModuleTerminal2", 5},
+            {"MOD_TERM_01", 4},
+            {"MOD_TERM_02", 5},
             {"Cabinet", 6},
-            {"Breaker", 7},
-            {"Tag", 8},
-            {"IOStrip", 9},
-            {"IOTerminalPlus", 10},
-            {"IOTerminalNeg", 11},
-            {"IOTerminalShield", 12},
+            {"BREAKER_01", 7},
+            {"TAG_01", 8},
+            {"PNL_TS_01", 9},
+            {"PNL_TB_01", 10},
+            {"PNL_TB_02", 11},
+            {"PNL_TB_03", 12},
             {"IOWireTagPlus", 13},
             {"IOWireTagNeg", 14},
             {"JB1", 15},
@@ -41,7 +41,7 @@ namespace LoopDataAccessLayer
             {"TerminalStrip", 2 },
             {"Terminal", 3},
             {"SignalType", 4},
-            {"Tag", 5},
+            {"TAG_01", 5},
             {"LeftCable", 6},
             {"LeftCore", 7},
             {"LeftColor", 8},
@@ -73,7 +73,7 @@ namespace LoopDataAccessLayer
                 {
                     ["JB_TS_01"] = GetJBRowString(rows.First(), "TerminalStrip")
                 };
-                foreach (var row in rows.OrderBy(r => GetJBRowString(r, "Tag")))
+                foreach (var row in rows.OrderBy(r => GetJBRowString(r, "TAG_01")))
                 {
                     string i_str = i.ToString("00");
                     result["JB_TB_" + i_str] = GetJBRowString(row, "Terminal");

@@ -106,7 +106,7 @@ namespace LoopDrawingDataUI
             string[] tags = { "LIT-7100", "LIT-1910" };
             loader.FetchLoopsData(tags);
             txtDisplayConnection.Text = loader.ToString();
-            string DefaultPathName = @"Z:\Matalino Design\Projects\Duco Development\LoopDrawings\acadtesting\";
+            string DefaultPathName = @"Z:\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\";
             loader.Data.Save(DefaultPathName + @"testjson.json");
 
             // just to test that the load function is workign as well.

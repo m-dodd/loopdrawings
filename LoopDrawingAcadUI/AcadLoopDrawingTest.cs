@@ -16,7 +16,7 @@ namespace LoopDrawingAcadUI
     internal class AcadLoopDrawingTest
     {
     
-        private const string DefaultPathName = @"Z:\Matalino Design\Projects\Duco Development\LoopDrawings\acadtesting\";
+        private const string DefaultPathName = @"Z:\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\";
         private const string TITPathName = DefaultPathName + @"\Loop Drawing Typical - TIT.dwg";
 
         public void OpenDrawingReadBlocks(TextBox txtBlockList, TextBox txtAttributeList)
