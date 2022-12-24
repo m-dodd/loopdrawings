@@ -60,11 +60,16 @@ namespace LoopDrawingAcadUI
             BlockTable bt = _tr.GetObject(_db.BlockTableId, OpenMode.ForRead) as BlockTable;
             foreach (ObjectId id in bt)
             {
-                BlockTableRecord btr = (BlockTableRecord)_tr.GetObject(id, OpenMode.ForRead);
-                var ids = (ObjectIdCollection)btr.GetBlockReferenceIds(true, true);
-                BlockReference br = _tr.GetObject(ids[0], OpenMode.ForRead) as BlockReference;
-                if (br.Name == blockName)
+                BlockTableRecord btr = _tr.GetObject(id, OpenMode.ForRead) as BlockTableRecord;
+                if (btr.Name == blockName)
                 {
+                    var ids = btr.GetBlockReferenceIds(true, true) as ObjectIdCollection;
+                    // if ids.Count == 1 then there is only one instance of that block in the drawing
+                    // but with our new idea of seperate blocks it is easily possible to have multiple instances 
+                    // of each block - not sure how I will deal with each of these references
+                    // obviously I can return a collection (list), but then I need to know what they are
+                    // for now just assume one instance per drawing
+                    BlockReference br = _tr.GetObject(ids[0], OpenMode.ForRead) as BlockReference;
                     return new Block(br, _tr);
                 }
             }
