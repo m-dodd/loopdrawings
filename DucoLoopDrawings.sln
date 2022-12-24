@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoopDrawingDataUI", "LoopDr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WTEdge.Entities", "WTEdgeEntities\WTEdge.Entities.csproj", "{99025B78-C9CE-47BB-9C70-23C482FF9CB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoopDataAccessLayer", "LoopDataAccessLayer\LoopDataAccessLayer.csproj", "{9ED4EFBA-6376-4B54-8E99-CA7EF5AE60C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoopDataAccessLayer", "LoopDataAccessLayer\LoopDataAccessLayer.csproj", "{9ED4EFBA-6376-4B54-8E99-CA7EF5AE60C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAcessObjects", "DataAcessObjects\DataAcessObjects.csproj", "{38FD4EE4-AB69-4045-93FB-A0E83023647F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoopDataAdapterLayer", "LoopDataAdapterLayer\LoopDataAdapterLayer.csproj", "{38FD4EE4-AB69-4045-93FB-A0E83023647F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoopDrawingAcadUI", "LoopDrawingAcadUI\LoopDrawingAcadUI.csproj", "{688F9C1E-C196-48D6-8D34-FBF313C6C677}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{38FD4EE4-AB69-4045-93FB-A0E83023647F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38FD4EE4-AB69-4045-93FB-A0E83023647F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38FD4EE4-AB69-4045-93FB-A0E83023647F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{688F9C1E-C196-48D6-8D34-FBF313C6C677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{688F9C1E-C196-48D6-8D34-FBF313C6C677}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{688F9C1E-C196-48D6-8D34-FBF313C6C677}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{688F9C1E-C196-48D6-8D34-FBF313C6C677}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

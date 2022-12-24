@@ -23,10 +23,10 @@ namespace LoopDataAccessLayer
             this.JBws = wb.Worksheet("JB Wiring");
         }
 
-        public Dictionary<string, string> GetTagData(string tag)
+        public Dictionary<string, string> GetLoopData(string loop)
         {
-            var ioData = GetIOTagData(tag);
-            var jbData = GetJBTagData(tag);
+            var ioData = GetIOTagData(loop);
+            var jbData = GetJBTagData(loop);
             return ioData.Concat(jbData).ToDictionary(e => e.Key, e => e.Value);
         }
 
@@ -71,13 +71,13 @@ namespace LoopDataAccessLayer
 
         private IXLRow? GetIORow(string tag)
         {
-            return IOws.Column(ExcelColumnMaps.IO["Tag"]).CellsUsed(cell => cell.GetString() == tag).FirstOrDefault()?.WorksheetRow();
+            return IOws.Column(ExcelColumnMaps.IO["TAG_01"]).CellsUsed(cell => cell.GetString() == tag).FirstOrDefault()?.WorksheetRow();
         }
 
         private IXLRows? GetJBRows(string tag)
         {
             //var c = IOws.Column(ExcelColumnMaps.IO["Tag"]).CellsUsed(cell => cell.GetString() == tag).ToList();//.FirstOrDefault()?.WorksheetRow();
-            var rows = JBws.RowsUsed(r => r.Cell(ExcelColumnMaps.JB["Tag"]).GetString() == tag);
+            var rows = JBws.RowsUsed(r => r.Cell(ExcelColumnMaps.JB["TAG_01"]).GetString() == tag);
             return rows;
         }
 

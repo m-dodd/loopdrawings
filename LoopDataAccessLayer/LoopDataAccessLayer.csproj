@@ -8,10 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.97.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAcessObjects\DataAcessObjects.csproj" />
+    <ProjectReference Include="..\LoopDataAdapterLayer\LoopDataAdapterLayer.csproj" />
     <ProjectReference Include="..\WTEdgeEntities\WTEdge.Entities.csproj" />
   </ItemGroup>
 

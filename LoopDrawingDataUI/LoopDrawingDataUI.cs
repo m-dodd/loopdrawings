@@ -31,6 +31,7 @@ namespace LoopDrawingDataUI
             txtDisplayConnection.Text = sb.ToString();
         }
 
+
         private void btnReadExcel_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -42,7 +43,7 @@ namespace LoopDrawingDataUI
                 if (IsExcelFile(fileName))
                 {
                     ExcelDataLoader excelLoader = new(fileName);
-                    var data = excelLoader.GetTagData("LIT-7100");
+                    var data = excelLoader.GetLoopData("LIT-7100");
                     txtDisplayConnection.Text = DictToString(data);
                 }
             }
@@ -62,6 +63,56 @@ namespace LoopDrawingDataUI
         private static string DictToString(Dictionary<string, string> dict)
         {
             return string.Join(System.Environment.NewLine, dict.Select(x => x.Key + ": " + x.Value?.ToString()));
+        }
+
+        private void GetData()
+        {
+
+        }
+
+        private void btnReadTagData_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new();
+            ExcelDataLoader excelLoader;
+            DBDataLoader dbLoader;
+            string fileName;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                fileName = openFileDialog1.FileName;
+            }
+            else
+            {
+                return;
+            }
+
+            if (IsExcelFile(fileName))
+            {
+                excelLoader = new(fileName);
+            }
+            else
+            {
+                return;
+            }
+
+            dbLoader = new();
+            
+
+            DataLoader loader = new(dbLoader, excelLoader);
+
+            // ok, so we are only interested in two tags at the moment
+            // LIT-7100
+            // LIT-1910
+            string[] tags = { "LIT-7100", "LIT-1910" };
+            loader.FetchLoopsData(tags);
+            txtDisplayConnection.Text = loader.ToString();
+            string DefaultPathName = @"Z:\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\";
+            loader.Data.Save(DefaultPathName + @"testjson.json");
+
+            // just to test that the load function is workign as well.
+            // we won't need that until we do the autocad ui
+            DataLoader loaderTestLoad = new(dbLoader, excelLoader);
+            loaderTestLoad.Data.Load(DefaultPathName + @"testjson.json");
         }
     }
 }
