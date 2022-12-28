@@ -48,6 +48,7 @@
     <Compile Include="ChatGPT.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="LoopData.cs" />
+    <Compile Include="LoopData_NewIdea.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
