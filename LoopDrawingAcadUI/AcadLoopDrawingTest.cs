@@ -10,18 +10,37 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LoopDataAdapterLayer;
+using System.IO;
 
 namespace LoopDrawingAcadUI
 {
     internal class AcadLoopDrawingTest
     {
-    
-        private const string DefaultPathName = @"Z:\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\";
-        private const string TITPathName = DefaultPathName + @"\Loop Drawing Typical - TIT.dwg";
+        private string DefaultPathName;
+        private string DWGPathName;
+
+
+        public AcadLoopDrawingTest()
+        {
+            DWGPathName = @"Z:\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Loop Drawing Typical - TIT.dwg";
+            DefaultPathName = System.IO.Path.GetDirectoryName(DWGPathName);
+        }
+
+        public AcadLoopDrawingTest(string dwgFileName)
+        {
+            DWGPathName = dwgFileName;
+            DefaultPathName = System.IO.Path.GetDirectoryName(DWGPathName);
+        }
+
+        public AcadLoopDrawingTest(string dwgFileName, string outputPath)
+        {
+            DWGPathName = dwgFileName;
+            DefaultPathName = outputPath;
+        }
 
         public void OpenDrawingReadBlocks(TextBox txtBlockList, TextBox txtAttributeList)
         {
-            string dwgFlpath = TITPathName;
+            string dwgFlpath = DWGPathName;
 
             using (Database db = new Database(false, true))
             {
@@ -40,8 +59,10 @@ namespace LoopDrawingAcadUI
                             txtBlockList.AppendText(index.ToString() + " - " + btRecord.Name + System.Environment.NewLine);
                         }
                         index++;
-                        if (btRecord.Name == "AI_01_1JB_DUCO")
-                        {
+                        if (btRecord.Name == "JB_3-TERM_SINGLE")
+                        //if (btRecord.Name == "PNL_3-TERM")
+                            //if (btRecord.Name == "AI_01_1JB_DUCO")
+                            {
                             ObjectIdCollection blockReferenceIDs = btRecord.GetBlockReferenceIds(true, true) as ObjectIdCollection; // get all references to loop block
                             BlockReference refLoop = tr.GetObject(blockReferenceIDs[0], OpenMode.ForRead) as BlockReference; // get first specific block
                             AttributeCollection ac = refLoop.AttributeCollection; // get list of attributes in the block reference
@@ -77,7 +98,7 @@ namespace LoopDrawingAcadUI
 
         public void GetModelSpaceText(TextBox modelTextBox)
         {
-            string dwgpath = TITPathName;
+            string dwgpath = DWGPathName;
             string textString = "";
             using (Database db = GetDrawingDB(dwgpath))
             {
@@ -103,7 +124,7 @@ namespace LoopDrawingAcadUI
 
         public void OpenTemplatePopulateBlock_New(string jsonfile)
         {
-            string dwgFlpath = TITPathName;
+            string dwgFlpath = DWGPathName;
             string savePath = DefaultPathName + @"testing_loop_attribute_updates.dwg";
             LoopDataCollection loopdata = new LoopDataCollection();
             loopdata.Load(jsonfile);
@@ -123,7 +144,7 @@ namespace LoopDrawingAcadUI
 
         public void OpenTemplatePopulateBlock(string jsonfile)
         {
-            string dwgFlpath = TITPathName;
+            string dwgFlpath = DWGPathName;
             string savePath = DefaultPathName + @"testing_loop_attribute_updates.dwg";
             LoopDataCollection loopdata = new LoopDataCollection();
             loopdata.Load(jsonfile);

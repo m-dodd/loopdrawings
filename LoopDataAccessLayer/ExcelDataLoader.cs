@@ -8,6 +8,14 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
+    internal static class ExcelStringHelper
+    {
+        internal static string GetJBRowString(IXLRow row, string col)
+        {
+            return row.Cell(ExcelColumnMaps.JB[col]).GetString();
+        }
+    }
+
     public class ExcelDataLoader : IDisposable
     {
         private readonly string fileName;
@@ -74,7 +82,7 @@ namespace LoopDataAccessLayer
             return IOws.Column(ExcelColumnMaps.IO["TAG_01"]).CellsUsed(cell => cell.GetString() == tag).FirstOrDefault()?.WorksheetRow();
         }
 
-        private IXLRows? GetJBRows(string tag)
+        public IXLRows? GetJBRows(string tag)
         {
             //var c = IOws.Column(ExcelColumnMaps.IO["Tag"]).CellsUsed(cell => cell.GetString() == tag).ToList();//.FirstOrDefault()?.WorksheetRow();
             var rows = JBws.RowsUsed(r => r.Cell(ExcelColumnMaps.JB["TAG_01"]).GetString() == tag);

@@ -23,7 +23,7 @@ namespace LoopDataAccessLayer
 
         public LoopDataCollection Data { get { return data; } }
 
-        private LoopData GetLoopData(string loop)
+        private LoopData_Old GetLoopData(string loop)
         {
             // loop is not actual tested or designed yet. I've really just been working with a tag, which is a loop
             // with a single value, but what happens when a loop is more complex?
@@ -40,7 +40,7 @@ namespace LoopDataAccessLayer
                 .ToDictionary(e => e.Key, e => e.Value);
             _ = attributes.Remove("", out string? loopID);
             _ = attributes.Remove("", out string? drawingID);
-            LoopData loopData = new()
+            LoopData_Old loopData = new()
             {
                 LoopID = loopID ?? String.Empty,
                 DrawingType = drawingID ?? String.Empty,

@@ -35,12 +35,16 @@
             this.btnReadBlocks = new System.Windows.Forms.Button();
             this.btnPopulateAttributes = new System.Windows.Forms.Button();
             this.btnLoadAttributes = new System.Windows.Forms.Button();
+            this.btnSelectDrawing = new System.Windows.Forms.Button();
+            this.lblDwgPath = new System.Windows.Forms.Label();
+            this.lblOutputPath = new System.Windows.Forms.Label();
+            this.btnOutputPath = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtAttributes
             // 
             this.txtAttributes.Location = new System.Drawing.Point(902, 133);
-            this.txtAttributes.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.txtAttributes.Margin = new System.Windows.Forms.Padding(6);
             this.txtAttributes.Multiline = true;
             this.txtAttributes.Name = "txtAttributes";
             this.txtAttributes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -50,7 +54,7 @@
             // txtBlocks
             // 
             this.txtBlocks.Location = new System.Drawing.Point(254, 133);
-            this.txtBlocks.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.txtBlocks.Margin = new System.Windows.Forms.Padding(6);
             this.txtBlocks.Multiline = true;
             this.txtBlocks.Name = "txtBlocks";
             this.txtBlocks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -79,8 +83,8 @@
             // 
             // btnReadBlocks
             // 
-            this.btnReadBlocks.Location = new System.Drawing.Point(24, 133);
-            this.btnReadBlocks.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnReadBlocks.Location = new System.Drawing.Point(12, 133);
+            this.btnReadBlocks.Margin = new System.Windows.Forms.Padding(6);
             this.btnReadBlocks.Name = "btnReadBlocks";
             this.btnReadBlocks.Size = new System.Drawing.Size(218, 75);
             this.btnReadBlocks.TabIndex = 10;
@@ -90,8 +94,8 @@
             // 
             // btnPopulateAttributes
             // 
-            this.btnPopulateAttributes.Location = new System.Drawing.Point(24, 219);
-            this.btnPopulateAttributes.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnPopulateAttributes.Location = new System.Drawing.Point(12, 219);
+            this.btnPopulateAttributes.Margin = new System.Windows.Forms.Padding(6);
             this.btnPopulateAttributes.Name = "btnPopulateAttributes";
             this.btnPopulateAttributes.Size = new System.Drawing.Size(218, 75);
             this.btnPopulateAttributes.TabIndex = 12;
@@ -101,7 +105,7 @@
             // 
             // btnLoadAttributes
             // 
-            this.btnLoadAttributes.Location = new System.Drawing.Point(24, 304);
+            this.btnLoadAttributes.Location = new System.Drawing.Point(12, 304);
             this.btnLoadAttributes.Name = "btnLoadAttributes";
             this.btnLoadAttributes.Size = new System.Drawing.Size(218, 73);
             this.btnLoadAttributes.TabIndex = 13;
@@ -109,11 +113,57 @@
             this.btnLoadAttributes.UseVisualStyleBackColor = true;
             this.btnLoadAttributes.Click += new System.EventHandler(this.btnLoadAttributes_Click);
             // 
+            // btnSelectDrawing
+            // 
+            this.btnSelectDrawing.Location = new System.Drawing.Point(12, 759);
+            this.btnSelectDrawing.Margin = new System.Windows.Forms.Padding(6);
+            this.btnSelectDrawing.Name = "btnSelectDrawing";
+            this.btnSelectDrawing.Size = new System.Drawing.Size(218, 75);
+            this.btnSelectDrawing.TabIndex = 14;
+            this.btnSelectDrawing.Text = "Select Drawing";
+            this.btnSelectDrawing.UseVisualStyleBackColor = true;
+            this.btnSelectDrawing.Click += new System.EventHandler(this.btnSelectDrawing_Click);
+            // 
+            // lblDwgPath
+            // 
+            this.lblDwgPath.AutoSize = true;
+            this.lblDwgPath.Location = new System.Drawing.Point(260, 784);
+            this.lblDwgPath.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lblDwgPath.Name = "lblDwgPath";
+            this.lblDwgPath.Size = new System.Drawing.Size(134, 25);
+            this.lblDwgPath.TabIndex = 15;
+            this.lblDwgPath.Text = "DrawingPath";
+            // 
+            // lblOutputPath
+            // 
+            this.lblOutputPath.AutoSize = true;
+            this.lblOutputPath.Location = new System.Drawing.Point(263, 871);
+            this.lblOutputPath.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lblOutputPath.Name = "lblOutputPath";
+            this.lblOutputPath.Size = new System.Drawing.Size(124, 25);
+            this.lblOutputPath.TabIndex = 17;
+            this.lblOutputPath.Text = "Output path";
+            // 
+            // btnOutputPath
+            // 
+            this.btnOutputPath.Location = new System.Drawing.Point(15, 846);
+            this.btnOutputPath.Margin = new System.Windows.Forms.Padding(6);
+            this.btnOutputPath.Name = "btnOutputPath";
+            this.btnOutputPath.Size = new System.Drawing.Size(218, 75);
+            this.btnOutputPath.TabIndex = 16;
+            this.btnOutputPath.Text = "Output Path";
+            this.btnOutputPath.UseVisualStyleBackColor = true;
+            this.btnOutputPath.Click += new System.EventHandler(this.btnOutputPath_Click);
+            // 
             // LoopDrawingUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1600, 865);
+            this.ClientSize = new System.Drawing.Size(1600, 967);
+            this.Controls.Add(this.lblOutputPath);
+            this.Controls.Add(this.btnOutputPath);
+            this.Controls.Add(this.lblDwgPath);
+            this.Controls.Add(this.btnSelectDrawing);
             this.Controls.Add(this.btnLoadAttributes);
             this.Controls.Add(this.btnPopulateAttributes);
             this.Controls.Add(this.btnReadBlocks);
@@ -121,7 +171,7 @@
             this.Controls.Add(this.lblBlockNames);
             this.Controls.Add(this.txtAttributes);
             this.Controls.Add(this.txtBlocks);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "LoopDrawingUI";
             this.Text = "LoopDrawingUI";
             this.ResumeLayout(false);
@@ -138,5 +188,9 @@
         private System.Windows.Forms.Button btnReadBlocks;
         private System.Windows.Forms.Button btnPopulateAttributes;
         private System.Windows.Forms.Button btnLoadAttributes;
+        private System.Windows.Forms.Button btnSelectDrawing;
+        private System.Windows.Forms.Label lblDwgPath;
+        private System.Windows.Forms.Label lblOutputPath;
+        private System.Windows.Forms.Button btnOutputPath;
     }
 }

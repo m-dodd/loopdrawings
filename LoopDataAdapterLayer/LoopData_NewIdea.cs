@@ -45,6 +45,7 @@ namespace LoopDataAdapterLayer
         /* Maybe this won't be abstract - maybe this is a concrete class as I think all blocks will be hte same */
         /* NO - the whole point is that MapData is different for each and every block */
         public string Name { get; set; } = String.Empty;
+        public string Tag { get; set; } = String.Empty;
         public Dictionary<string, string> Attributes { get; } = new Dictionary<string, string>();
         
         public abstract void MapData(); // maps the block data
@@ -66,7 +67,7 @@ namespace LoopDataAdapterLayer
         }
     }
 
-    public class LoopDrawing : IMappable
+    public class LoopDrawingData : IMappable
     {
         public string LoopID { get; set; } = String.Empty;
         public string TemplateID { get; set; } = String.Empty;
@@ -82,9 +83,9 @@ namespace LoopDataAdapterLayer
         }
     }
 
-    public static class LoopDrawingFactory
+    public static class LoopDrawingDataFactory
     {
-        public static LoopDrawing GetLoop(string TemplateID)
+        public static LoopDrawingData GetLoop(string TemplateID)
         {
             throw new NotImplementedException();
         }
@@ -96,7 +97,7 @@ namespace LoopDataAdapterLayer
     // and finally the list of blocks can just look and call the MapData funcion of each block as built above
     //
     // I think this is beginning to come together
-    public static class BlockFactory
+    public static class BlockFactoryXXX
     {
         public static BlockDataMappable GetBlock(string blockName)
         {
@@ -114,14 +115,14 @@ namespace LoopDataAdapterLayer
 
     public class AllLoopDrawings
     {
-        public List<LoopDrawing> Drawings { get; set; } = new List<LoopDrawing>();
+        public List<LoopDrawingData> Drawings { get; set; } = new List<LoopDrawingData>();
         
         public string ToJson()
         {
             throw new NotImplementedException();
         }
 
-        public List<LoopDrawing> FromJson()
+        public List<LoopDrawingData> FromJson()
         {
             throw new NotImplementedException();
         }
