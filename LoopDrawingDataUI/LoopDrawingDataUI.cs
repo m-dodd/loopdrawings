@@ -142,7 +142,7 @@ namespace LoopDrawingDataUI
             }
             DBDataLoader dbLoader = new();
             BlockFactory blockFactory = new BlockFactory(dbLoader, excelLoader);
-            BlockDataMappable someBlock = blockFactory.GetBlock("JB_3_TERM_SINGLE", "LIT-7100");
+            BlockDataMappable someBlock = blockFactory.GetBlock("JB_3-TERM_SINGLE", "LIT-7100");
             someBlock.MapData();
         }
 
