@@ -64,6 +64,13 @@ namespace LoopDataAccessLayer
         protected abstract void FetchDBData();
     }
 
+    public class EMPTY_BLOCK : BlockDataExcel
+    {
+        public EMPTY_BLOCK(ExcelDataLoader excelLoader) : base(excelLoader) { }
+        public override void MapData() { }
+        protected override void FetchExcelData() { }
+    }
+
 
     public class JB_3_TERM_SINGLE : BlockDataExcel
     {
@@ -116,10 +123,23 @@ namespace LoopDataAccessLayer
         }
     }
 
-
-    public class MOD_1_TERM : BlockDataDB
+    public class PNL_3_TERM : PNL_3_TERM_24VDC
     {
-        public MOD_1_TERM(DBDataLoader dbLoader) : base(dbLoader)
+        public PNL_3_TERM(ExcelDataLoader excelLoader) : base(excelLoader)
+        {
+        }
+
+        protected override void FetchExcelData()
+        {
+            base.FetchExcelData();
+            Attributes.Remove("BREAKER_NO");
+        }
+    }
+
+
+    public class MOD_1_TERM : BlockDataExcelDB
+    {
+        public MOD_1_TERM(ExcelDataLoader excelLoader, DBDataLoader dbLoader) : base(excelLoader, dbLoader)
         {
         }
 
@@ -130,7 +150,7 @@ namespace LoopDataAccessLayer
             Attributes["RACK"] = data.Rack;
             Attributes["SLOT"] = data.Slot;
             Attributes["CHANNEL"] = data.Channel;
-            Attributes["MOD_TERM"] = data.ModTerm;
+            
 
             string[] tagComponents = Tag.Split('-');
             if (tagComponents.Length == 2)
@@ -151,9 +171,44 @@ namespace LoopDataAccessLayer
                 + "."
                 + Attributes["SLOT"].PadLeft(2, '0')
                 + "."
-                + Attributes["CHANNEL"];
+                + Attributes["CHANNEL"]
+                + "+";
 
-            Attributes["DRAWING_NO"] = data.DrawingNumber;
+            Attributes["DRAWING_NO"] = data.PidDrawingNumber;
+        }
+
+        protected override void FetchExcelData()
+        {
+            var row = excelLoader.GetIORow(Tag);
+            if (row != null)
+            {
+                Attributes["MOD_TERM"] = ExcelStringHelper.GetIORowString(row, ExcelIOColumns.MOD_TERM_01);
+            }
+        }
+    }
+
+    public class MOD_2_TERM : MOD_1_TERM
+    {
+        public MOD_2_TERM(ExcelDataLoader excelLoader, DBDataLoader dbLoader) : base(excelLoader, dbLoader)
+        {
+        }
+
+        protected override void FetchDBData()
+        {
+            base.FetchDBData();
+            Attributes["WIRE_TAG_IO_1"] = Attributes["WIRETAG_IO"];
+            Attributes["WIRE_TAG_IO_2"] = Attributes["WIRE_TAG_IO_1"].Replace("+", "-");
+            Attributes.Remove("WIRETAG_IO");
+        }
+
+        protected override void FetchExcelData()
+        {
+            var row = excelLoader.GetIORow(Tag);
+            if (row != null)
+            {
+                Attributes["MOD_TERM1"] = ExcelStringHelper.GetIORowString(row, ExcelIOColumns.MOD_TERM_01);
+                Attributes["MOD_TERM2"] = ExcelStringHelper.GetIORowString(row, ExcelIOColumns.MOD_TERM_02);
+            }
         }
     }
 
@@ -205,5 +260,29 @@ namespace LoopDataAccessLayer
             }
         }
     }
+
+    public class INST_AO_2W : INST_AI_2W
+    {
+        public INST_AO_2W(ExcelDataLoader excelLoader, DBDataLoader dbLoader) : base(excelLoader, dbLoader)
+        {
+        }
+
+        protected override void FetchDBData()
+        {
+            base.FetchDBData();
+            DBLoopData data = dbLoader.GetLoopData(Tag);
+
+            Attributes.Remove("RANGE");
+            Attributes["VALVE_FAIL"] = data.FailPosition; 
+
+        }
+
+        protected override void FetchExcelData()
+        {
+            base.FetchExcelData();
+        }
+    }
+
+    
 
 }

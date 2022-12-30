@@ -45,8 +45,8 @@ namespace LoopDataAdapterLayer
     {
         /* Maybe this won't be abstract - maybe this is a concrete class as I think all blocks will be hte same */
         /* NO - the whole point is that MapData is different for each and every block */
-        public string Name { get; set; } = String.Empty;
-        public string Tag { get; set; } = String.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Tag { get; set; } = string.Empty;
         public Dictionary<string, string> Attributes { get; } = new Dictionary<string, string>();
         
         public abstract void MapData(); // maps the block data
@@ -55,9 +55,9 @@ namespace LoopDataAdapterLayer
 
     public class LoopDrawingData : IMappable
     {
-        public string LoopID { get; set; } = String.Empty;
-        public string TemplateID { get; set; } = String.Empty;
-        public string DrawingName { get; set; } = String.Empty;
+        public string LoopID { get; set; } = string.Empty;
+        public string TemplateID { get; set; } = string.Empty;
+        public string DrawingName { get; set; } = string.Empty;
         public List<BlockDataMappable> Blocks { get; set; } = new List<BlockDataMappable>();
 
         public void MapData()

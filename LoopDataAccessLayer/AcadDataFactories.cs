@@ -32,12 +32,16 @@ namespace LoopDataAccessLayer
                     return new JB_3_TERM_SINGLE(this.excelLoader) { Name=blockName, Tag=Tag };
                 case "PNL_3-TERM_24VDC":
                     return new PNL_3_TERM_24VDC(this.excelLoader) { Name=blockName, Tag=Tag };
+                case "PNL_3-TERM":
+                    return new PNL_3_TERM(this.excelLoader) { Name=blockName, Tag=Tag };
                 case "MOD_1-TERM":
-                    return new MOD_1_TERM(this.dbLoader) { Name=blockName, Tag=Tag };
+                    return new MOD_1_TERM(this.excelLoader, this.dbLoader) { Name=blockName, Tag=Tag };
+                case "MOD_2-TERM":
+                    return new MOD_2_TERM(this.excelLoader, this.dbLoader) { Name=blockName, Tag=Tag };
                 case "INST_AI_2W":
                     return new INST_AI_2W(this.excelLoader, this.dbLoader) { Name=blockName, Tag=Tag };
                 default:
-                    throw new NotImplementedException();
+                    return new EMPTY_BLOCK(this.excelLoader);
             }
         }
     }

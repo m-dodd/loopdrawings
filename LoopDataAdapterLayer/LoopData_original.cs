@@ -38,8 +38,8 @@ namespace LoopDataAdapterLayer
     }
     public class LoopData_Old
     {
-        public string LoopID { get; set; } = String.Empty;
-        public string DrawingType { get; set; } = String.Empty;
+        public string LoopID { get; set; } = string.Empty;
+        public string DrawingType { get; set; } = string.Empty;
         public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
 
         public override string ToString()

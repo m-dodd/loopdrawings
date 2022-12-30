@@ -38,26 +38,27 @@ namespace LoopDataAccessLayer
                     d => new DBLoopData
                     {
                         Tag = d.Tag,
-                        Description = d.Controldescription ?? String.Empty,
-                        Manufacturer = d.Manufacturer ?? String.Empty,
-                        Model = d.Model ?? String.Empty,
-                        JB1Tag = d.Jb1tag ?? String.Empty,
-                        JB2Tag = d.Jb2tag ?? String.Empty,
+                        LoopNo = d.Loopno ?? string.Empty,
+                        Description = d.Servicedescription ?? string.Empty,
+                        Manufacturer = d.Manufacturer ?? string.Empty,
+                        Model = d.Model ?? string.Empty,
+                        JB1Tag = d.Jb1tag ?? string.Empty,
+                        JB2Tag = d.Jb2tag ?? string.Empty,
 
                         Rack = ((d.Rack == null) ? -1 : (int)d.Rack).ToString(),
                         Slot = ((d.Slot == null) ? -1 : (int)d.Slot).ToString(),
                         Channel = ((d.Channel == null) ? -1 : (int)d.Channel).ToString(),
-                        ModTerm = ((d.Port == null) ? -1 : (int)d.Port).ToString(),
 
-                        DrawingNumber = d.Newwiringdrawing ?? String.Empty,
+                        PidDrawingNumber = d.Pid ?? string.Empty,
                         MinCalRange = ((d.Tblarss == null) ? DBLoopData.CALERROR : (int)(d.Tblarss.Mincalibrange ?? DBLoopData.CALERROR)).ToString(),
                         MaxCalRange = ((d.Tblarss == null) ? DBLoopData.CALERROR : (int)(d.Tblarss.Maxcalibrange ?? DBLoopData.CALERROR)).ToString(),
-                        LoLoAlarm = (d.Tblarss == null) ? String.Empty : d.Tblarss.Llalarm ?? String.Empty,
-                        LoAlarm = (d.Tblarss == null) ? String.Empty : d.Tblarss.Loalarm ?? String.Empty,
-                        HiAlarm = (d.Tblarss == null) ? String.Empty : d.Tblarss.Hialarm ?? String.Empty,
-                        HiHiAlarm = (d.Tblarss == null) ? String.Empty : d.Tblarss.Hhalarm ?? String.Empty,
-                        LoControl = (d.Tblarss == null) ? String.Empty : d.Tblarss.Lowctrl ?? String.Empty,
-                        HiControl = (d.Tblarss == null) ? String.Empty : d.Tblarss.Highctrl ?? String.Empty,
+                        LoLoAlarm = (d.Tblarss == null) ? string.Empty : d.Tblarss.Llalarm ?? string.Empty,
+                        LoAlarm = (d.Tblarss == null) ? string.Empty : d.Tblarss.Loalarm ?? string.Empty,
+                        HiAlarm = (d.Tblarss == null) ? string.Empty : d.Tblarss.Hialarm ?? string.Empty,
+                        HiHiAlarm = (d.Tblarss == null) ? string.Empty : d.Tblarss.Hhalarm ?? string.Empty,
+                        LoControl = (d.Tblarss == null) ? string.Empty : d.Tblarss.Lowctrl ?? string.Empty,
+                        HiControl = (d.Tblarss == null) ? string.Empty : d.Tblarss.Highctrl ?? string.Empty,
+                        FailPosition = d.Failposition ?? string.Empty,
 
                     }).FirstOrDefault();
                 loopData[tag] = data ?? new DBLoopData();
@@ -71,24 +72,30 @@ namespace LoopDataAccessLayer
     {
         public const int CALERROR = -9999;
 
-        public string Tag { get; set; } = String.Empty;
-        public string Description { get; set; } = String.Empty;
-        public string Manufacturer { get; set; } = String.Empty;
-        public string Model { get; set; } = String.Empty;
-        public string JB1Tag { get; set; } = String.Empty;
-        public string JB2Tag { get; set; } = String.Empty;
+        public string Tag { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Manufacturer { get; set; } = string.Empty;
+        public string Model { get; set; } = string.Empty;
+        public string JB1Tag { get; set; } = string.Empty;
+        public string JB2Tag { get; set; } = string.Empty;
         public string Rack { get; set; } = "-99";
         public string Slot { get; set; } = "-99";
         public string Channel { get; set; } = "-99";
-        public string ModTerm { get; set; } = String.Empty;
-        public string DrawingNumber { get; set; } = String.Empty;
+        public string ModTerm1 { get; set; } = string.Empty;
+        public string ModTerm2 { get; set; } = string.Empty;
+        public string PidDrawingNumber { get; set; } = string.Empty;
         public string MinCalRange { get; set; } = "-99";
         public string MaxCalRange { get; set; } = "-99";
-        public string LoLoAlarm { get; set; } = String.Empty;
-        public string LoAlarm { get; set; } = String.Empty;
-        public string HiAlarm { get; set; } = String.Empty;
-        public string HiHiAlarm { get; set; } = String.Empty;
-        public string LoControl { get; set; } = String.Empty;
-        public string HiControl { get; set; } = String.Empty;
+        public string FailPosition { get; set; } = string.Empty;
+        public string LoLoAlarm { get; set; } = string.Empty;
+        public string LoAlarm { get; set; } = string.Empty;
+        public string HiAlarm { get; set; } = string.Empty;
+        public string HiHiAlarm { get; set; } = string.Empty;
+        public string LoControl { get; set; } = string.Empty;
+        public string HiControl { get; set; } = string.Empty;
+        public string IoPanel { get; set; } = string.Empty;
+
+        // additional fields that may be useful
+        public string LoopNo { get; set; } = string.Empty;
     }
 }

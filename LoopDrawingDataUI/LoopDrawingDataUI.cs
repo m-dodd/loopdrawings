@@ -121,7 +121,7 @@ namespace LoopDrawingDataUI
                 }
                 else
                 {
-                    lblConfigFile.Text = String.Empty;
+                    lblConfigFile.Text = string.Empty;
                 }
             }
         }

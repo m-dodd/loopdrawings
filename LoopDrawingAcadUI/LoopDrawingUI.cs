@@ -30,8 +30,8 @@ namespace LoopDrawingAcadUI
         private void btnReadBlocks_Click(object sender, EventArgs e)
         {
             AcadLoopDrawingTest acadTest = new AcadLoopDrawingTest(lblDwgPath.Text);
-            txtBlocks.Text = String.Empty;
-            txtAttributes.Text = String.Empty;
+            txtBlocks.Text = string.Empty;
+            txtAttributes.Text = string.Empty;
             acadTest.OpenDrawingReadBlocks(txtBlocks, txtAttributes);
         }
 
@@ -56,7 +56,7 @@ namespace LoopDrawingAcadUI
                 }
                 else
                 {
-                    lblDwgPath.Text = String.Empty;
+                    lblDwgPath.Text = string.Empty;
                 }
             }
 
@@ -73,7 +73,7 @@ namespace LoopDrawingAcadUI
                 }
                 else
                 {
-                    lblOutputPath.Text = String.Empty;
+                    lblOutputPath.Text = string.Empty;
                 }
             }
 
