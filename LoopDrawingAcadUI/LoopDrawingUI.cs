@@ -29,8 +29,9 @@ namespace LoopDrawingAcadUI
 
         private void btnReadBlocks_Click(object sender, EventArgs e)
         {
-            AcadLoopDrawingTest acadTest = new AcadLoopDrawingTest();
-            txtBlocks.Text = "";
+            AcadLoopDrawingTest acadTest = new AcadLoopDrawingTest(lblDwgPath.Text);
+            txtBlocks.Text = string.Empty;
+            txtAttributes.Text = string.Empty;
             acadTest.OpenDrawingReadBlocks(txtBlocks, txtAttributes);
         }
 
@@ -42,6 +43,39 @@ namespace LoopDrawingAcadUI
 
             LoopDataCollection loopdata = new LoopDataCollection();
             loopdata.Load(DefaultPathName + @"testjson.json");
+
+        }
+
+        private void btnSelectDrawing_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog1 = new OpenFileDialog())
+            {
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    lblDwgPath.Text = openFileDialog1.FileName;
+                }
+                else
+                {
+                    lblDwgPath.Text = string.Empty;
+                }
+            }
+
+
+        }
+
+        private void btnOutputPath_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog fld = new FolderBrowserDialog())
+            {
+                if (fld.ShowDialog() == DialogResult.OK)
+                {
+                    lblOutputPath.Text = fld.SelectedPath;
+                }
+                else
+                {
+                    lblOutputPath.Text = string.Empty;
+                }
+            }
 
         }
     }

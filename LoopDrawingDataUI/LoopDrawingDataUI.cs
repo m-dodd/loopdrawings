@@ -1,5 +1,6 @@
 using System.Text;
 using LoopDataAccessLayer;
+using LoopDataAdapterLayer;
 
 namespace LoopDrawingDataUI
 {
@@ -8,11 +9,6 @@ namespace LoopDrawingDataUI
         public frmLoopUI()
         {
             InitializeComponent();
-        }
-
-        private void btnReadData_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void btnGetData_Click(object sender, EventArgs e)
@@ -113,6 +109,55 @@ namespace LoopDrawingDataUI
             // we won't need that until we do the autocad ui
             DataLoader loaderTestLoad = new(dbLoader, excelLoader);
             loaderTestLoad.Data.Load(DefaultPathName + @"testjson.json");
+        }
+
+        private void btnConfigFile_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog oFile = new OpenFileDialog())
+            {
+                if (oFile.ShowDialog() == DialogResult.OK)
+                {
+                    lblConfigFile.Text = oFile.FileName;
+                }
+                else
+                {
+                    lblConfigFile.Text = string.Empty;
+                }
+            }
+        }
+
+        private void btnReadConfig_Click(object sender, EventArgs e)
+        {
+            LoopDataConfig config = new LoopDataConfig();
+            config.LoadConfig(lblConfigFile.Text);
+        }
+
+        private void btnReadDataClasses_Click(object sender, EventArgs e)
+        {
+            
+            ExcelDataLoader? excelLoader = GetExcelLoader();
+            if (excelLoader == null)
+            {
+                return;
+            }
+            DBDataLoader dbLoader = new();
+            BlockFactory blockFactory = new BlockFactory(dbLoader, excelLoader);
+            BlockDataMappable someBlock = blockFactory.GetBlock("JB_3-TERM_SINGLE", "LIT-7100");
+            someBlock.MapData();
+        }
+
+        private ExcelDataLoader? GetExcelLoader()
+        {
+            using (OpenFileDialog openFileDialog1 = new())
+            {
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    string fileName = openFileDialog1.FileName;
+                    if (IsExcelFile(fileName)) { return new ExcelDataLoader(fileName); }
+                }
+              
+                return null;
+            }
         }
     }
 }
