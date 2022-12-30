@@ -69,28 +69,4 @@ namespace LoopDataAdapterLayer
         }
     }
 
-    
-    public static class LoopDrawingDataFactory
-    {
-        public static LoopDrawingData GetLoop(string TemplateID)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
- 
-    public class AllLoopDrawings
-    {
-        public List<LoopDrawingData> Drawings { get; set; } = new List<LoopDrawingData>();
-        
-        public string ToJson()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<LoopDrawingData> FromJson()
-        {
-            throw new NotImplementedException();
-        }
-    }
 }

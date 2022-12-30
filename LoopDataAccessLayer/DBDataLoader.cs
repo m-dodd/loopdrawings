@@ -71,6 +71,7 @@ namespace LoopDataAccessLayer
     public class DBLoopData
     {
         public const int CALERROR = -9999;
+        public const int RACKERROR = -99;
 
         public string Tag { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
@@ -78,14 +79,14 @@ namespace LoopDataAccessLayer
         public string Model { get; set; } = string.Empty;
         public string JB1Tag { get; set; } = string.Empty;
         public string JB2Tag { get; set; } = string.Empty;
-        public string Rack { get; set; } = "-99";
-        public string Slot { get; set; } = "-99";
-        public string Channel { get; set; } = "-99";
+        public string Rack { get; set; } = RACKERROR.ToString();
+        public string Slot { get; set; } = RACKERROR.ToString();
+        public string Channel { get; set; } = RACKERROR.ToString();
         public string ModTerm1 { get; set; } = string.Empty;
         public string ModTerm2 { get; set; } = string.Empty;
         public string PidDrawingNumber { get; set; } = string.Empty;
-        public string MinCalRange { get; set; } = "-99";
-        public string MaxCalRange { get; set; } = "-99";
+        public string MinCalRange { get; set; } = CALERROR.ToString();
+        public string MaxCalRange { get; set; } = CALERROR.ToString();
         public string FailPosition { get; set; } = string.Empty;
         public string LoLoAlarm { get; set; } = string.Empty;
         public string LoAlarm { get; set; } = string.Empty;

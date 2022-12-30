@@ -15,8 +15,7 @@ namespace LoopDataAdapterLayer
         public void LoadConfig(string configFile)
         {
             var json = File.ReadAllText(configFile);
-            var data = JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
-            TemplateDefs = data;
+            TemplateDefs = JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
         }
     }
 
@@ -24,6 +23,6 @@ namespace LoopDataAdapterLayer
     {
         public string TemplateName { get; set; }
         public string Filename { get; set; }
-        public List<string> Blocks { get; set; }
+        public Dictionary<string, string> BlockMap { get; set; }
     }
 }

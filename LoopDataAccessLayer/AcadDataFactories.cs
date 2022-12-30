@@ -45,4 +45,60 @@ namespace LoopDataAccessLayer
             }
         }
     }
+
+    public class LoopDrawingsBuilder
+    {
+        public List<LoopDrawingData> Drawings { get; set; } = new List<LoopDrawingData>();
+        private LoopDrawingDataFactory _drawingFactory;
+        private LoopDataConfig _config;
+
+        public LoopDrawingsBuilder(string configFileName)
+        {
+            _config = new LoopDataConfig();
+            _config.LoadConfig(configFileName);
+        }
+
+        public string ToJson()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ToJson(string fileName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<LoopDrawingData> FromJson()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class LoopDrawingDataFactory
+    {
+        private readonly DBDataLoader dbLoader;
+        private readonly ExcelDataLoader excelLoader;
+        private readonly BlockFactory _blockFactory;
+
+        public LoopDrawingDataFactory(DBDataLoader dbLoader, ExcelDataLoader excelLoader)
+        {
+            this.dbLoader = dbLoader;
+            this.excelLoader = excelLoader;
+            _blockFactory = new BlockFactory(this.dbLoader, this.excelLoader);
+        }
+
+        public LoopDrawingData GetLoop(string TemplateID, string Tag)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void GetAllBlocks(TemplateConfig template)
+        {
+            foreach(string b in template.Blocks)
+            {
+                _blockFactory.GetBlock(b)
+            }
+        }
+    }
 }

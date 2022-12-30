@@ -11,40 +11,6 @@ namespace LoopDrawingDataUI
             InitializeComponent();
         }
 
-        private void btnGetData_Click(object sender, EventArgs e)
-        {
-            DBDataLoader dataLoader = new();
-
-            // ok, so we are only interested in two tags at the moment
-            // LIT-7100
-            // LIT-1910
-            StringBuilder sb = new();
-            string[] tags = { "LIT-7100", "LIT-1910" };
-            foreach (string tag in tags)
-            {
-                sb.Append(dataLoader?.GetLoopData(tag)?.ToString() + System.Environment.NewLine + System.Environment.NewLine);
-            }
-            txtDisplayConnection.Text = sb.ToString();
-        }
-
-
-        private void btnReadExcel_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            //DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK) // Test result.
-            {
-                string fileName = openFileDialog1.FileName;
-                if (IsExcelFile(fileName))
-                {
-                    ExcelDataLoader excelLoader = new(fileName);
-                    var data = excelLoader.GetLoopData("LIT-7100");
-                    txtDisplayConnection.Text = DictToString(data);
-                }
-            }
-        }
-
         private static bool IsExcelFile(string fileName)
         {
             string extension = Path.GetExtension(fileName);
@@ -141,9 +107,11 @@ namespace LoopDrawingDataUI
                 return;
             }
             DBDataLoader dbLoader = new();
-            BlockFactory blockFactory = new BlockFactory(dbLoader, excelLoader);
-            BlockDataMappable someBlock = blockFactory.GetBlock("JB_3-TERM_SINGLE", "LIT-7100");
-            someBlock.MapData();
+
+            // BlockFactory blockFactory = new BlockFactory(dbLoader, excelLoader);
+            // BlockDataMappable someBlock = blockFactory.GetBlock("JB_3-TERM_SINGLE", "LIT-7100");
+            // someBlock.MapData();
+
         }
 
         private ExcelDataLoader? GetExcelLoader()
