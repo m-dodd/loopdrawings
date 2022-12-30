@@ -123,6 +123,7 @@ namespace LoopDataAccessLayer
         }
     }
 
+
     public class PNL_3_TERM : PNL_3_TERM_24VDC
     {
         public PNL_3_TERM(ExcelDataLoader excelLoader) : base(excelLoader)
@@ -166,7 +167,7 @@ namespace LoopDataAccessLayer
             Attributes["ALARM5"] = data.HiControl;
             Attributes["ALARM6"] = data.LoControl;
 
-            Attributes["WIRETAG_IO"] = "AIN-"
+            Attributes["WIRE_TAG_IO"] = "AIN-"
                 + Attributes["RACK"].PadLeft(3, '0')
                 + "."
                 + Attributes["SLOT"].PadLeft(2, '0')
@@ -187,6 +188,7 @@ namespace LoopDataAccessLayer
         }
     }
 
+
     public class MOD_2_TERM : MOD_1_TERM
     {
         public MOD_2_TERM(ExcelDataLoader excelLoader, DBDataLoader dbLoader) : base(excelLoader, dbLoader)
@@ -196,7 +198,7 @@ namespace LoopDataAccessLayer
         protected override void FetchDBData()
         {
             base.FetchDBData();
-            Attributes["WIRE_TAG_IO_1"] = Attributes["WIRETAG_IO"];
+            Attributes["WIRE_TAG_IO_1"] = Attributes["WIRETAG_IO"].Replace("AIN", "AOUT");
             Attributes["WIRE_TAG_IO_2"] = Attributes["WIRE_TAG_IO_1"].Replace("+", "-");
             Attributes.Remove("WIRETAG_IO");
         }
@@ -260,6 +262,7 @@ namespace LoopDataAccessLayer
             }
         }
     }
+
 
     public class INST_AO_2W : INST_AI_2W
     {
