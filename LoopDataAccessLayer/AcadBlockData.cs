@@ -198,9 +198,9 @@ namespace LoopDataAccessLayer
         protected override void FetchDBData()
         {
             base.FetchDBData();
-            Attributes["WIRE_TAG_IO_1"] = Attributes["WIRETAG_IO"].Replace("AIN", "AOUT");
+            Attributes["WIRE_TAG_IO_1"] = Attributes["WIRE_TAG_IO"].Replace("AIN", "AOUT");
             Attributes["WIRE_TAG_IO_2"] = Attributes["WIRE_TAG_IO_1"].Replace("+", "-");
-            Attributes.Remove("WIRETAG_IO");
+            Attributes.Remove("WIRE_TAG_IO");
         }
 
         protected override void FetchExcelData()
