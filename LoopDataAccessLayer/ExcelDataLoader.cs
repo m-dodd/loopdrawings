@@ -10,14 +10,16 @@ namespace LoopDataAccessLayer
 {
     internal static class ExcelStringHelper
     {
-        internal static string GetJBRowString(IXLRow row, ExcelJBColumns col)
+        internal static string GetRowString<T>(IXLRow row, T col) where T : Enum
         {
-            return row.Cell((int)col).GetString();
-        }
-
-        internal static string GetIORowString(IXLRow row, ExcelIOColumns col)
-        {
-            return row.Cell((int)col).GetString();
+            try
+            {
+                return row.Cell((int)(object)col).GetString();
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 
