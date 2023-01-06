@@ -7,6 +7,22 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
+    public class LoopDrawingData : IMappable
+    {
+        public string LoopID { get; set; } = string.Empty;
+        public string TemplateID { get; set; } = string.Empty;
+        public string DrawingName { get; set; } = string.Empty;
+        public List<BlockDataMappable> Blocks { get; set; } = new List<BlockDataMappable>();
+
+        public void MapData()
+        {
+            foreach (BlockDataMappable block in Blocks)
+            {
+                block.MapData();
+            }
+        }
+    }
+
     public class AcadDrawingTemplate
     {
         private TemplateConfig template;

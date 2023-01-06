@@ -1,5 +1,4 @@
-﻿using LoopDataAdapterLayer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +6,17 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
+    public abstract class BlockDataMappable : IMappable
+    {
+        /* Maybe this won't be abstract - maybe this is a concrete class as I think all blocks will be hte same */
+        /* NO - the whole point is that MapData is different for each and every block */
+        public string Name { get; set; } = string.Empty;
+        public string Tag { get; set; } = string.Empty;
+        public Dictionary<string, string> Attributes { get; } = new Dictionary<string, string>();
+
+        public abstract void MapData(); // maps the block data
+    }
+
     public abstract class BlockDataExcel : BlockDataMappable
     {
         protected readonly ExcelDataLoader excelLoader;
