@@ -1,5 +1,4 @@
-﻿using LoopDataAdapterLayer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,12 +12,12 @@ namespace LoopDataAccessLayer
     // and finally the list of blocks can just look and call the MapData funcion of each block as built above
     //
     // I think this is beginning to come together
-    public class BlockFactory
+    public class AcadBlockFactory
     {
         private readonly DBDataLoader dbLoader;
         private readonly ExcelDataLoader excelLoader;
 
-        public BlockFactory(DBDataLoader dbLoader, ExcelDataLoader excelLoader)
+        public AcadBlockFactory(DBDataLoader dbLoader, ExcelDataLoader excelLoader)
         {
             this.dbLoader = dbLoader;
             this.excelLoader = excelLoader;
@@ -48,62 +47,6 @@ namespace LoopDataAccessLayer
                     return new INST_AI_2W(this.excelLoader, this.dbLoader) { Name=blockName, Tag=Tag };
                 default:
                     return new EMPTY_BLOCK(this.excelLoader);
-            }
-        }
-    }
-
-    public class LoopDrawingsBuilder
-    {
-        public List<LoopDrawingData> Drawings { get; set; } = new List<LoopDrawingData>();
-        private LoopDrawingDataFactory _drawingFactory;
-        private LoopDataConfig _config;
-
-        public LoopDrawingsBuilder(string configFileName)
-        {
-            _config = new LoopDataConfig();
-            _config.LoadConfig(configFileName);
-        }
-
-        public string ToJson()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ToJson(string fileName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<LoopDrawingData> FromJson()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
-    public class LoopDrawingDataFactory
-    {
-        private readonly DBDataLoader dbLoader;
-        private readonly ExcelDataLoader excelLoader;
-        private readonly BlockFactory _blockFactory;
-
-        public LoopDrawingDataFactory(DBDataLoader dbLoader, ExcelDataLoader excelLoader)
-        {
-            this.dbLoader = dbLoader;
-            this.excelLoader = excelLoader;
-            _blockFactory = new BlockFactory(this.dbLoader, this.excelLoader);
-        }
-
-        public LoopDrawingData GetLoop(string TemplateID, string Tag)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void GetAllBlocks(TemplateConfig template)
-        {
-            foreach(KeyValuePair<string, string> b in template.BlockMap)
-            {
-                _blockFactory.GetBlock(b);
             }
         }
     }
