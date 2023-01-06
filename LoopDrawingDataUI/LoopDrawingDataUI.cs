@@ -60,21 +60,21 @@ namespace LoopDrawingDataUI
             dbLoader = new();
             
 
-            DataLoader loader = new(dbLoader, excelLoader);
+            // DataLoader loader = new(dbLoader, excelLoader);
 
             // ok, so we are only interested in two tags at the moment
             // LIT-7100
             // LIT-1910
             string[] tags = { "LIT-7100", "LIT-1910" };
-            loader.FetchLoopsData(tags);
-            txtDisplayConnection.Text = loader.ToString();
+            // loader.FetchLoopsData(tags);
+            // txtDisplayConnection.Text = loader.ToString();
             string DefaultPathName = @"Z:\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\";
-            loader.Data.Save(DefaultPathName + @"testjson.json");
+            // loader.Data.Save(DefaultPathName + @"testjson.json");
 
             // just to test that the load function is workign as well.
             // we won't need that until we do the autocad ui
-            DataLoader loaderTestLoad = new(dbLoader, excelLoader);
-            loaderTestLoad.Data.Load(DefaultPathName + @"testjson.json");
+            // DataLoader loaderTestLoad = new(dbLoader, excelLoader);
+            // loaderTestLoad.Data.Load(DefaultPathName + @"testjson.json");
         }
 
         private void btnConfigFile_Click(object sender, EventArgs e)

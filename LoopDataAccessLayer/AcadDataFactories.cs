@@ -24,8 +24,14 @@ namespace LoopDataAccessLayer
             this.excelLoader = excelLoader;
         }
 
-        public BlockDataMappable GetBlock(string blockName, string Tag)
+        public BlockDataMappable GetBlock(KeyValuePair<string, string> blockConfig)
         {
+            string blockName = blockConfig.Key;
+            // this actually doesn't work, as the blockConfig.Value is a generic mapping
+            // need logic somewhere to convert this to a specifc tag
+            // probably need to have this as part of the looptemplate logic
+            // this is a bandaid as I move things around
+            string Tag = blockConfig.Value;
             switch (blockName)
             {
                 case "JB_3-TERM_SINGLE":
@@ -95,9 +101,9 @@ namespace LoopDataAccessLayer
 
         private void GetAllBlocks(TemplateConfig template)
         {
-            foreach(string b in template.Blocks)
+            foreach(KeyValuePair<string, string> b in template.BlockMap)
             {
-                _blockFactory.GetBlock(b)
+                _blockFactory.GetBlock(b);
             }
         }
     }
