@@ -66,19 +66,27 @@ namespace LoopDataAccessLayer
     }
 
 
+    public class EMPTY_BLOCK : BlockDataExcel
+    {
+        public EMPTY_BLOCK(DataLoader dataLoader) : base(dataLoader) { }
+        public override void MapData() { }
+        protected override void FetchExcelData() { }
+    }
+
+
     public class JB_3_TERM_SINGLE : BlockDataExcel
     {
         public JB_3_TERM_SINGLE(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchExcelData()
         {
-            var rows = dataLoader
+            var jbRows = dataLoader
                 .ExcelLoader
                 ?.GetJBRows(Tag)
                 ?.OrderBy(r => ExcelStringHelper.GetRowString(r, ExcelJBColumns.TAG_01));
-            if (rows != null)
+            if (jbRows != null)
             {
-                List<ClosedXML.Excel.IXLRow> rows = rows.ToList();
+                List<ClosedXML.Excel.IXLRow> rows = jbRows.ToList();
 
                 Attributes["JB_TAG-1"] = Tag;
                 Attributes["JB_TS-1"] = ExcelStringHelper.GetRowString(rows[0], ExcelJBColumns.TerminalStrip);
