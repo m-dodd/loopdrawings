@@ -65,13 +65,6 @@ namespace LoopDataAccessLayer
         protected abstract void FetchDBData();
     }
 
-    public class EMPTY_BLOCK : BlockDataExcel
-    {
-        public EMPTY_BLOCK(DataLoader dataLoader) : base(dataLoader) { }
-        public override void MapData() { }
-        protected override void FetchExcelData() { }
-    }
-
 
     public class JB_3_TERM_SINGLE : BlockDataExcel
     {
@@ -85,17 +78,17 @@ namespace LoopDataAccessLayer
                 ?.OrderBy(r => ExcelStringHelper.GetRowString(r, ExcelJBColumns.TAG_01));
             if (rows != null)
             {
-                List<ClosedXML.Excel.IXLRow> r = rows.ToList();
+                List<ClosedXML.Excel.IXLRow> rows = rows.ToList();
 
                 Attributes["JB_TAG-1"] = Tag;
-                Attributes["JB_TS-1"] = ExcelStringHelper.GetRowString(r[0], ExcelJBColumns.TerminalStrip);
-                Attributes["TB1-1"] = ExcelStringHelper.GetRowString(r[0], ExcelJBColumns.Terminal);
-                Attributes["TB2-1"] = ExcelStringHelper.GetRowString(r[1], ExcelJBColumns.Terminal);
-                Attributes["TB3-1"] = ExcelStringHelper.GetRowString(r[2], ExcelJBColumns.Terminal);
-                Attributes["CLR1-L1"] = ExcelStringHelper.GetRowString(r[0], ExcelJBColumns.LeftColor);
-                Attributes["CLR2-L2"] = ExcelStringHelper.GetRowString(r[1], ExcelJBColumns.LeftColor);
-                Attributes["CLR1-R1"] = ExcelStringHelper.GetRowString(r[0], ExcelJBColumns.RightColor);
-                Attributes["CLR2-R2"] = ExcelStringHelper.GetRowString(r[1], ExcelJBColumns.RightColor);
+                Attributes["JB_TS-1"] = ExcelStringHelper.GetRowString(rows[0], ExcelJBColumns.TerminalStrip);
+                Attributes["TB1-1"] = ExcelStringHelper.GetRowString(rows[0], ExcelJBColumns.Terminal);
+                Attributes["TB2-1"] = ExcelStringHelper.GetRowString(rows[1], ExcelJBColumns.Terminal);
+                Attributes["TB3-1"] = ExcelStringHelper.GetRowString(rows[2], ExcelJBColumns.Terminal);
+                Attributes["CLR1-L1"] = ExcelStringHelper.GetRowString(rows[0], ExcelJBColumns.LeftColor);
+                Attributes["CLR2-L2"] = ExcelStringHelper.GetRowString(rows[1], ExcelJBColumns.LeftColor);
+                Attributes["CLR1-R1"] = ExcelStringHelper.GetRowString(rows[0], ExcelJBColumns.RightColor);
+                Attributes["CLR2-R2"] = ExcelStringHelper.GetRowString(rows[1], ExcelJBColumns.RightColor);
             }
         }
     }
