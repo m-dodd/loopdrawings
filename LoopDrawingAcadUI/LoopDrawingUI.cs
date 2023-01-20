@@ -41,8 +41,8 @@ namespace LoopDrawingAcadUI
             // we won't need that until we do the autocad ui
             string DefaultPathName = @"Z:\Matalino Design\Projects\Duco Development\LoopDrawings\acadtesting\";
 
-            LoopDataCollection loopdata = new LoopDataCollection();
-            loopdata.Load(DefaultPathName + @"testjson.json");
+            //LoopDataCollection loopdata = new LoopDataCollection();
+            //loopdata.Load(DefaultPathName + @"testjson.json");
 
         }
 

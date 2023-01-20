@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
+
 {
     internal partial class WTEdgeContext : DbContext
     {
@@ -18,6 +19,10 @@ namespace LoopDataAccessLayer
 
         public virtual DbSet<Tblarss> Tblarsses { get; set; } = null!;
         public virtual DbSet<Tblindex> Tblindices { get; set; } = null!;
+        public virtual DbSet<Tblindexrelation> Tblindexrelations { get; set; } = null!;
+        public virtual DbSet<Tblloop> Tblloops { get; set; } = null!;
+        public virtual DbSet<Tblloopno> Tblloopnos { get; set; } = null!;
+        public virtual DbSet<Tbllooptemplate> Tbllooptemplates { get; set; } = null!;
         public virtual DbSet<Tblsdkrelation> Tblsdkrelations { get; set; } = null!;
         public virtual DbSet<Tblsystem> Tblsystems { get; set; } = null!;
 
@@ -311,6 +316,8 @@ namespace LoopDataAccessLayer
 
                 entity.HasIndex(e => e.Powersupply, "flpowersupply");
 
+                entity.HasIndex(e => e.Loopno, "loopno");
+
                 entity.HasIndex(e => e.Tag, "tag")
                     .IsUnique();
 
@@ -329,10 +336,6 @@ namespace LoopDataAccessLayer
                 entity.Property(e => e.Channel)
                     .HasColumnType("int(25)")
                     .HasColumnName("channel");
-
-                entity.Property(e => e.Clientcomments)
-                    .HasColumnType("mediumtext")
-                    .HasColumnName("clientcomments");
 
                 entity.Property(e => e.Comments)
                     .HasColumnType("mediumtext")
@@ -391,6 +394,10 @@ namespace LoopDataAccessLayer
                     .HasMaxLength(50)
                     .HasColumnName("instrumenttype");
 
+                entity.Property(e => e.Internalcomments)
+                    .HasColumnType("mediumtext")
+                    .HasColumnName("internalcomments");
+
                 entity.Property(e => e.Iopanel)
                     .HasMaxLength(100)
                     .HasColumnName("iopanel");
@@ -432,7 +439,7 @@ namespace LoopDataAccessLayer
                     .HasColumnName("location");
 
                 entity.Property(e => e.Loopno)
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .HasColumnName("loopno");
 
                 entity.Property(e => e.Manufacturer)
@@ -573,6 +580,12 @@ namespace LoopDataAccessLayer
                     .HasForeignKey(d => d.Itpmparent)
                     .HasConstraintName("fkitpmparent");
 
+                entity.HasOne(d => d.LoopnoNavigation)
+                    .WithMany(p => p.Tblindices)
+                    .HasPrincipalKey(p => p.Loopno)
+                    .HasForeignKey(d => d.Loopno)
+                    .HasConstraintName("fkloopno");
+
                 entity.HasOne(d => d.Parenttag1Navigation)
                     .WithMany(p => p.InverseParenttag1Navigation)
                     .HasPrincipalKey(p => p.Tag)
@@ -596,6 +609,106 @@ namespace LoopDataAccessLayer
                     .HasPrincipalKey(p => p.System)
                     .HasForeignKey(d => d.System)
                     .HasConstraintName("tblindex_ibfk_25");
+            });
+
+            modelBuilder.Entity<Tblindexrelation>(entity =>
+            {
+                entity.ToTable("tblindexrelation");
+
+                entity.HasIndex(e => e.Destination, "fkdestination");
+
+                entity.HasIndex(e => e.Source, "fksource");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(25)")
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Destination)
+                    .HasMaxLength(50)
+                    .HasColumnName("destination");
+
+                entity.Property(e => e.Source)
+                    .HasMaxLength(50)
+                    .HasColumnName("source");
+
+                entity.HasOne(d => d.DestinationNavigation)
+                    .WithMany(p => p.TblindexrelationDestinationNavigations)
+                    .HasPrincipalKey(p => p.Tag)
+                    .HasForeignKey(d => d.Destination)
+                    .HasConstraintName("fkdestination");
+
+                entity.HasOne(d => d.SourceNavigation)
+                    .WithMany(p => p.TblindexrelationSourceNavigations)
+                    .HasPrincipalKey(p => p.Tag)
+                    .HasForeignKey(d => d.Source)
+                    .HasConstraintName("fksource");
+            });
+
+            modelBuilder.Entity<Tblloop>(entity =>
+            {
+                entity.ToTable("tblloop");
+
+                entity.HasIndex(e => e.Looptemplate, "fklooptemplate");
+
+                entity.HasIndex(e => e.Loop, "fktestloop")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(25)")
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Loop)
+                    .HasMaxLength(100)
+                    .HasColumnName("loop");
+
+                entity.Property(e => e.Looptemplate)
+                    .HasMaxLength(100)
+                    .HasColumnName("looptemplate");
+
+                entity.HasOne(d => d.LoopNavigation)
+                    .WithOne(p => p.Tblloop)
+                    .HasPrincipalKey<Tblloopno>(p => p.Loopno)
+                    .HasForeignKey<Tblloop>(d => d.Loop)
+                    .HasConstraintName("tblloop_ibfk_2");
+            });
+
+            modelBuilder.Entity<Tblloopno>(entity =>
+            {
+                entity.ToTable("tblloopno");
+
+                entity.HasIndex(e => e.Loopno, "loopno")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(25)")
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Loopno)
+                    .HasMaxLength(100)
+                    .HasColumnName("loopno");
+            });
+
+            modelBuilder.Entity<Tbllooptemplate>(entity =>
+            {
+                entity.ToTable("tbllooptemplate");
+
+                entity.HasIndex(e => e.Looptemplate, "looptemplate");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(25)")
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Comment)
+                    .HasColumnType("mediumtext")
+                    .HasColumnName("comment");
+
+                entity.Property(e => e.Description)
+                    .HasColumnType("mediumtext")
+                    .HasColumnName("description");
+
+                entity.Property(e => e.Looptemplate)
+                    .HasMaxLength(100)
+                    .HasColumnName("looptemplate");
             });
 
             modelBuilder.Entity<Tblsdkrelation>(entity =>
