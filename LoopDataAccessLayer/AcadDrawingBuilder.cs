@@ -10,7 +10,7 @@ namespace LoopDataAccessLayer
     public class AcadDrawingBuilder
     {
         public List<LoopDrawingData> Drawings { get; set; } = new List<LoopDrawingData>();
-        private AcadDrawingDataFactory _drawingFactory;
+        //private AcadDrawingDataFactory _drawingFactory;
         private LoopDataConfig _config;
 
         public AcadDrawingBuilder(string configFileName)
