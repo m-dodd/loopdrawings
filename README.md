@@ -1,20 +1,18 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+The goal of this project is to create a system to automatically generate loop drawings in AutoCAD from data in the WTEdge database, supplemented by a spreadsheet for wiring and junction box data.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+# Structure
+AutoCAD object model only supports FrameWork4.8 and as we need to run the program *in-process*, which means, within the AutoCAD exe, there was no way to get Enitity Framework to work directly in this application. We were directed towards potentially creating a rest API for the database, which would have worked, but that didn't feel right.
+
+We gravitated towards a compromise. We have a data access / generation layer that gets all of the data required and generates a file that can be consumed by the AutoCAD applicationt to generate the final drawings.
+
+Currently the program is broken into five individual programs.
+1. `WTEdgeEntities` - this layer contains all of hte Entity Framework entities. I've moved the context object to `LoopDataAccessLayer` as it feels more appropriate.
+1. `LoopDataAccessLayer` - as the name implied this layer contains all of the logic to get the required data.
+2. `LoopDrawingDataUI` - UI for the `LoopDataAccessLayer`.
+3. `LoopDrawingAcadUI` - this is the dll that will be created that will provide a minimal front end, and from that create all loop drawings.
+4. `LoopDrawingAcadUI` - as there are different versions of .NET being used in the other projects this project exists to bridge the gap between the Data Acess Layer and the AutoCad layer. Any objects that both layers need will live here.
 
 # Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+TO-DO - there is probably a lot that others could add to this.
