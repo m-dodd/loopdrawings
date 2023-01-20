@@ -14,13 +14,18 @@ namespace LoopDataAccessLayer
     // I think this is beginning to come together
     public class AcadBlockFactory
     {
-        private readonly DBDataLoader dbLoader;
-        private readonly ExcelDataLoader excelLoader;
+        //private readonly DBDataLoader dbLoader;
+        //private readonly ExcelDataLoader excelLoader;
+        private readonly DataLoader dataLoader;
+
+        public AcadBlockFactory(DataLoader dataLoader)
+        {
+            this.dataLoader = dataLoader;
+        }
 
         public AcadBlockFactory(DBDataLoader dbLoader, ExcelDataLoader excelLoader)
         {
-            this.dbLoader = dbLoader;
-            this.excelLoader = excelLoader;
+            this.dataLoader = new(excelLoader, dbLoader);
         }
 
         public BlockDataMappable GetBlock(KeyValuePair<string, string> blockConfig)
@@ -34,19 +39,19 @@ namespace LoopDataAccessLayer
             switch (blockName)
             {
                 case "JB_3-TERM_SINGLE":
-                    return new JB_3_TERM_SINGLE(this.excelLoader) { Name=blockName, Tag=Tag };
+                    return new JB_3_TERM_SINGLE(this.dataLoader) { Name=blockName, Tag=Tag };
                 case "PNL_3-TERM_24VDC":
-                    return new PNL_3_TERM_24VDC(this.excelLoader) { Name=blockName, Tag=Tag };
+                    return new PNL_3_TERM_24VDC(this.dataLoader) { Name=blockName, Tag=Tag };
                 case "PNL_3-TERM":
-                    return new PNL_3_TERM(this.excelLoader) { Name=blockName, Tag=Tag };
+                    return new PNL_3_TERM(this.dataLoader) { Name=blockName, Tag=Tag };
                 case "MOD_1-TERM":
-                    return new MOD_1_TERM(this.excelLoader, this.dbLoader) { Name=blockName, Tag=Tag };
+                    return new MOD_1_TERM(this.dataLoader) { Name=blockName, Tag=Tag };
                 case "MOD_2-TERM":
-                    return new MOD_2_TERM(this.excelLoader, this.dbLoader) { Name=blockName, Tag=Tag };
+                    return new MOD_2_TERM(this.dataLoader) { Name=blockName, Tag=Tag };
                 case "INST_AI_2W":
-                    return new INST_AI_2W(this.excelLoader, this.dbLoader) { Name=blockName, Tag=Tag };
+                    return new INST_AI_2W(this.dataLoader) { Name=blockName, Tag=Tag };
                 default:
-                    return new EMPTY_BLOCK(this.excelLoader);
+                    return new EMPTY_BLOCK(this.dataLoader);
             }
         }
     }

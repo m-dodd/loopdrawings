@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LoopDataAccessLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,18 +14,20 @@ namespace LoopDataAccessLayer
         public string Name { get; set; } = string.Empty;
         public string Tag { get; set; } = string.Empty;
         public Dictionary<string, string> Attributes { get; } = new Dictionary<string, string>();
+        protected readonly DataLoader dataLoader;
+
+        public BlockDataMappable(DataLoader dataLoader)
+        {
+            this.dataLoader = dataLoader;
+        }
 
         public abstract void MapData(); // maps the block data
     }
 
     public abstract class BlockDataExcel : BlockDataMappable
     {
-        protected readonly ExcelDataLoader excelLoader;
 
-        public BlockDataExcel(ExcelDataLoader excelLoader)
-        {
-            this.excelLoader = excelLoader;
-        }
+        public BlockDataExcel(DataLoader dataLoader) : base(dataLoader) { }
 
         public override void MapData()
         {
@@ -37,12 +40,7 @@ namespace LoopDataAccessLayer
 
     public abstract class BlockDataDB : BlockDataMappable
     {
-        protected readonly DBDataLoader dbLoader;
-
-        public BlockDataDB(DBDataLoader dbLoader)
-        {
-            this.dbLoader = dbLoader;
-        }
+        public BlockDataDB(DataLoader dataLoader) : base(dataLoader) { }
 
         public override void MapData()
         {
@@ -55,14 +53,7 @@ namespace LoopDataAccessLayer
 
     public abstract class BlockDataExcelDB : BlockDataMappable
     {
-        protected readonly DBDataLoader dbLoader;
-        protected readonly ExcelDataLoader excelLoader;
-
-        public BlockDataExcelDB(ExcelDataLoader excelLoader, DBDataLoader dbLoader)
-        {
-            this.excelLoader = excelLoader; 
-            this.dbLoader = dbLoader;
-        }
+        public BlockDataExcelDB(DataLoader dataLoader) : base(dataLoader) { }
 
         public override void MapData()
         {
@@ -76,7 +67,7 @@ namespace LoopDataAccessLayer
 
     public class EMPTY_BLOCK : BlockDataExcel
     {
-        public EMPTY_BLOCK(ExcelDataLoader excelLoader) : base(excelLoader) { }
+        public EMPTY_BLOCK(DataLoader dataLoader) : base(dataLoader) { }
         public override void MapData() { }
         protected override void FetchExcelData() { }
     }
@@ -84,11 +75,12 @@ namespace LoopDataAccessLayer
 
     public class JB_3_TERM_SINGLE : BlockDataExcel
     {
-        public JB_3_TERM_SINGLE(ExcelDataLoader excelLoader) : base(excelLoader) { }
+        public JB_3_TERM_SINGLE(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchExcelData()
         {
-            var rows = excelLoader
+            var rows = dataLoader
+                .ExcelLoader
                 ?.GetJBRows(Tag)
                 ?.OrderBy(r => ExcelStringHelper.GetRowString(r, ExcelJBColumns.TAG_01));
             if (rows != null)
@@ -111,11 +103,11 @@ namespace LoopDataAccessLayer
 
     public class PNL_3_TERM_24VDC : BlockDataExcel
     {
-        public PNL_3_TERM_24VDC(ExcelDataLoader excelLoader) : base(excelLoader) { }
+        public PNL_3_TERM_24VDC(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchExcelData()
         {
-            var row = excelLoader.GetIORow(Tag);
+            var row = dataLoader.ExcelLoader?.GetIORow(Tag);
             if (row != null)
             {
                 Attributes["PNL_TAG"] = ExcelStringHelper.GetRowString(row, ExcelIOColumns.PANEL_TAG);
@@ -136,9 +128,7 @@ namespace LoopDataAccessLayer
 
     public class PNL_3_TERM : PNL_3_TERM_24VDC
     {
-        public PNL_3_TERM(ExcelDataLoader excelLoader) : base(excelLoader)
-        {
-        }
+        public PNL_3_TERM(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchExcelData()
         {
@@ -150,13 +140,11 @@ namespace LoopDataAccessLayer
 
     public class MOD_1_TERM : BlockDataExcelDB
     {
-        public MOD_1_TERM(ExcelDataLoader excelLoader, DBDataLoader dbLoader) : base(excelLoader, dbLoader)
-        {
-        }
+        public MOD_1_TERM(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
         {
-            DBLoopData data = dbLoader.GetLoopData(Tag);
+            DBLoopData data = dataLoader.DBLoader.GetLoopData(Tag);
 
             Attributes["RACK"] = data.Rack;
             Attributes["SLOT"] = data.Slot;
@@ -190,7 +178,7 @@ namespace LoopDataAccessLayer
 
         protected override void FetchExcelData()
         {
-            var row = excelLoader.GetIORow(Tag);
+            var row = dataLoader.ExcelLoader?.GetIORow(Tag);
             if (row != null)
             {
                 Attributes["MOD_TERM"] = ExcelStringHelper.GetRowString(row, ExcelIOColumns.MOD_TERM_01);
@@ -201,9 +189,7 @@ namespace LoopDataAccessLayer
 
     public class MOD_2_TERM : MOD_1_TERM
     {
-        public MOD_2_TERM(ExcelDataLoader excelLoader, DBDataLoader dbLoader) : base(excelLoader, dbLoader)
-        {
-        }
+        public MOD_2_TERM(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
         {
@@ -215,7 +201,7 @@ namespace LoopDataAccessLayer
 
         protected override void FetchExcelData()
         {
-            var row = excelLoader.GetIORow(Tag);
+            var row = dataLoader.ExcelLoader?.GetIORow(Tag);
             if (row != null)
             {
                 Attributes["MOD_TERM1"] = ExcelStringHelper.GetRowString(row, ExcelIOColumns.MOD_TERM_01);
@@ -227,13 +213,11 @@ namespace LoopDataAccessLayer
 
     public class INST_AI_2W : BlockDataExcelDB
     {
-        public INST_AI_2W(ExcelDataLoader excelLoader, DBDataLoader dbLoader) : base(excelLoader, dbLoader)
-        {
-        }
+        public INST_AI_2W(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
         {
-            DBLoopData data = dbLoader.GetLoopData(Tag);
+            DBLoopData data = dataLoader.DBLoader.GetLoopData(Tag);
 
             Attributes["MANUFACTURER"] = data.Manufacturer;
             Attributes["MODEL"] = data.Model;
@@ -259,7 +243,7 @@ namespace LoopDataAccessLayer
 
         protected override void FetchExcelData()
         {
-            var row = excelLoader.GetIORow(Tag);
+            var row = dataLoader.ExcelLoader?.GetIORow(Tag);
             if (row != null)
             {
                 Attributes["TERM1"] = ExcelStringHelper.GetRowString(row, ExcelIOColumns.DeviceTerminalPlus);
@@ -276,14 +260,12 @@ namespace LoopDataAccessLayer
 
     public class INST_AO_2W : INST_AI_2W
     {
-        public INST_AO_2W(ExcelDataLoader excelLoader, DBDataLoader dbLoader) : base(excelLoader, dbLoader)
-        {
-        }
+        public INST_AO_2W(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
         {
             base.FetchDBData();
-            DBLoopData data = dbLoader.GetLoopData(Tag);
+            DBLoopData data = dataLoader.DBLoader.GetLoopData(Tag);
 
             Attributes.Remove("RANGE");
             Attributes["VALVE_FAIL"] = data.FailPosition; 

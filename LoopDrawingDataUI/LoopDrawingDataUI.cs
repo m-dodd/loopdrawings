@@ -11,16 +11,6 @@ namespace LoopDrawingDataUI
             InitializeComponent();
         }
 
-        private static bool IsExcelFile(string fileName)
-        {
-            string extension = Path.GetExtension(fileName);
-            string[] validExtensions = { ".xlsx", ".xlsm" };
-            foreach (string ext in validExtensions)
-            {
-                if (extension.ToLower() == ext) return true;
-            }
-            return false;
-        }
 
         private static string DictToString(Dictionary<string, string> dict)
         {
@@ -48,7 +38,7 @@ namespace LoopDrawingDataUI
                 return;
             }
 
-            if (IsExcelFile(fileName))
+            if (ExcelDataLoader.IsExcelFile(fileName))
             {
                 excelLoader = new(fileName);
             }
@@ -121,7 +111,10 @@ namespace LoopDrawingDataUI
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     string fileName = openFileDialog1.FileName;
-                    if (IsExcelFile(fileName)) { return new ExcelDataLoader(fileName); }
+                    if (ExcelDataLoader.IsExcelFile(fileName))
+                    {
+                        return new ExcelDataLoader(fileName);
+                    }
                 }
               
                 return null;

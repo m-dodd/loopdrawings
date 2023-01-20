@@ -10,7 +10,25 @@ namespace LoopDataAdapterLayer
 {
     public class LoopDataConfig
     {
+        private string configFile;
         public Dictionary<string, TemplateConfig> TemplateDefs { get; set; }
+
+        public LoopDataConfig()
+        {
+            this.configFile= string.Empty;
+        }
+
+        public LoopDataConfig(string configFile)
+        {
+            this.configFile= configFile;
+        }
+
+
+        public void LoadConfig()
+        {
+            var json = File.ReadAllText(this.configFile);
+            TemplateDefs =  JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
+        }
 
         public void LoadConfig(string configFile)
         {

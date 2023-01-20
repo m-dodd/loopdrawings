@@ -49,6 +49,17 @@ namespace LoopDataAccessLayer
             return rows;
         }
 
+        public static bool IsExcelFile(string fileName)
+        {
+            string extension = Path.GetExtension(fileName);
+            string[] validExtensions = { ".xlsx", ".xlsm" };
+            foreach (string ext in validExtensions)
+            {
+                if (extension.ToLower() == ext) return true;
+            }
+            return false;
+        }
+
         public void Dispose() => wb.Dispose();
     }
 }
