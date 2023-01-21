@@ -45,10 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatGPT.cs" />
     <Compile Include="LoopDataConfig.cs" />
-    <Compile Include="LoopData_original.cs" />
-    <Compile Include="LoopData_NewIdea.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

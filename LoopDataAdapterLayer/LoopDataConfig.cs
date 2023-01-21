@@ -10,20 +10,52 @@ namespace LoopDataAdapterLayer
 {
     public class LoopDataConfig
     {
+        private string configFile;
+
+        public string TemplateDrawingPath { get; set; } = string.Empty;
         public Dictionary<string, TemplateConfig> TemplateDefs { get; set; }
+
+        public LoopDataConfig()
+        {
+            this.configFile= string.Empty;
+        }
+
+        public LoopDataConfig(string configFile)
+        {
+            this.configFile= configFile;
+        }
+
+
+        public void LoadConfig()
+        {
+            var json = File.ReadAllText(this.configFile);
+            TemplateDefs =  JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
+        }
 
         public void LoadConfig(string configFile)
         {
             var json = File.ReadAllText(configFile);
-            var data = JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
-            TemplateDefs = data;
+            TemplateDefs =  JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
+        }
+
+        public static LoopDataConfig FromJSonFile(string configFile)
+        {
+            var json = File.ReadAllText(configFile);
+            return JsonConvert.DeserializeObject<LoopDataConfig>(json);
         }
     }
 
     public class TemplateConfig
     {
         public string TemplateName { get; set; }
-        public string Filename { get; set; }
-        public List<string> Blocks { get; set; }
+        public string DrawingFilename { get; set; }
+        public List<string> TagTypes;
+        public List<BlockMapData> BlockMap { get; set; }
+    }
+
+    public class BlockMapData
+    {
+        public string Name { get; set; }
+        public List<string> Tags { get; set; }
     }
 }

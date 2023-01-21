@@ -126,59 +126,59 @@ namespace LoopDrawingAcadUI
         {
             string dwgFlpath = DWGPathName;
             string savePath = DefaultPathName + @"testing_loop_attribute_updates.dwg";
-            LoopDataCollection loopdata = new LoopDataCollection();
-            loopdata.Load(jsonfile);
+            //LoopDataCollection loopdata = new LoopDataCollection();
+            //loopdata.Load(jsonfile);
 
-            using (DrawingFactory drawingFactory = new DrawingFactory())
-            {
-                using(Drawing drawing = drawingFactory.Open(dwgFlpath) as Drawing)
-                {
-                    using (Block block = drawing.FindBlock("AI_01_1JB_DUCO"))
-                    {
-                        block?.SetValues(loopdata.Data[0].Attributes);
-                        drawing.SaveAs(savePath);
-                    }
-                }
-            }
+            //using (DrawingFactory drawingFactory = new DrawingFactory())
+            //{
+            //    using(Drawing drawing = drawingFactory.Open(dwgFlpath) as Drawing)
+            //    {
+            //        using (Block block = drawing.FindBlock("AI_01_1JB_DUCO"))
+            //        {
+            //            block?.SetValues(loopdata.Data[0].Attributes);
+            //            drawing.SaveAs(savePath);
+            //        }
+            //    }
+            //}
         }
 
         public void OpenTemplatePopulateBlock(string jsonfile)
         {
             string dwgFlpath = DWGPathName;
             string savePath = DefaultPathName + @"testing_loop_attribute_updates.dwg";
-            LoopDataCollection loopdata = new LoopDataCollection();
-            loopdata.Load(jsonfile);
-            //IDictionary<string, string> tagdata = TestData.TagDict;
-            IDictionary<string, string> tagdata = loopdata.Data[0].Attributes;
+        //    LoopDataCollection loopdata = new LoopDataCollection();
+        //    loopdata.Load(jsonfile);
+        //    //IDictionary<string, string> tagdata = TestData.TagDict;
+        //    IDictionary<string, string> tagdata = loopdata.Data[0].Attributes;
 
-            using (Database db = new Database(false, true))
-            {
-                db.ReadDwgFile(dwgFlpath, FileOpenMode.OpenForReadAndAllShare, false, null);
-                using (Transaction tr = db.TransactionManager.StartTransaction())
-                {
-                    BlockTable bt = tr.GetObject(db.BlockTableId, OpenMode.ForRead) as BlockTable;
-                    foreach (ObjectId id in bt)
-                    {
-                        BlockTableRecord btRecord = (BlockTableRecord)tr.GetObject(id, OpenMode.ForRead);
-                        if (btRecord.Name == "AI_01_1JB_DUCO")
-                        {
-                            ObjectIdCollection blockReferenceIDs = btRecord.GetBlockReferenceIds(true, true) as ObjectIdCollection; // get all references to loop block
-                            BlockReference refLoop = tr.GetObject(blockReferenceIDs[0], OpenMode.ForRead) as BlockReference; // get first specific block
-                            AttributeCollection ac = refLoop.AttributeCollection; // get list of attributes in the block reference
-                            foreach (ObjectId attributeId in ac)
-                            {
-                                AttributeReference ar = tr.GetObject(attributeId, OpenMode.ForWrite) as AttributeReference; // get first attribute reference
-                                if (tagdata.ContainsKey(ar.Tag))
-                                {
-                                    ar.TextString = tagdata[ar.Tag];
-                                }
-                            }
-                        }
-                    }
-                    tr.Commit();
-                }
-                db.SaveAs(savePath, true, DwgVersion.Current, db.SecurityParameters);
-            }
+        //    using (Database db = new Database(false, true))
+        //    {
+        //        db.ReadDwgFile(dwgFlpath, FileOpenMode.OpenForReadAndAllShare, false, null);
+        //        using (Transaction tr = db.TransactionManager.StartTransaction())
+        //        {
+        //            BlockTable bt = tr.GetObject(db.BlockTableId, OpenMode.ForRead) as BlockTable;
+        //            foreach (ObjectId id in bt)
+        //            {
+        //                BlockTableRecord btRecord = (BlockTableRecord)tr.GetObject(id, OpenMode.ForRead);
+        //                if (btRecord.Name == "AI_01_1JB_DUCO")
+        //                {
+        //                    ObjectIdCollection blockReferenceIDs = btRecord.GetBlockReferenceIds(true, true) as ObjectIdCollection; // get all references to loop block
+        //                    BlockReference refLoop = tr.GetObject(blockReferenceIDs[0], OpenMode.ForRead) as BlockReference; // get first specific block
+        //                    AttributeCollection ac = refLoop.AttributeCollection; // get list of attributes in the block reference
+        //                    foreach (ObjectId attributeId in ac)
+        //                    {
+        //                        AttributeReference ar = tr.GetObject(attributeId, OpenMode.ForWrite) as AttributeReference; // get first attribute reference
+        //                        if (tagdata.ContainsKey(ar.Tag))
+        //                        {
+        //                            ar.TextString = tagdata[ar.Tag];
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //            tr.Commit();
+        //        }
+        //        db.SaveAs(savePath, true, DwgVersion.Current, db.SecurityParameters);
+        //    }
         }
 
         

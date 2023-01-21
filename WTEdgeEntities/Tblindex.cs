@@ -11,6 +11,8 @@ namespace WTEdge.Entities
             InverseParenttag1Navigation = new HashSet<Tblindex>();
             InverseParenttag2Navigation = new HashSet<Tblindex>();
             InverseParenttag3Navigation = new HashSet<Tblindex>();
+            TblindexrelationDestinationNavigations = new HashSet<Tblindexrelation>();
+            TblindexrelationSourceNavigations = new HashSet<Tblindexrelation>();
             TblsdkrelationOutputtagNavigations = new HashSet<Tblsdkrelation>();
             TblsdkrelationParenttagsNavigations = new HashSet<Tblsdkrelation>();
         }
@@ -70,7 +72,7 @@ namespace WTEdge.Entities
         public string? Newwiringdrawing { get; set; }
         public string? Status { get; set; }
         public string? Comments { get; set; }
-        public string? Clientcomments { get; set; }
+        public string? Internalcomments { get; set; }
         public string? Rev { get; set; }
         public string? Commissioningphase { get; set; }
         public string? Sdkinputgroup { get; set; }
@@ -80,6 +82,7 @@ namespace WTEdge.Entities
         public string? Ioterminals { get; set; }
 
         public virtual Tblindex? ItpmparentNavigation { get; set; }
+        public virtual Tblloopno? LoopnoNavigation { get; set; }
         public virtual Tblindex? Parenttag1Navigation { get; set; }
         public virtual Tblindex? Parenttag2Navigation { get; set; }
         public virtual Tblindex? Parenttag3Navigation { get; set; }
@@ -89,6 +92,8 @@ namespace WTEdge.Entities
         public virtual ICollection<Tblindex> InverseParenttag1Navigation { get; set; }
         public virtual ICollection<Tblindex> InverseParenttag2Navigation { get; set; }
         public virtual ICollection<Tblindex> InverseParenttag3Navigation { get; set; }
+        public virtual ICollection<Tblindexrelation> TblindexrelationDestinationNavigations { get; set; }
+        public virtual ICollection<Tblindexrelation> TblindexrelationSourceNavigations { get; set; }
         public virtual ICollection<Tblsdkrelation> TblsdkrelationOutputtagNavigations { get; set; }
         public virtual ICollection<Tblsdkrelation> TblsdkrelationParenttagsNavigations { get; set; }
     }
