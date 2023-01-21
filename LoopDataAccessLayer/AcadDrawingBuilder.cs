@@ -7,69 +7,63 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class LoopNoTemplatePair
-    {
-        public string LoopNo { get; set; } = string.Empty;
-        public string Template { get; set; } = string.Empty;
-    }
-
     public class AcadDrawingBuilder
     {
-        public List<LoopDrawingData> Drawings { get; set; }
-        //private AcadDrawingDataFactory _drawingFactory;
-        private LoopDataConfig config;
+        
         private DataLoader dataLoader;
+        private LoopDataConfig loopConfig;
 
-        public AcadDrawingBuilder(DataLoader dataLoader, string configFileName)
+        public AcadDrawingBuilder(DataLoader dataLoader, LoopDataConfig loopConfig)
         {
-            Drawings = new();
-
             // do I need to check that the dataloader was correctly instantiated?
             //  Yes, it can fail to load the excel or the db and if it does then I can't
             //  do any work. figure this out
             this.dataLoader = dataLoader;
-
-            // probably need a graceful excel if no config file found or not the right format
-            // handle these events
-            config = new(configFileName);
-            config.LoadConfig();
+            this.loopConfig = loopConfig;
         }
 
-        public void GetLoops()
+        public LoopDrawingData BuildDrawing(LoopNoTemplatePair loop)
         {
-            // read from database and get the loop / loop template pair objects
+            // for a given LoopNoTemplatePair
+            //      get all tags for the loop and map them to the respective config type
+            var tags = GetLoopTagMap(loop);
+
+            //      build all blocks
+            //      create drawing data object
+            //      add it to the list of drawings
             throw new NotImplementedException();
         }
 
-        public void GetLoopTags(LoopNoTemplatePair loop)
+        private object GetLoopTags(LoopNoTemplatePair loop)
         {
+            // this function should go to the database and get all of the tags for a given loop
+            // we will need a few different fields
+            // not sure on the type of the return yet, as I'm not sure what happens when I query for
+            // a set of tags for a given loop which will return multiple values
+            throw new NotImplementedException();
+        }
+
+        private Dictionary<string, string> GetLoopTagMap(LoopNoTemplatePair loop)
+        {
+            var tags = GetLoopTags(loop);
             // what is the return type of this?
             //      a dictionary maybe?
             //      a loop tag getter object
             throw new NotImplementedException();
         }
 
-        public List<BlockDataMappable> BuildBlocks(LoopNoTemplatePair loop)
+        private List<BlockDataMappable> BuildBlocks(LoopNoTemplatePair loop)
         {
             List<BlockDataMappable> blocks = new();
             AcadBlockFactory blockFactory = new(dataLoader);
-            foreach (BlockMapData blockMap in config.TemplateDefs[loop.Template].BlockMap)
+            foreach (BlockMapData blockMap in loopConfig.TemplateDefs[loop.Template].BlockMap)
             {
-                blocks.Add(blockFactory.GetBlock(blockMap));
+                //blocks.Add(blockFactory.GetBlock(blockMap));
             }
+
+            return blocks;
         }
 
-        public LoopDrawingData BuildDrawing(LoopNoTemplatePair loop)
-        {
-            // for a given LoopNoTemplatePair
-            //      get all tags for the loop
-            GetLoopTags(loop);
-            //      map all tags to the type required by the template
-            //      build all blocks
-            //      create drawing data object
-            //      add it to the list of drawings
-            throw new NotImplementedException();
-        }
 
         public string ToJson()
         {

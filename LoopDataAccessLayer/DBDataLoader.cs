@@ -20,6 +20,21 @@ namespace LoopDataAccessLayer
             this.db = new WTEdgeContext();
             loopData = new Dictionary<string, DBLoopData>();
         }
+
+        public IEnumerable<LoopNoTemplatePair> GetLoops()
+        {
+            var loops = db
+                          .Tblloops
+                          .Where(x => x != null)
+                          .Select(
+                              loop => new LoopNoTemplatePair
+                              {
+                                  LoopNo = loop.Loop ?? string.Empty,
+                                  Template = loop.Looptemplate ?? string.Empty,
+                              }
+                          );
+            return loops;
+        }
         
         public DBLoopData GetLoopData(string tag)
         {
@@ -27,8 +42,7 @@ namespace LoopDataAccessLayer
             ///     First check to see if the data is in the dictionar and if it is simply return it
             ///     If it is not in the dict then fetch it and add it to the dict and return it
             ///     Now any future call for this same data will not need to fetch it
-            DBLoopData? data;
-            if (loopData.TryGetValue(tag, out data))
+            if (loopData.TryGetValue(tag, out var data))
             {
                 return data;
             }

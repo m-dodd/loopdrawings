@@ -8,8 +8,8 @@ namespace LoopDataAccessLayer
 {
     public class DataLoader
     {
-        public DBDataLoader? DBLoader { get; set; }
-        public ExcelDataLoader? ExcelLoader { get; set; }
+        public DBDataLoader DBLoader { get; set; }
+        public ExcelDataLoader ExcelLoader { get; set; }
 
         public DataLoader(ExcelDataLoader excelLoader)
         {
@@ -23,19 +23,20 @@ namespace LoopDataAccessLayer
             ExcelLoader= excelLoader;
         }
 
-        public DataLoader(string excelFileName)
-        {
-            if (ExcelDataLoader.IsExcelFile(excelFileName))
-            {
-                ExcelLoader = new(excelFileName);
-            }
-            else
-            {
-                ExcelLoader = null;
-                DBLoader = null;
-                return;
-            }
-            DBLoader = new();
-        }
+        // maybe I won't allow this to happen and also use dependency injection when building this object
+        //public DataLoader(string excelFileName)
+        //{
+        //    if (ExcelDataLoader.IsExcelFile(excelFileName))
+        //    {
+        //        ExcelLoader = new(excelFileName);
+        //    }
+        //    else
+        //    {
+        //        ExcelLoader = null;
+        //        DBLoader = null;
+        //        return;
+        //    }
+        //    DBLoader = new();
+        //}
     }
 }
