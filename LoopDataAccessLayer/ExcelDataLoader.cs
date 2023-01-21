@@ -34,7 +34,7 @@ namespace LoopDataAccessLayer
         {
             this.fileName=fileName;
             this.wb = new XLWorkbook(this.fileName);
-            this.IOws = wb.Worksheet("combine_io_devices");
+            this.IOws = wb.Worksheet("IO_Wiring_Devices");
             this.JBws = wb.Worksheet("JB Wiring");
         }
 

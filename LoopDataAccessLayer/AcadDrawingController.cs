@@ -13,7 +13,7 @@ namespace LoopDataAccessLayer
         private LoopDataConfig loopConfig;
         private DataLoader dataLoader;
 
-        public List<LoopDrawingData> Drawings { get; set; }
+        public List<AcadDrawingData> Drawings { get; set; }
 
         public AcadDrawingController(DataLoader dataLoader, string configFileName)
         {
@@ -24,25 +24,18 @@ namespace LoopDataAccessLayer
             loopConfig = new(configFileName);
             loopConfig.LoadConfig();
             
-            Drawings = new List<LoopDrawingData>();
+            Drawings = new List<AcadDrawingData>();
             
         }
 
-        private IEnumerable<LoopNoTemplatePair> GetLoops()
-        {
-            //var loops = dataLoader
-            //    .DBLoader
-            //    .
-            // read from database and get the loop / loop template pair objects
-            throw new NotImplementedException();
-        }
+        
 
         public void BuildDrawings()
         {
             AcadDrawingBuilder drawingBuilder = new(dataLoader, loopConfig);
             foreach (LoopNoTemplatePair loop in dataLoader.DBLoader.GetLoops()) 
             {
-                LoopDrawingData drawing = drawingBuilder.BuildDrawing(loop);
+                AcadDrawingData drawing = drawingBuilder.BuildDrawing(loop);
                 drawing.MapData();
                 Drawings.Add(drawing);
             }

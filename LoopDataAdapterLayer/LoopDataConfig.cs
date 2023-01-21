@@ -11,6 +11,8 @@ namespace LoopDataAdapterLayer
     public class LoopDataConfig
     {
         private string configFile;
+
+        public string TemplateDrawingPath { get; set; } = string.Empty;
         public Dictionary<string, TemplateConfig> TemplateDefs { get; set; }
 
         public LoopDataConfig()

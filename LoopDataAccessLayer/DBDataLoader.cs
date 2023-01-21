@@ -21,19 +21,33 @@ namespace LoopDataAccessLayer
             loopData = new Dictionary<string, DBLoopData>();
         }
 
-        public IEnumerable<LoopNoTemplatePair> GetLoops()
+        public List<LoopNoTemplatePair> GetLoops()
         {
-            var loops = db
-                          .Tblloops
-                          .Where(x => x != null)
-                          .Select(
-                              loop => new LoopNoTemplatePair
-                              {
-                                  LoopNo = loop.Loop ?? string.Empty,
-                                  Template = loop.Looptemplate ?? string.Empty,
-                              }
-                          );
-            return loops;
+            return db.Tblloops
+                      // it's possible that I will want to gracefully handle Looptemplate == null in the future
+                      // I'm thinking of a log file message or something, but for now, I don't want it
+                      .Where(x => (x.Loop != "---") && (x.Loop != null) && (x.Looptemplate != null))
+                      .Select(loop => new LoopNoTemplatePair
+                      {
+                          LoopNo = loop.Loop ?? string.Empty,
+                          Template = loop.Looptemplate ?? string.Empty,
+                      })
+                      //.AsEnumerable();
+                      .ToList();
+        }
+
+        public List<LoopTagData> GetLoopTags(LoopNoTemplatePair loop)
+        {
+            string[] badStatus = { "OUT OF SCOPE", "DELETE", "HOLD" };
+            return db.Tblindices
+                     .Where(t => (t.Loopno == loop.LoopNo) && !badStatus.Contains(t.Status))
+                     .Select(tag => new LoopTagData
+                     {
+                         Tag = tag.Tag ?? string.Empty,
+                         IOType = tag.Iotype ?? string.Empty,
+                         InstrumentType = tag.Instrumenttype ?? string.Empty,
+                     })
+                     .ToList();
         }
         
         public DBLoopData GetLoopData(string tag)
@@ -80,6 +94,13 @@ namespace LoopDataAccessLayer
                 return loopData[tag];
             }
         }
+    }
+
+    public class LoopTagData
+    {
+        public string Tag { get; set; } = string.Empty;
+        public string IOType { get; set; } = string.Empty;
+        public string InstrumentType { get; set; } = string.Empty;
     }
 
     public class DBLoopData

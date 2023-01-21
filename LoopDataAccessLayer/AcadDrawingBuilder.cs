@@ -1,4 +1,5 @@
-﻿using LoopDataAdapterLayer;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using LoopDataAdapterLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,43 +23,43 @@ namespace LoopDataAccessLayer
             this.loopConfig = loopConfig;
         }
 
-        public LoopDrawingData BuildDrawing(LoopNoTemplatePair loop)
+        public AcadDrawingData? BuildDrawing(LoopNoTemplatePair loop)
         {
-            // for a given LoopNoTemplatePair
-            //      get all tags for the loop and map them to the respective config type
-            var tags = GetLoopTagMap(loop);
-
-            //      build all blocks
-            //      create drawing data object
-            //      add it to the list of drawings
-            throw new NotImplementedException();
+            if (loopConfig.TemplateDefs.TryGetValue(loop.Template, out TemplateConfig? template))
+            {
+                Dictionary<string, string>? tagMap = BuildLoopTagMap(loop, template);
+                if (tagMap != null)
+                {
+                    List<BlockDataMappable> blocks = BuildBlocks(template, tagMap);
+                    AcadDrawingData drawing = new AcadDrawingData
+                    {
+                        Blocks = blocks,
+                        LoopID = loop.LoopNo,
+                        TemplateName = template.TemplateName,
+                        DrawingFileName = Path.Combine(loopConfig.TemplateDrawingPath, template.DrawingFilename)
+                    };
+                    drawing.MapData();
+                    return drawing;
+                }
+            }
+            return null;
         }
 
-        private object GetLoopTags(LoopNoTemplatePair loop)
+        private Dictionary<string, string> BuildLoopTagMap(LoopNoTemplatePair loop, TemplateConfig template)
         {
-            // this function should go to the database and get all of the tags for a given loop
-            // we will need a few different fields
-            // not sure on the type of the return yet, as I'm not sure what happens when I query for
-            // a set of tags for a given loop which will return multiple values
-            throw new NotImplementedException();
+            List<LoopTagData> tags = dataLoader.DBLoader.GetLoopTags(loop);
+            Dictionary<string, string> tagMap = LoopTagMapper.BuildTagMap(tags, template);
+            return tagMap;
+            
         }
 
-        private Dictionary<string, string> GetLoopTagMap(LoopNoTemplatePair loop)
-        {
-            var tags = GetLoopTags(loop);
-            // what is the return type of this?
-            //      a dictionary maybe?
-            //      a loop tag getter object
-            throw new NotImplementedException();
-        }
-
-        private List<BlockDataMappable> BuildBlocks(LoopNoTemplatePair loop)
+        private List<BlockDataMappable> BuildBlocks(TemplateConfig template, Dictionary<string, string> tagMap)
         {
             List<BlockDataMappable> blocks = new();
             AcadBlockFactory blockFactory = new(dataLoader);
-            foreach (BlockMapData blockMap in loopConfig.TemplateDefs[loop.Template].BlockMap)
+            foreach (BlockMapData blockMap in template.BlockMap)
             {
-                //blocks.Add(blockFactory.GetBlock(blockMap));
+                //blocks.Add(blockFactory.GetBlock(blockMap, tagMap));
             }
 
             return blocks;
@@ -75,7 +76,7 @@ namespace LoopDataAccessLayer
             throw new NotImplementedException();
         }
 
-        public List<LoopDrawingData> FromJson()
+        public List<AcadDrawingData> FromJson()
         {
             throw new NotImplementedException();
         }

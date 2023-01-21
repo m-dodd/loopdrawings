@@ -34,6 +34,7 @@
             this.lblConfigFile = new System.Windows.Forms.Label();
             this.btnReadConfig = new System.Windows.Forms.Button();
             this.btnReadDataClasses = new System.Windows.Forms.Button();
+            this.btnBuildObjects = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtDisplayConnection
@@ -95,11 +96,22 @@
             this.btnReadDataClasses.UseVisualStyleBackColor = true;
             this.btnReadDataClasses.Click += new System.EventHandler(this.btnReadDataClasses_Click);
             // 
+            // btnBuildObjects
+            // 
+            this.btnBuildObjects.Location = new System.Drawing.Point(4, 501);
+            this.btnBuildObjects.Name = "btnBuildObjects";
+            this.btnBuildObjects.Size = new System.Drawing.Size(125, 58);
+            this.btnBuildObjects.TabIndex = 12;
+            this.btnBuildObjects.Text = "Attempt new classes";
+            this.btnBuildObjects.UseVisualStyleBackColor = true;
+            this.btnBuildObjects.Click += new System.EventHandler(this.btnBuildObjects_Click);
+            // 
             // frmLoopUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 591);
+            this.Controls.Add(this.btnBuildObjects);
             this.Controls.Add(this.btnReadDataClasses);
             this.Controls.Add(this.btnReadConfig);
             this.Controls.Add(this.lblConfigFile);
@@ -120,5 +132,6 @@
         private Label lblConfigFile;
         private Button btnReadConfig;
         private Button btnReadDataClasses;
+        private Button btnBuildObjects;
     }
 }

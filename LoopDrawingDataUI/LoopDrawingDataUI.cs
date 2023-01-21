@@ -120,5 +120,19 @@ namespace LoopDrawingDataUI
                 return null;
             }
         }
+
+        private void btnBuildObjects_Click(object sender, EventArgs e)
+        {
+            ExcelDataLoader? excelLoader = GetExcelLoader();
+            if (excelLoader == null)
+            {
+                return;
+            }
+            DBDataLoader dbLoader = new();
+            DataLoader dataLoader = new(excelLoader, dbLoader);
+            string configFileName = lblConfigFile.Text;
+            AcadDrawingController controller = new(dataLoader, configFileName);
+            controller.BuildDrawings();
+        }
     }
 }
