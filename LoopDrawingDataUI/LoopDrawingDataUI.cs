@@ -131,8 +131,14 @@ namespace LoopDrawingDataUI
             DBDataLoader dbLoader = new();
             DataLoader dataLoader = new(excelLoader, dbLoader);
             string configFileName = lblConfigFile.Text;
-            AcadDrawingController controller = new(dataLoader, configFileName);
-            controller.BuildDrawings();
+            if (!(string.IsNullOrEmpty(configFileName) || configFileName == "lblConfigFile"))
+            {
+                string jsonOutputFilename = Path.Combine(Path.GetDirectoryName(configFileName)!,
+                                                          "output_test_data.json");
+                AcadDrawingController controller = new(dataLoader, configFileName);
+                controller.BuildDrawings();
+                controller.SaveDrawingsToFile(jsonOutputFilename);
+            }
         }
     }
 }

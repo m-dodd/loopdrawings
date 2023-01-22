@@ -48,8 +48,7 @@ namespace LoopDataAdapterLayer
     public class TemplateConfig
     {
         public string TemplateName { get; set; }
-        public string DrawingFilename { get; set; }
-        public List<string> TagTypes;
+        public string TemplateFileName { get; set; }
         public List<BlockMapData> BlockMap { get; set; }
     }
 

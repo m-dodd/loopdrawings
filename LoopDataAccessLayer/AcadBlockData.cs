@@ -141,6 +141,8 @@ namespace LoopDataAccessLayer
 
     public class MOD_1_TERM : BlockDataExcelDB
     {
+        public string ControllerTag { get; set; } = string.Empty;
+
         public MOD_1_TERM(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
@@ -150,9 +152,9 @@ namespace LoopDataAccessLayer
             Attributes["RACK"] = data.Rack;
             Attributes["SLOT"] = data.Slot;
             Attributes["CHANNEL"] = data.Channel;
-            
 
-            string[] tagComponents = Tag.Split('-');
+
+            string[] tagComponents = ControllerTag.Split('-');
             if (tagComponents.Length == 2)
             {
                 Attributes["FUNCTIONAL_ID"] = tagComponents[0];
