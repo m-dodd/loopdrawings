@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using LoopDataAdapterLayer;
+﻿using LoopDataAdapterLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,16 +26,16 @@ namespace LoopDataAccessLayer
         {
             if (loopConfig.TemplateDefs.TryGetValue(loop.Template, out TemplateConfig? template))
             {
-                Dictionary<string, string>? tagMap = BuildLoopTagMap(loop, template);
-                if (tagMap != null)
+                Dictionary<string, string> tagMap = BuildLoopTagMap(loop, template);
+                if (tagMap.Count > 0)
                 {
                     List<BlockDataMappable> blocks = BuildBlocks(template, tagMap);
-                    AcadDrawingData drawing = new AcadDrawingData
+                    AcadDrawingData drawing = new()
                     {
                         Blocks = blocks,
                         LoopID = loop.LoopNo,
                         TemplateName = template.TemplateName,
-                        DrawingFileName = Path.Combine(loopConfig.TemplateDrawingPath, template.DrawingFilename)
+                        DrawingFileName = Path.Combine(loopConfig.TemplateDrawingPath, template.TemplateFileName)
                     };
                     drawing.MapData();
                     return drawing;
@@ -48,9 +47,8 @@ namespace LoopDataAccessLayer
         private Dictionary<string, string> BuildLoopTagMap(LoopNoTemplatePair loop, TemplateConfig template)
         {
             List<LoopTagData> tags = dataLoader.DBLoader.GetLoopTags(loop);
-            Dictionary<string, string> tagMap = LoopTagMapper.BuildTagMap(tags, template);
-            return tagMap;
-            
+            return LoopTagMapper.BuildTagMap(tags, template);
+
         }
 
         private List<BlockDataMappable> BuildBlocks(TemplateConfig template, Dictionary<string, string> tagMap)
@@ -59,29 +57,14 @@ namespace LoopDataAccessLayer
             AcadBlockFactory blockFactory = new(dataLoader);
             foreach (BlockMapData blockMap in template.BlockMap)
             {
-                //blocks.Add(blockFactory.GetBlock(blockMap, tagMap));
+                BlockDataMappable block = blockFactory.GetBlock(blockMap, tagMap);
+                if (block is not EMPTY_BLOCK)
+                {
+                    blocks.Add(block);
+                }
             }
 
             return blocks;
         }
-
-
-        public string ToJson()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ToJson(string fileName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<AcadDrawingData> FromJson()
-        {
-            throw new NotImplementedException();
-        }
     }
-
-
-    
 }
