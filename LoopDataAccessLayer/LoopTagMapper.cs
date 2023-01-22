@@ -22,7 +22,7 @@ namespace LoopDataAccessLayer
         {
             Dictionary<string, string> tagMap = new();
 
-            foreach(string tagtype in templateConfig.TagTypes)
+            foreach(string tagtype in GetTagTypes(templateConfig.BlockMap))
             {
                 if (definedTagTypes.Contains( tagtype ))
                 {
@@ -30,6 +30,20 @@ namespace LoopDataAccessLayer
                 }
             }
             return tagMap;
+        }
+
+        private static HashSet<string> GetTagTypes(List<BlockMapData> BlockMap)
+        {
+            HashSet<string> uniqueTags = new HashSet<string>();
+            foreach (BlockMapData block in BlockMap)
+            {
+                foreach(string tag in block.Tags)
+                {
+                    uniqueTags.Add(tag);
+                }
+            }
+
+            return uniqueTags;
         }
 
         private static string GetTag(IEnumerable<LoopTagData> tags, string tagtype)
