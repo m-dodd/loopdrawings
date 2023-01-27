@@ -1,6 +1,6 @@
 using System.Text;
 using LoopDataAccessLayer;
-using LoopDataAdapterLayer;
+
 
 namespace LoopDrawingDataUI
 {
@@ -12,16 +12,7 @@ namespace LoopDrawingDataUI
         }
 
 
-        private static string DictToString(Dictionary<string, string> dict)
-        {
-            return string.Join(System.Environment.NewLine, dict.Select(x => x.Key + ": " + x.Value?.ToString()));
-        }
-
-        private void GetData()
-        {
-
-        }
-
+        
         private void btnReadTagData_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new();
@@ -38,7 +29,7 @@ namespace LoopDrawingDataUI
                 return;
             }
 
-            if (ExcelDataLoader.IsExcelFile(fileName))
+            if (ExcelHelper.IsExcelFile(fileName))
             {
                 excelLoader = new(fileName);
             }
@@ -82,12 +73,6 @@ namespace LoopDrawingDataUI
             }
         }
 
-        private void btnReadConfig_Click(object sender, EventArgs e)
-        {
-            LoopDataConfig config = new LoopDataConfig();
-            config.LoadConfig(lblConfigFile.Text);
-        }
-
         private void btnReadDataClasses_Click(object sender, EventArgs e)
         {
             
@@ -111,7 +96,7 @@ namespace LoopDrawingDataUI
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     string fileName = openFileDialog1.FileName;
-                    if (ExcelDataLoader.IsExcelFile(fileName))
+                    if (ExcelHelper.IsExcelFile(fileName))
                     {
                         return new ExcelDataLoader(fileName);
                     }
@@ -121,6 +106,11 @@ namespace LoopDrawingDataUI
             }
         }
 
+        private TitleBlockData BuildTitleBlock()
+        {
+            //throw new NotImplementedException();
+            return new TitleBlockData();
+        }
         private void btnBuildObjects_Click(object sender, EventArgs e)
         {
             ExcelDataLoader? excelLoader = GetExcelLoader();
@@ -131,14 +121,58 @@ namespace LoopDrawingDataUI
             DBDataLoader dbLoader = new();
             DataLoader dataLoader = new(excelLoader, dbLoader);
             string configFileName = lblConfigFile.Text;
-            if (!(string.IsNullOrEmpty(configFileName) || configFileName == "lblConfigFile"))
+            string outputPath = lblDrawingOutputPath.Text;
+            string templatePath = lblTemplatePath.Text;
+            string siteId = lblSiteID.Text;
+
+            if (!string.IsNullOrEmpty(configFileName) 
+                && !string.IsNullOrEmpty(outputPath) 
+                && !string.IsNullOrEmpty(templatePath))
             {
-                string jsonOutputFilename = Path.Combine(Path.GetDirectoryName(configFileName)!,
-                                                          "output_test_data.json");
-                AcadDrawingController controller = new(dataLoader, configFileName);
+                LoopDataConfig loopConfig = new(configFileName);
+                loopConfig.LoadConfig();
+                loopConfig.TemplateDrawingPath = templatePath;
+                loopConfig.OutputDrawingPath = outputPath;
+                loopConfig.SiteID = siteId;
+
+                string jsonOutputFilename = Path.Combine(outputPath, "output_test_data.json");
+                AcadDrawingController controller = new(dataLoader, loopConfig, BuildTitleBlock());
                 controller.BuildDrawings();
                 controller.SaveDrawingsToFile(jsonOutputFilename);
             }
+        }
+
+        private void frmLoopUI_Load(object sender, EventArgs e)
+        {
+            lblConfigFile.Text = string.Empty;
+            lblDrawingOutputPath.Text = string.Empty;
+            lblTemplatePath.Text = string.Empty;
+        }
+
+
+        private void GetFolderSetLabel(Label label)
+        {
+            using (FolderBrowserDialog fld = new())
+            {
+                if (fld.ShowDialog() == DialogResult.OK)
+                {
+                    label.Text = fld.SelectedPath;
+                }
+                else
+                {
+                    label.Text = string.Empty;
+                }
+            }
+        }
+
+        private void btnTemplatePath_Click(object sender, EventArgs e)
+        {
+            GetFolderSetLabel(lblTemplatePath);
+        }
+
+        private void btnOutputPath_Click(object sender, EventArgs e)
+        {
+            GetFolderSetLabel(lblDrawingOutputPath);
         }
     }
 }

@@ -60,22 +60,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AcadCommands.cs" />
-    <Compile Include="AcadLoopDrawingTest.cs" />
-    <Compile Include="AutoCadHelper.cs" />
-    <Compile Include="ChatGPT.cs" />
-    <Compile Include="chatgpt2.cs" />
-    <Compile Include="LoopDrawingUI.cs">
+    <Compile Include="src\Acad\AcadBlockProcessor.cs" />
+    <Compile Include="src\Acad\AcadCommands.cs" />
+    <Compile Include="src\Acad\AcadController.cs" />
+    <Compile Include="src\Acad\AcadDrawing.cs" />
+    <Compile Include="src\Acad\AcadDrawingFactory.cs" />
+    <Compile Include="src\Acad\AcadDrawingProcessor.cs" />
+    <Compile Include="src\Acad\IAcadBlockProcessor.cs" />
+    <Compile Include="src\Acad\IAcadDrawing.cs" />
+    <Compile Include="src\Acad\IAcadDrawingFactory.cs" />
+    <Compile Include="src\Acad\IAcadDrawingProcessor.cs" />
+    <Compile Include="src\ChatGPT\chat_gpt_idea.cs" />
+    <Compile Include="src\Obsolete\AcadLoopDrawingTest.cs" />
+    <Compile Include="src\Obsolete\DrawingsBuilder.cs" />
+    <Compile Include="src\Obsolete\AutoCadHelper.cs" />
+    <Compile Include="src\ChatGPT\ChatGPT.cs" />
+    <Compile Include="src\ChatGPT\chatgpt2.cs" />
+    <Compile Include="src\UI\LoopDrawingUI.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoopDrawingUI.Designer.cs">
+    <Compile Include="src\UI\LoopDrawingUI.Designer.cs">
       <DependentUpon>LoopDrawingUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestData.cs" />
+    <Compile Include="src\Obsolete\TestData.cs" />
+    <Compile Include="src\ChatGPT\x.cs" />
+    <Compile Include="src\ChatGPT\xxx.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="LoopDrawingUI.resx">
+    <EmbeddedResource Include="src\UI\LoopDrawingUI.resx">
       <DependentUpon>LoopDrawingUI.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
