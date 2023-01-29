@@ -71,10 +71,8 @@ namespace LoopDataAccessLayer
     {
         public TITLE_BLOCK(DataLoader dataLoader) : base(dataLoader) 
         {
-            TitleBlockData = new TitleBlockData(); 
         }
 
-        public TitleBlockData TitleBlockData { get; set; }
         public override void MapData() 
         {
             MapTitleBlockData();
@@ -82,7 +80,7 @@ namespace LoopDataAccessLayer
 
         private void MapTitleBlockData()
         {
-            if (TitleBlockData is not null)
+            if (dataLoader.TitleBlock is not null)
             {
                 // populate attributes from titleblockdata
                 //Attributes[""] = TitleBlockData.DrawingName;

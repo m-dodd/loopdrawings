@@ -17,7 +17,6 @@ namespace LoopDataAccessLayer
         public string OutputDrawingPath { get; set; } = string.Empty;
         public string SiteID { get; set; } = string.Empty;
 
-        public TitleBlockData? TitleBlockData { get; set; }
         public Dictionary<string, TemplateConfig> TemplateDefs { get; set; } = 
             new Dictionary<string, TemplateConfig>();
 
@@ -47,12 +46,6 @@ namespace LoopDataAccessLayer
             TemplateDefs =
                 JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json) ??
                 new Dictionary<string, TemplateConfig>();
-        }
-
-        public static LoopDataConfig? FromJSonFile(string configFile)
-        {
-            var json = File.ReadAllText(configFile);
-            return JsonConvert.DeserializeObject<LoopDataConfig>(json);
         }
     }
 

@@ -10,7 +10,7 @@
         }
 
         public BlockDataMappable GetBlock(
-            BlockMapData blockMap, Dictionary<string, string> tagMap, TitleBlockData titleBlock )
+            BlockMapData blockMap, Dictionary<string, string> tagMap)
         {
             switch (blockMap.Name)
             {

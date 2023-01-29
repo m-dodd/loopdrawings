@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace LoopDataAdapterLayer
 {
-    public class AcadDrawingData : AcadBaseDrawingData
+    public class AcadDrawingData : AcadBaseDrawingData<AcadBlockData>
     {
-        public List<AcadBlockData> Blocks { get; set; } = new List<AcadBlockData>();
+        //public List<AcadBlockData> Blocks { get; set; } = new List<AcadBlockData>();
     }
 }

@@ -1,109 +1,24 @@
+using System.Drawing.Text;
 using System.Text;
+using DocumentFormat.OpenXml;
 using LoopDataAccessLayer;
-
+using Microsoft.VisualBasic;
 
 namespace LoopDrawingDataUI
 {
     public partial class frmLoopUI : Form
     {
+        private string configFileName = string.Empty;
+        private string excelFileName = string.Empty;
+        private string templatePath = string.Empty;
+        private string outputResultPath = string.Empty;
+        private string outputDrawingPath = string.Empty;
+        private string siteId;
+
         public frmLoopUI()
         {
             InitializeComponent();
-        }
-
-
-        
-        private void btnReadTagData_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog1 = new();
-            ExcelDataLoader excelLoader;
-            DBDataLoader dbLoader;
-            string fileName;
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                fileName = openFileDialog1.FileName;
-            }
-            else
-            {
-                return;
-            }
-
-            if (ExcelHelper.IsExcelFile(fileName))
-            {
-                excelLoader = new(fileName);
-            }
-            else
-            {
-                return;
-            }
-
-            dbLoader = new();
-            
-
-            // DataLoader loader = new(dbLoader, excelLoader);
-
-            // ok, so we are only interested in two tags at the moment
-            // LIT-7100
-            // LIT-1910
-            string[] tags = { "LIT-7100", "LIT-1910" };
-            // loader.FetchLoopsData(tags);
-            // txtDisplayConnection.Text = loader.ToString();
-            string DefaultPathName = @"Z:\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\";
-            // loader.Data.Save(DefaultPathName + @"testjson.json");
-
-            // just to test that the load function is workign as well.
-            // we won't need that until we do the autocad ui
-            // DataLoader loaderTestLoad = new(dbLoader, excelLoader);
-            // loaderTestLoad.Data.Load(DefaultPathName + @"testjson.json");
-        }
-
-        private void btnConfigFile_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog oFile = new OpenFileDialog())
-            {
-                if (oFile.ShowDialog() == DialogResult.OK)
-                {
-                    lblConfigFile.Text = oFile.FileName;
-                }
-                else
-                {
-                    lblConfigFile.Text = string.Empty;
-                }
-            }
-        }
-
-        private void btnReadDataClasses_Click(object sender, EventArgs e)
-        {
-            
-            ExcelDataLoader? excelLoader = GetExcelLoader();
-            if (excelLoader == null)
-            {
-                return;
-            }
-            DBDataLoader dbLoader = new();
-
-            // BlockFactory blockFactory = new BlockFactory(dbLoader, excelLoader);
-            // BlockDataMappable someBlock = blockFactory.GetBlock("JB_3-TERM_SINGLE", "LIT-7100");
-            // someBlock.MapData();
-
-        }
-
-        private ExcelDataLoader? GetExcelLoader()
-        {
-            using (OpenFileDialog openFileDialog1 = new())
-            {
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    string fileName = openFileDialog1.FileName;
-                    if (ExcelHelper.IsExcelFile(fileName))
-                    {
-                        return new ExcelDataLoader(fileName);
-                    }
-                }
-              
-                return null;
-            }
+            siteId = lblSiteID.Text;
         }
 
         private TitleBlockData BuildTitleBlock()
@@ -111,35 +26,31 @@ namespace LoopDrawingDataUI
             //throw new NotImplementedException();
             return new TitleBlockData();
         }
+
         private void btnBuildObjects_Click(object sender, EventArgs e)
         {
-            ExcelDataLoader? excelLoader = GetExcelLoader();
-            if (excelLoader == null)
+            if(!FilesAndFoldersValid())
             {
+                string invalidFilesMessage = "Please check configuration. One or more paths / filenames are invalid.";
+                string invalidCaption = "Invalid Input";
+                MessageBox.Show(invalidFilesMessage, invalidCaption, MessageBoxButtons.OK , MessageBoxIcon.Error);
                 return;
             }
+
+            ExcelDataLoader excelLoader = new(excelFileName);
             DBDataLoader dbLoader = new();
-            DataLoader dataLoader = new(excelLoader, dbLoader);
-            string configFileName = lblConfigFile.Text;
-            string outputPath = lblDrawingOutputPath.Text;
-            string templatePath = lblTemplatePath.Text;
-            string siteId = lblSiteID.Text;
+            DataLoader dataLoader = new(excelLoader, dbLoader, BuildTitleBlock());
 
-            if (!string.IsNullOrEmpty(configFileName) 
-                && !string.IsNullOrEmpty(outputPath) 
-                && !string.IsNullOrEmpty(templatePath))
-            {
-                LoopDataConfig loopConfig = new(configFileName);
-                loopConfig.LoadConfig();
-                loopConfig.TemplateDrawingPath = templatePath;
-                loopConfig.OutputDrawingPath = outputPath;
-                loopConfig.SiteID = siteId;
+            LoopDataConfig loopConfig = new(configFileName);
+            loopConfig.LoadConfig();
+            loopConfig.TemplateDrawingPath = templatePath;
+            loopConfig.OutputDrawingPath = outputDrawingPath;
+            loopConfig.SiteID = siteId;
 
-                string jsonOutputFilename = Path.Combine(outputPath, "output_test_data.json");
-                AcadDrawingController controller = new(dataLoader, loopConfig, BuildTitleBlock());
-                controller.BuildDrawings();
-                controller.SaveDrawingsToFile(jsonOutputFilename);
-            }
+            string jsonOutputFilename = Path.Combine(outputResultPath, "output_test_data.json");
+            AcadDrawingController controller = new(dataLoader, loopConfig);
+            controller.BuildDrawings();
+            controller.SaveDrawingsToFile(jsonOutputFilename);
         }
 
         private void frmLoopUI_Load(object sender, EventArgs e)
@@ -147,32 +58,39 @@ namespace LoopDrawingDataUI
             lblConfigFile.Text = string.Empty;
             lblDrawingOutputPath.Text = string.Empty;
             lblTemplatePath.Text = string.Empty;
+            lblResultOutputPath.Text = string.Empty;
+            lblExcelFile.Text = string.Empty;
         }
 
-
-        private void GetFolderSetLabel(Label label)
+        private void btnConfigFile_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog fld = new())
-            {
-                if (fld.ShowDialog() == DialogResult.OK)
-                {
-                    label.Text = fld.SelectedPath;
-                }
-                else
-                {
-                    label.Text = string.Empty;
-                }
-            }
+            configFileName = GetFileName();
+            lblConfigFile.Text = GetShortPath(configFileName);
         }
 
         private void btnTemplatePath_Click(object sender, EventArgs e)
         {
-            GetFolderSetLabel(lblTemplatePath);
+            templatePath = GetFolderName();
+            lblTemplatePath.Text = GetShortPath(templatePath);
         }
 
         private void btnOutputPath_Click(object sender, EventArgs e)
         {
-            GetFolderSetLabel(lblDrawingOutputPath);
+            outputDrawingPath = GetFolderName();
+            lblDrawingOutputPath.Text = GetShortPath(outputDrawingPath); 
+        }
+
+        private void btnResultOutputPath_Click(object sender, EventArgs e)
+        {
+            //GetFolderSetLabel(lblResultOutputPath);
+            outputResultPath = GetFolderName();
+            lblResultOutputPath.Text = GetShortPath(outputResultPath);
+        }
+
+        private void btnExcelFile_Click(object sender, EventArgs e)
+        {
+            excelFileName = GetFileName();
+            lblExcelFile.Text = GetShortPath(excelFileName);
         }
     }
 }

@@ -23,7 +23,6 @@ namespace LoopDrawingAcadUI
 
         public void Dispose()
         {
-            Transaction.Commit();
             Transaction.Dispose();
             Database.Dispose();
         }

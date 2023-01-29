@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public interface IDataLoader : IExcelLoader, IDBLoader
+    public interface ITemplatePicker
     {
-        public TitleBlockData TitleBlock { get; set; }
+        TemplateConfig GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap);
     }
 }

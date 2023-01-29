@@ -18,6 +18,11 @@ namespace LoopDrawingAcadUI
 
         public void ProcessBlocks(IEnumerable<AcadBlockData> blocks)
         {
+            //  this is extremely inefficient
+            //      - for every block in my list of blocks I have to loop through the autocad block table to find it
+            //      - a better way would be to looop through the block table and check to see if that block is in my list
+            //      - I would need to first loop this list once and turn it into a dictionary
+            //          - which then begs the question - should I just create it as a dictionary in the data generation phase?
             foreach (AcadBlockData block in blocks)
             {
                 ProcessBlock(block);

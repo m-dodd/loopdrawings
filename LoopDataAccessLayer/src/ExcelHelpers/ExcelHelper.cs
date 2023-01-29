@@ -27,12 +27,16 @@ namespace LoopDataAccessLayer
 
         public static bool IsExcelFile(string fileName)
         {
-            string extension = Path.GetExtension(fileName);
-            string[] validExtensions = { ".xlsx", ".xlsm" };
-            foreach (string ext in validExtensions)
+            if (!string.IsNullOrEmpty(fileName))
             {
-                if (extension.ToLower() == ext) return true;
+                string extension = Path.GetExtension(fileName);
+                string[] validExtensions = { ".xlsx", ".xlsm" };
+                foreach (string ext in validExtensions)
+                {
+                    if (extension.ToLower() == ext) return true;
+                }
             }
+
             return false;
         }
     }

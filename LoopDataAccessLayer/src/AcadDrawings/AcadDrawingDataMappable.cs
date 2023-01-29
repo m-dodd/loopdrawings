@@ -2,21 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace LoopDataAccessLayer
 {
-    public class AcadDrawingDataMappable : AcadBaseDrawingData, IMappableDrawing
+    public class AcadDrawingDataMappable : AcadBaseDrawingData<IMappableBlock>, IMappableDrawing
     {
-        public List<IMappableBlock> Blocks { get; set; } = new List<IMappableBlock>();
-
-        public AcadDrawingDataMappable() { }
-
-        public AcadDrawingDataMappable(List<IMappableBlock> blocks) 
+        public void MapData()
         {
-            this.Blocks = blocks;
+            MapBlocks();
         }
 
         private void MapBlocks()
@@ -27,9 +21,6 @@ namespace LoopDataAccessLayer
             }
         }
         
-        public void MapData()
-        {
-            MapBlocks();
-        }
+        
     }
 }
