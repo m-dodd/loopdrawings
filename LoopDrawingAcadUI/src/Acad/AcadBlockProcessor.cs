@@ -51,7 +51,7 @@ namespace LoopDrawingAcadUI
             foreach (ObjectId id in bt)
             {
                 BlockTableRecord btr = tr.GetObject(id, OpenMode.ForRead) as BlockTableRecord;
-                if (btr.Name == blockName)
+                if (btr.Name.ToLower() == blockName.ToLower())
                 {
                     var ids = btr.GetBlockReferenceIds(true, true) as ObjectIdCollection;
                     // if ids.Count == 1 then there is only one instance of that block in the drawing

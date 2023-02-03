@@ -27,9 +27,6 @@ namespace LoopDataAccessLayer
                 default:
                     return template;
             }
-            
-            
-            throw new NotImplementedException();
         }
 
         private TemplateConfig GetXmitterTemplate(TemplateConfig template, Dictionary<string, string> tagMap)

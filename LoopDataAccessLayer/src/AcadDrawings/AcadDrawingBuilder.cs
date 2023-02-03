@@ -59,7 +59,7 @@ namespace LoopDataAccessLayer
                 Blocks = blocks,
                 LoopID = loop.LoopNo,
                 TemplateName = template.TemplateName,
-                TemplateDrawingFileName = Path.Combine(loopConfig.TemplateDrawingPath, template.TemplateName + ".dwg"),
+                TemplateDrawingFileName = Path.Combine(loopConfig.TemplateDrawingPath, template.TemplateFileName),
                 OutputDrawingFileName = BuildOutputDrawingName(drawingName)
             };
             drawing.MapData();

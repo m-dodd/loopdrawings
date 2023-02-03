@@ -51,6 +51,7 @@ namespace LoopDrawingDataUI
             AcadDrawingController controller = new(dataLoader, loopConfig);
             controller.BuildDrawings();
             controller.SaveDrawingsToFile(jsonOutputFilename);
+            MessageBox.Show("Drawings completed!");
         }
 
         private void frmLoopUI_Load(object sender, EventArgs e)

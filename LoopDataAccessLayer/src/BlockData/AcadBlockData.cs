@@ -155,11 +155,11 @@ namespace LoopDataAccessLayer
     }
 
 
-    public class MOD_1_TERM : BlockDataExcelDB
+    public class MOD_1_TERM_1_BPCS : BlockDataExcelDB
     {
         public string ControllerTag { get; set; } = string.Empty;
 
-        public MOD_1_TERM(DataLoader dataLoader) : base(dataLoader) { }
+        public MOD_1_TERM_1_BPCS(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
         {
@@ -201,9 +201,9 @@ namespace LoopDataAccessLayer
     }
 
 
-    public class MOD_2_TERM : MOD_1_TERM
+    public class MOD_2_TERM_1_BPCS : MOD_1_TERM_1_BPCS
     {
-        public MOD_2_TERM(DataLoader dataLoader) : base(dataLoader) { }
+        public MOD_2_TERM_1_BPCS(DataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchExcelData()
         {
@@ -212,8 +212,8 @@ namespace LoopDataAccessLayer
             {
                 Attributes["MOD_TERM1"] = ExcelHelper.GetRowString(row, ExcelIOColumns.MOD_TERM_01);
                 Attributes["MOD_TERM2"] = ExcelHelper.GetRowString(row, ExcelIOColumns.MOD_TERM_02);
-                Attributes["WIRE_TAG_IO_1"] = ExcelHelper.GetRowString(row, ExcelIOColumns.MOD_WIRE_TAG_01);
-                Attributes["WIRE_TAG_IO_2"] = ExcelHelper.GetRowString(row, ExcelIOColumns.MOD_WIRE_TAG_02);
+                Attributes["WIRE_TAG_IO-1"] = ExcelHelper.GetRowString(row, ExcelIOColumns.MOD_WIRE_TAG_01);
+                Attributes["WIRE_TAG_IO-2"] = ExcelHelper.GetRowString(row, ExcelIOColumns.MOD_WIRE_TAG_02);
                 Attributes.Remove("WIRE_TAG_IO");
             }
         }

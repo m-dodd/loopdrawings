@@ -10,7 +10,7 @@
                     { "Name": "INST_AI_2W", "Tags": ["AI"] },
                     { "Name": "JB_3-TERM_SINGLE", "Tags": ["AI"] },
                     { "Name": "PNL_3-TERM_24VDC", "Tags": ["AI"] },
-                    { "Name": "MOD_1-TERM", "Tags": ["AI", "AI"] }
+                    { "Name": "MOD_1-TERM-BPCS", "Tags": ["AI", "AI"] }
                 ]
 		},
     "XMITER_2JB": 
@@ -24,7 +24,7 @@
                     { "Name": "INST_AI_2W", "Tags": ["AI"] },
                     { "Name": "JB_3-TERM_DUAL", "Tags": ["AI"] },
                     { "Name": "PNL_3-TERM_24VDC", "Tags": ["AI"] },
-                    { "Name": "MOD_1-TERM", "Tags": ["AI", "AI"] }
+                    { "Name": "MOD_1-TERM-BPCS", "Tags": ["AI", "AI"] }
                 ]
 		},
     "PID_AI_0JB_AO_0JB":
@@ -37,11 +37,11 @@
 					{"Name": "SHUTDOWN_TABLE_10-ROW", "Tags": ["AI"]},
 					{"Name": "INST_AI_2W", "Tags": ["AI"]},
                     {"Name": "PNL_3-TERM_24VDC", "Tags": ["AI"]},
-					{"Name": "MOD_1-TERM", "Tags": ["AI", "CONTROLLER"]},
+					{"Name": "MOD_1-TERM-BPCS", "Tags": ["AI", "CONTROLLER"]},
 					{"Name": "INST_AO_2W", "Tags": ["AO"]},
 					{"Name": "BUTTERFLY_DIAPHRAGM", "Tags": ["VALVE"]},
 					{"Name": "PNL_3-TERM", "Tags": ["AO"]},
-					{"Name": "MOD_2-TERM", "Tags": ["AO", "CONTROLLER"]}
+					{"Name": "MOD_2-TERM-BPCS", "Tags": ["AO", "CONTROLLER"]}
 				]
 		}
 }

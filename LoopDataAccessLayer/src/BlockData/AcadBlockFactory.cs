@@ -23,16 +23,16 @@
                 case "PNL_3-TERM":
                     return new PNL_3_TERM(this.dataLoader) { Name = blockMap.Name, Tag = tagMap[blockMap.Tags[0]] };
                 
-                case "MOD_1-TERM":
-                    return new MOD_1_TERM(this.dataLoader)
+                case "MOD_1-TERM_1-BPCS":
+                    return new MOD_1_TERM_1_BPCS(this.dataLoader)
                     {
                         Name = blockMap.Name,
                         Tag = tagMap[blockMap.Tags[0]],
                         ControllerTag = tagMap[blockMap.Tags[1]],
                     };
                 
-                case "MOD_2-TERM":
-                    return new MOD_2_TERM(this.dataLoader)
+                case "MOD_2-TERM_1-BPCS":
+                    return new MOD_2_TERM_1_BPCS(this.dataLoader)
                     {
                         Name = blockMap.Name,
                         Tag = tagMap[blockMap.Tags[0]],
