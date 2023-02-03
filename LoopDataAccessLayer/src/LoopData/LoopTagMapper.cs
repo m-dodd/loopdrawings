@@ -10,9 +10,6 @@ namespace LoopDataAccessLayer
 {
     public class LoopTagMapper
     {
-        // I have a problem whereby the titleblock will be defined in the ui but every drawing will need it
-        // so it needs to propagate down to the block builder - but how?
-        // public static TitleBlockData TitleBlock { get; set; }
         private static string[] definedTagTypes = { "AI", "AO", "CONTROLLER", "VALVE" };
 
         public static Dictionary<string, string> BuildTagMap(

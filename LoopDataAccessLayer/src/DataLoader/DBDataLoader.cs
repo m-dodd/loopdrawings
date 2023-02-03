@@ -19,11 +19,10 @@ namespace LoopDataAccessLayer
                       // I'm thinking of a log file message or something, but for now, I don't want it
                       .Where(x => (x.Loop != "---") && (x.Loop != null) && (x.Looptemplate != null))
                       .Select(loop => new LoopNoTemplatePair
-                      {
-                          LoopNo = loop.Loop ?? string.Empty,
-                          Template = loop.Looptemplate ?? string.Empty,
-                      })
-                      //.AsEnumerable();
+                                      {
+                                          LoopNo = loop.Loop ?? string.Empty,
+                                          Template = loop.Looptemplate ?? string.Empty,
+                                      })
                       .ToList();
         }
 

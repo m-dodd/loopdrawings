@@ -16,22 +16,31 @@ namespace LoopDataAccessLayer
 
         public TemplateConfig GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
         {
-            switch (template.TemplateName)
+            //switch (template.TemplateName)
+            //{
+            //    case "XMITTER":
+            //        return GetXmitterTemplate(template, tagMap);
+                
+            //    case "PID_LOOP":
+            //        return GetPidTemplate(template, tagMap); ;
+                
+            //    default:
+            //        return template;
+            //}
+            if (template.TemplateName.Contains("XMITER"))
             {
-                case "XMITTER":
-                    return GetXmitterTemplate(template, tagMap);
-                
-                case "PID_LOOP":
-                    return GetPidTemplate(template, tagMap); ;
-                
-                default:
-                    return template;
+                return GetXmitterTemplate(template, tagMap);
+            }
+            else
+            {
+                return template;
             }
         }
 
         private TemplateConfig GetXmitterTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
         {
             // create XMITTER template selection logic
+            int numberOfJbs = CountNumberJbs(tagMap["AI"]);
             return template;
         }
 
@@ -40,6 +49,19 @@ namespace LoopDataAccessLayer
             // create PID_LOOP template selection logic
             // PID_LOOP needs to look at number of JB's as well as valve type
             return template;
+        }
+
+        private int CountNumberJbs(string tag)
+        {
+            var rows = dataLoader.GetJBRows(tag);
+            if (rows is not null)
+            {
+                return rows.Select(r => ExcelHelper.GetRowString(r, ExcelJBColumns.JBTag))
+                           .Distinct()
+                           .Count();
+            }
+
+            return 0;
         }
 
 

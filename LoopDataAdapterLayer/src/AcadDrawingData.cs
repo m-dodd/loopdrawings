@@ -8,6 +8,5 @@ namespace LoopDataAdapterLayer
 {
     public class AcadDrawingData : AcadBaseDrawingData<AcadBlockData>
     {
-        //public List<AcadBlockData> Blocks { get; set; } = new List<AcadBlockData>();
     }
 }
