@@ -36,15 +36,21 @@ namespace LoopDrawingAcadUI
 
         private void ProcessBlockRefAttributes(BlockReference br, Dictionary<string, string> attributeData)
         {
+            Database oldDb = HostApplicationServices.WorkingDatabase;
+            HostApplicationServices.WorkingDatabase = db;
             foreach (ObjectId attributeId in br.AttributeCollection)
             {
-                AttributeReference ar = tr.GetObject(attributeId, OpenMode.ForWrite) as AttributeReference; // get first attribute reference
+                AttributeReference ar = tr.GetObject(attributeId, OpenMode.ForWrite) as AttributeReference;
                 if (attributeData.ContainsKey(ar.Tag))
                 {
                     ar.TextString = attributeData[ar.Tag];
+                    ar.AdjustAlignment(db);
                 }
             }
+            HostApplicationServices.WorkingDatabase = oldDb;
         }
+
+
         private BlockReference GetAcadBlockReference(string blockName)
         {
             BlockTable bt = GetBlocktable();
