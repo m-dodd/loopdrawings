@@ -8,6 +8,6 @@ namespace LoopDataAccessLayer
 {
     public interface ITemplatePicker
     {
-        TemplateConfig GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap);
+        TemplateConfig? GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap);
     }
 }
