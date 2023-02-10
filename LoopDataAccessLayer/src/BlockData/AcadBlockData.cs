@@ -9,9 +9,9 @@ namespace LoopDataAccessLayer
 {
     public abstract class BlockDataMappable : AcadBlockData, IMappableBlock
     {
-        protected readonly DataLoader dataLoader;
+        protected readonly IDataLoader dataLoader;
 
-        public BlockDataMappable(DataLoader dataLoader)
+        public BlockDataMappable(IDataLoader dataLoader)
         {
             this.dataLoader = dataLoader;
         }
@@ -22,7 +22,7 @@ namespace LoopDataAccessLayer
     public abstract class BlockDataExcel : BlockDataMappable
     {
 
-        public BlockDataExcel(DataLoader dataLoader) : base(dataLoader) { }
+        public BlockDataExcel(IDataLoader dataLoader) : base(dataLoader) { }
 
         public override void MapData()
         {
@@ -35,7 +35,7 @@ namespace LoopDataAccessLayer
 
     public abstract class BlockDataDB : BlockDataMappable
     {
-        public BlockDataDB(DataLoader dataLoader) : base(dataLoader) { }
+        public BlockDataDB(IDataLoader dataLoader) : base(dataLoader) { }
 
         public override void MapData()
         {
@@ -48,7 +48,7 @@ namespace LoopDataAccessLayer
 
     public abstract class BlockDataExcelDB : BlockDataMappable
     {
-        public BlockDataExcelDB(DataLoader dataLoader) : base(dataLoader) { }
+        public BlockDataExcelDB(IDataLoader dataLoader) : base(dataLoader) { }
 
         public override void MapData()
         {
@@ -63,13 +63,13 @@ namespace LoopDataAccessLayer
 
     public class EMPTY_BLOCK : BlockDataMappable
     {
-        public EMPTY_BLOCK(DataLoader dataLoader) : base(dataLoader) { }
+        public EMPTY_BLOCK(IDataLoader dataLoader) : base(dataLoader) { }
         public override void MapData() { }
     }
 
     public class TITLE_BLOCK : BlockDataMappable
     {
-        public TITLE_BLOCK(DataLoader dataLoader) : base(dataLoader) 
+        public TITLE_BLOCK(IDataLoader dataLoader) : base(dataLoader) 
         {
         }
 
@@ -93,7 +93,7 @@ namespace LoopDataAccessLayer
 
     public class JB_3_TERM_SINGLE : BlockDataExcel
     {
-        public JB_3_TERM_SINGLE(DataLoader dataLoader) : base(dataLoader) { }
+        public JB_3_TERM_SINGLE(IDataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchExcelData()
         {
@@ -120,7 +120,7 @@ namespace LoopDataAccessLayer
 
     public class PNL_3_TERM_24VDC : BlockDataExcel
     {
-        public PNL_3_TERM_24VDC(DataLoader dataLoader) : base(dataLoader) { }
+        public PNL_3_TERM_24VDC(IDataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchExcelData()
         {
@@ -145,7 +145,7 @@ namespace LoopDataAccessLayer
 
     public class PNL_3_TERM : PNL_3_TERM_24VDC
     {
-        public PNL_3_TERM(DataLoader dataLoader) : base(dataLoader) { }
+        public PNL_3_TERM(IDataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchExcelData()
         {
@@ -222,7 +222,7 @@ namespace LoopDataAccessLayer
 
     public class INST_AI_2W : BlockDataExcelDB
     {
-        public INST_AI_2W(DataLoader dataLoader) : base(dataLoader) { }
+        public INST_AI_2W(IDataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
         {
@@ -274,7 +274,7 @@ namespace LoopDataAccessLayer
 
     public class INST_AO_2W : INST_AI_2W
     {
-        public INST_AO_2W(DataLoader dataLoader) : base(dataLoader) { }
+        public INST_AO_2W(IDataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
         {
@@ -294,7 +294,7 @@ namespace LoopDataAccessLayer
 
     public class BUTTERFLY_DIAPHRAGM : BlockDataDB
     {
-        public BUTTERFLY_DIAPHRAGM(DataLoader dataLoader) : base(dataLoader) { }
+        public BUTTERFLY_DIAPHRAGM(IDataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
         {

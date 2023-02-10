@@ -1,10 +1,10 @@
 ﻿namespace LoopDataAccessLayer
 {
-    public class AcadBlockFactory
+    public class AcadBlockFactory : IAcadBlockFactory
     {
-        private readonly DataLoader dataLoader;
+        private readonly IDataLoader dataLoader;
 
-        public AcadBlockFactory(DataLoader dataLoader)
+        public AcadBlockFactory(IDataLoader dataLoader)
         {
             this.dataLoader = dataLoader;
         }

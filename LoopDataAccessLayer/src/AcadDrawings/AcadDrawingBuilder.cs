@@ -10,56 +10,71 @@ namespace LoopDataAccessLayer
     public class AcadDrawingBuilder : IAcadDrawingBuilder
     {
         
-        private readonly DataLoader dataLoader;
+        private readonly IDataLoader dataLoader;
+        private readonly ITemplatePicker templatePicker;
+        private readonly IAcadBlockFactory blockFactory;
         private readonly LoopDataConfig loopConfig;
 
-        public AcadDrawingBuilder(DataLoader dataLoader, LoopDataConfig loopConfig)
+        public AcadDrawingBuilder(
+            IDataLoader dataLoader,
+            LoopDataConfig loopConfig,
+            ITemplatePicker templatePicker,
+            IAcadBlockFactory blockFactory
+            )
         {
             this.dataLoader = dataLoader;
             this.loopConfig = loopConfig;
+            this.templatePicker = templatePicker;
+            this.blockFactory = blockFactory;
         }
 
         public AcadDrawingDataMappable? BuildDrawing(LoopNoTemplatePair loop)
         {
-            if (loopConfig.TemplateDefs.TryGetValue(loop.Template, out TemplateConfig? template))
+            var template = GetTemplate(loop);
+            if (template is null)
             {
-                return CreateDrawing(loop, template);
+                return null;
             }
-            return null;
+
+            var tagMap = GetLoopTagMap(loop, template);
+            if (tagMap.Count == 0)
+            {
+                return null;
+            }
+
+            var correctTemplate = GetCorrectTemplate(template, tagMap);
+            if (correctTemplate is null)
+            {
+                return null;
+            }
+
+            return ConstructDrawing(loop, correctTemplate, tagMap);
+
         }
 
-        private AcadDrawingDataMappable? CreateDrawing(LoopNoTemplatePair loop, TemplateConfig template)
+        private TemplateConfig? GetTemplate(LoopNoTemplatePair loop)
         {
-            Dictionary<string, string> tagMap = BuildLoopTagMap(loop, template);
-            
-            if (tagMap.Count > 0)
-            {
-                return ConstructDrawing(loop, 
-                                        GetTemplateToUse(template, tagMap),
-                                        tagMap);
-            }
-            return null;
+            return loopConfig.TemplateDefs.TryGetValue(loop.Template, out TemplateConfig? template)
+                ? template
+                : null;
         }
 
-        private TemplateConfig GetTemplateToUse(TemplateConfig template, Dictionary<string, string> tagMap)
+        private TemplateConfig? GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
         {
-            TemplatePicker templatePicker = new(dataLoader);
             return templatePicker.GetCorrectTemplate(template, tagMap);
         }
 
-
         private AcadDrawingDataMappable ConstructDrawing(LoopNoTemplatePair loop, TemplateConfig template, Dictionary<string, string> tagMap)
         {
-            string drawingName = BuildDrawingIdentifier(loop);
-            dataLoader.TitleBlock.DrawingName = drawingName;
+            var blocks = BuildBlocks(template, tagMap);
+            var drawingName = BuildDrawingIdentifier(loop);
 
-            List<IMappableBlock> blocks = BuildBlocks(template, tagMap);
-            AcadDrawingDataMappable drawing = new()
+            var drawing = new AcadDrawingDataMappable
             {
                 Blocks = blocks,
                 LoopID = loop.LoopNo,
                 TemplateName = template.TemplateName,
-                TemplateDrawingFileName = Path.Combine(loopConfig.TemplateDrawingPath, template.TemplateFileName),
+                TemplateDrawingFileName = BuildTemplateDrawingName(template),
                 OutputDrawingFileName = BuildOutputDrawingName(drawingName)
             };
             drawing.MapData();
@@ -74,12 +89,17 @@ namespace LoopDataAccessLayer
             return Path.Combine(loopConfig.OutputDrawingPath, name);
         }
 
+        private string BuildTemplateDrawingName(TemplateConfig template)
+        {
+            return Path.Combine(loopConfig.TemplateDrawingPath, template.TemplateFileName);
+        }
+
         private string BuildDrawingIdentifier(LoopNoTemplatePair loop) 
         {
             return loopConfig.SiteID + "-" + loop.LoopNo;
         }
 
-        private Dictionary<string, string> BuildLoopTagMap(LoopNoTemplatePair loop, TemplateConfig template)
+        private Dictionary<string, string> GetLoopTagMap(LoopNoTemplatePair loop, TemplateConfig template)
         {
             List<LoopTagData> tags = dataLoader.GetLoopTags(loop);
             if (tags.Count > 0) 
@@ -95,19 +115,22 @@ namespace LoopDataAccessLayer
 
         private List<IMappableBlock> BuildBlocks(TemplateConfig template, Dictionary<string, string> tagMap)
         {
-            List<IMappableBlock> blocks = new();
-            AcadBlockFactory blockFactory = new(dataLoader);
-            foreach (BlockMapData blockMap in template.BlockMap)
-            {
-                IMappableBlock block = blockFactory.GetBlock(blockMap, tagMap);
-                
-                if (block is not EMPTY_BLOCK)
-                {
-                    blocks.Add(block);
-                }
-            }
+            //List<IMappableBlock> blocks = new();
+            //foreach (BlockMapData blockMap in template.BlockMap)
+            //{
+            //    IMappableBlock block = blockFactory.GetBlock(blockMap, tagMap);
 
-            return blocks;
+            //    if (block is not EMPTY_BLOCK)
+            //    {
+            //        blocks.Add(block);
+            //    }
+            //}
+
+            //return blocks;
+            return template.BlockMap
+                .Select(blockMap => (IMappableBlock)blockFactory.GetBlock(blockMap, tagMap))
+                .Where(block => block is not EMPTY_BLOCK)
+                .ToList();
         }
     }
 }

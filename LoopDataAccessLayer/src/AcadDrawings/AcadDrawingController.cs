@@ -13,11 +13,11 @@ namespace LoopDataAccessLayer
     {
         
         private readonly LoopDataConfig loopConfig;
-        private readonly DataLoader dataLoader;
+        private readonly IDataLoader dataLoader;
 
         public List<AcadDrawingDataMappable> Drawings { get; set; }
 
-        public AcadDrawingController(DataLoader dataLoader, LoopDataConfig loopConfig)
+        public AcadDrawingController(IDataLoader dataLoader, LoopDataConfig loopConfig)
         {
             this.dataLoader = dataLoader;
             this.loopConfig = loopConfig;
@@ -26,7 +26,9 @@ namespace LoopDataAccessLayer
 
         public void BuildDrawings()
         {
-            AcadDrawingBuilder drawingBuilder = new(dataLoader, loopConfig);
+            AcadBlockFactory blockFactory = new(dataLoader);
+            TemplatePicker templatePicker = new(dataLoader, loopConfig);
+            AcadDrawingBuilder drawingBuilder = new(dataLoader, loopConfig, templatePicker, blockFactory);
             foreach (LoopNoTemplatePair loop in dataLoader.GetLoops())
             {
                 AcadDrawingDataMappable? drawing = drawingBuilder.BuildDrawing(loop);

@@ -7,10 +7,10 @@ namespace LoopDataAccessLayer
 {
     public class TemplatePicker : ITemplatePicker
     {
-        private readonly DataLoader dataLoader;
+        private readonly IDataLoader dataLoader;
         private readonly LoopDataConfig loopConfig;
 
-        public TemplatePicker(DataLoader dataLoader, LoopDataConfig loopConfig)
+        public TemplatePicker(IDataLoader dataLoader, LoopDataConfig loopConfig)
         {
             this.dataLoader = dataLoader;
             this.loopConfig = loopConfig;
@@ -36,14 +36,10 @@ namespace LoopDataAccessLayer
 
         private TemplateConfig? GetTemplate(string templateName)
         {
-            if (loopConfig.TemplateDefs.TryGetValue(templateName.ToUpper(), out TemplateConfig? template))
-            {
-                return template;
-            }
-            else
-            {
-                return null;
-            }
+            
+            return loopConfig.TemplateDefs.TryGetValue(templateName.ToUpper(), out TemplateConfig? template)
+                ? template
+                : null;
         }
 
         private TemplateConfig? GetXmitterTemplate(Dictionary<string, string> tagMap)
