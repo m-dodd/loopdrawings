@@ -2,6 +2,7 @@
 using LoopDataAdapterLayer;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LoopDrawingAcadUI
 {
@@ -18,20 +19,47 @@ namespace LoopDrawingAcadUI
 
         public void ProcessBlocks(IEnumerable<AcadBlockData> blocks)
         {
-            //  this is extremely inefficient
-            //      - for every block in my list of blocks I have to loop through the autocad block table to find it
-            //      - a better way would be to looop through the block table and check to see if that block is in my list
-            //      - I would need to first loop this list once and turn it into a dictionary
-            //          - which then begs the question - should I just create it as a dictionary in the data generation phase?
             foreach (AcadBlockData block in blocks)
             {
                 ProcessBlock(block);
             }
         }
+
+        //private void ProcessBlocksMUCH_FASTER_I_THINK(IEnumerable<AcadBlockData> blocks)
+        //{
+        //    // this function would replace ProcessBlocks and would allow me to delete some other functions here
+        //    // I think this shoudl be much much faster... I base this on the assumption that tr.GetObject as BlockTableRecord must be somewhat slow
+        //    // which means my `GetAcadBlockReference` function is super slow - this makes that function obsolte
+
+        //    // convert list to dict to look up blockdata when a block is found
+        //    Dictionary<string, AcadBlockData> blockDict = blocks.ToDictionary(b => b.Name, b => b);
+            
+        //    // loop through block table ONCE - this is the main difference
+        //    foreach (ObjectId id in GetBlocktable())
+        //    {
+        //        BlockTableRecord btr = tr.GetObject(id, OpenMode.ForRead) as BlockTableRecord;
+                
+        //        // is this block part of our data?
+        //        if (blockDict.TryGetValue(btr.Name, out var block))
+        //        {
+        //            ProcessBlockRefAttributes(GetBlockReference2(btr), block.Attributes);
+        //        }
+        //    }
+        //}
+
+        //private BlockReference GetBlockReference2(BlockTableRecord btr)
+        //{
+        //    var ids = btr.GetBlockReferenceIds(true, true) as ObjectIdCollection;
+        //    return tr.GetObject(ids[0], OpenMode.ForRead) as BlockReference;
+        //}
+
         public void ProcessBlock(AcadBlockData block)
         {
             BlockReference br = GetAcadBlockReference(block.Name);
-            ProcessBlockRefAttributes(br, block.Attributes);
+            if (br != null)
+            {
+                ProcessBlockRefAttributes(br, block.Attributes);
+            }
         }
 
         private void ProcessBlockRefAttributes(BlockReference br, Dictionary<string, string> attributeData)
@@ -64,22 +92,16 @@ namespace LoopDrawingAcadUI
         private BlockReference GetAcadBlockReference(string blockName)
         {
             BlockTable bt = GetBlocktable();
-            foreach (ObjectId id in bt)
+            if (bt.Has(blockName))
             {
-                BlockTableRecord btr = tr.GetObject(id, OpenMode.ForRead) as BlockTableRecord;
-                if (btr.Name.ToLower() == blockName.ToLower())
-                {
-                    var ids = btr.GetBlockReferenceIds(true, true) as ObjectIdCollection;
-                    // if ids.Count == 1 then there is only one instance of that block in the drawing
-                    // but with our new idea of seperate blocks it is easily possible to have multiple instances 
-                    // of each block - not sure how I will deal with each of these references
-                    // obviously I can return a collection (list), but then I need to know what they are
-                    // for now just assume one instance per drawing
-                    return tr.GetObject(ids[0], OpenMode.ForRead) as BlockReference;
-                }
+                BlockTableRecord btr = (BlockTableRecord)tr.GetObject(bt[blockName], OpenMode.ForRead);
+                var ids = btr.GetBlockReferenceIds(true, true);
+                return tr.GetObject(ids[0], OpenMode.ForRead) as BlockReference;
             }
-
-            return null;
+            else
+            {
+                return null;
+            }
         }
 
         private BlockTable GetBlocktable()
