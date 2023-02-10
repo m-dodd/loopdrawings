@@ -43,7 +43,12 @@
                     return new INST_AI_2W(dataLoader) { Name = blockMap.Name, Tag = tagMap[blockMap.Tags[0]] };
                 
                 case "INST_AO_2W":
-                    return new INST_AO_2W(dataLoader) { Name = blockMap.Name, Tag = tagMap[blockMap.Tags[0]] };
+                    return new INST_AO_2W(dataLoader)
+                    {
+                        Name = blockMap.Name,
+                        Tag = tagMap[blockMap.Tags[0]],
+                        ValveTag = tagMap[blockMap.Tags[1]]
+                    };
 
                 case "BUTTERFLY_DIAPHRAGM":
                     return new BUTTERFLY_DIAPHRAGM(dataLoader) { Name = blockMap.Name, Tag = tagMap[blockMap.Tags[0]] };

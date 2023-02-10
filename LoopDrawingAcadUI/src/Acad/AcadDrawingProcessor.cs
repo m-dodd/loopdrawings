@@ -6,8 +6,7 @@ namespace LoopDrawingAcadUI
     {
         public void ProcessDrawing(AcadDrawing drawing)
         {
-            AcadBlockProcessor blockProcessor =
-                new AcadBlockProcessor(drawing.Database, drawing.Transaction);
+            AcadBlockProcessor blockProcessor = new AcadBlockProcessor(drawing.Database, drawing.Transaction);
             blockProcessor.ProcessBlocks(drawing.AcadDrawingData.Blocks);
             drawing.Save();
         }

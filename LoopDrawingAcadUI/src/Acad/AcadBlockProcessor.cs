@@ -25,34 +25,6 @@ namespace LoopDrawingAcadUI
             }
         }
 
-        //private void ProcessBlocksMUCH_FASTER_I_THINK(IEnumerable<AcadBlockData> blocks)
-        //{
-        //    // this function would replace ProcessBlocks and would allow me to delete some other functions here
-        //    // I think this shoudl be much much faster... I base this on the assumption that tr.GetObject as BlockTableRecord must be somewhat slow
-        //    // which means my `GetAcadBlockReference` function is super slow - this makes that function obsolte
-
-        //    // convert list to dict to look up blockdata when a block is found
-        //    Dictionary<string, AcadBlockData> blockDict = blocks.ToDictionary(b => b.Name, b => b);
-            
-        //    // loop through block table ONCE - this is the main difference
-        //    foreach (ObjectId id in GetBlocktable())
-        //    {
-        //        BlockTableRecord btr = tr.GetObject(id, OpenMode.ForRead) as BlockTableRecord;
-                
-        //        // is this block part of our data?
-        //        if (blockDict.TryGetValue(btr.Name, out var block))
-        //        {
-        //            ProcessBlockRefAttributes(GetBlockReference2(btr), block.Attributes);
-        //        }
-        //    }
-        //}
-
-        //private BlockReference GetBlockReference2(BlockTableRecord btr)
-        //{
-        //    var ids = btr.GetBlockReferenceIds(true, true) as ObjectIdCollection;
-        //    return tr.GetObject(ids[0], OpenMode.ForRead) as BlockReference;
-        //}
-
         public void ProcessBlock(AcadBlockData block)
         {
             BlockReference br = GetAcadBlockReference(block.Name);
