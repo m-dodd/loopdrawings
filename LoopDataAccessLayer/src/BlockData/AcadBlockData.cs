@@ -159,7 +159,7 @@ namespace LoopDataAccessLayer
     {
         public string ControllerTag { get; set; } = string.Empty;
 
-        public MOD_1_TERM_1_BPCS(DataLoader dataLoader) : base(dataLoader) { }
+        public MOD_1_TERM_1_BPCS(IDataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
         {
@@ -203,7 +203,7 @@ namespace LoopDataAccessLayer
 
     public class MOD_2_TERM_1_BPCS : MOD_1_TERM_1_BPCS
     {
-        public MOD_2_TERM_1_BPCS(DataLoader dataLoader) : base(dataLoader) { }
+        public MOD_2_TERM_1_BPCS(IDataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchExcelData()
         {

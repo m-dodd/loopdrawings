@@ -36,7 +36,17 @@ namespace LoopDrawingAcadUI
 
         private void ProcessBlockRefAttributes(BlockReference br, Dictionary<string, string> attributeData)
         {
-            Database oldDb = HostApplicationServices.WorkingDatabase;
+            // We had an issue where just replacing the text in the attribute was causing the alignment
+            // to be wrong. It has to do with confusion between what database Acad thinks it should be working
+            // with and the fact that we are "sideloading" our database.
+            //
+            // Solution:
+            //      - save a copy of the current database
+            //      - replace it with our database
+            //      - AdjustAlignment
+            //      - restore original database
+
+            Database activeDB = HostApplicationServices.WorkingDatabase;
             HostApplicationServices.WorkingDatabase = db;
             foreach (ObjectId attributeId in br.AttributeCollection)
             {
@@ -47,7 +57,7 @@ namespace LoopDrawingAcadUI
                     ar.AdjustAlignment(db);
                 }
             }
-            HostApplicationServices.WorkingDatabase = oldDb;
+            HostApplicationServices.WorkingDatabase = activeDB;
         }
 
 
