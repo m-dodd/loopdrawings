@@ -20,7 +20,5 @@ namespace LoopDataAccessLayer
                 block.MapData();
             }
         }
-        
-        
     }
 }

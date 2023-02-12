@@ -102,7 +102,7 @@ namespace LoopDataAccessLayer
             var rows = dataLoader.GetJBRows(tag);
             if (rows is not null)
             {
-                return rows.Select(r => ExcelHelper.GetRowString(r, ExcelJBColumns.JBTag))
+                return rows.Select(r => ExcelHelper.GetRowString(r, dataLoader.ExcelJBCols.JBTag))
                            .Distinct()
                            .Count();
             }

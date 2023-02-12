@@ -10,17 +10,7 @@ namespace LoopDataAccessLayer
 {
     public static class ExcelHelper
     {
-        internal static string GetRowString(IXLRow row, ExcelIOColumns col)
-        {
-            return GetRowStringHelper(row, (int)col);
-        }
-
-        internal static string GetRowString(IXLRow row, ExcelJBColumns col)
-        {
-            return GetRowStringHelper(row, (int)col);
-        }
-
-        private static string GetRowStringHelper(IXLRow row, int col)
+        public static string GetRowString(IXLRow row, int col)
         {
             return row.Cell(col)?.GetString() ?? string.Empty;
         }
@@ -39,5 +29,7 @@ namespace LoopDataAccessLayer
 
             return false;
         }
+
+        
     }
 }
