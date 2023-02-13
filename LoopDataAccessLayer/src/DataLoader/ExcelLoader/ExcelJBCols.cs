@@ -17,13 +17,5 @@ namespace LoopDataAccessLayer
         public IExcelJBRowSide<int> LeftSide { get; set; }
         public IExcelJBRowSide<int> RightSide { get; set; }
 #pragma warning restore CS8618
-        //public int LeftCable { get; set; } = -1;
-        //public int LeftCore { get; set; } = -1;
-        //public int LeftColor { get; set; } = -1;
-        //public int LeftWireTag { get; set; } = -1;
-        //public int RightCable { get; set; } = -1;
-        //public int RightCore { get; set; } = -1;
-        //public int RightColor { get; set; } = -1;
-        //public int RightTag { get; set; } = -1;
     }
 }
