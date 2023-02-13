@@ -37,6 +37,7 @@
                         Name = blockMap.Name,
                         Tag = tagMap[blockMap.Tags[0]],
                         ControllerTag = tagMap[blockMap.Tags[1]],
+                        AITag = tagMap[blockMap.Tags[2]],
                     };
                 
                 case "INST_AI_2W":

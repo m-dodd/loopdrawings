@@ -43,6 +43,7 @@
             this.lblResultOutputPath = new System.Windows.Forms.Label();
             this.btnResultOutputPath = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.btnLoadTestConfig = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.SuspendLayout();
@@ -51,7 +52,7 @@
             // 
             this.btnConfigFile.Location = new System.Drawing.Point(4, 12);
             this.btnConfigFile.Name = "btnConfigFile";
-            this.btnConfigFile.Size = new System.Drawing.Size(125, 31);
+            this.btnConfigFile.Size = new System.Drawing.Size(143, 31);
             this.btnConfigFile.TabIndex = 8;
             this.btnConfigFile.Text = "Config File";
             this.btnConfigFile.UseVisualStyleBackColor = true;
@@ -60,7 +61,7 @@
             // lblConfigFile
             // 
             this.lblConfigFile.AutoSize = true;
-            this.lblConfigFile.Location = new System.Drawing.Point(143, 20);
+            this.lblConfigFile.Location = new System.Drawing.Point(157, 20);
             this.lblConfigFile.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblConfigFile.Name = "lblConfigFile";
             this.lblConfigFile.Size = new System.Drawing.Size(74, 15);
@@ -81,7 +82,7 @@
             // lblTemplatePath
             // 
             this.lblTemplatePath.AutoSize = true;
-            this.lblTemplatePath.Location = new System.Drawing.Point(143, 94);
+            this.lblTemplatePath.Location = new System.Drawing.Point(157, 94);
             this.lblTemplatePath.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTemplatePath.Name = "lblTemplatePath";
             this.lblTemplatePath.Size = new System.Drawing.Size(92, 15);
@@ -92,7 +93,7 @@
             // 
             this.btnTemplatePath.Location = new System.Drawing.Point(4, 86);
             this.btnTemplatePath.Name = "btnTemplatePath";
-            this.btnTemplatePath.Size = new System.Drawing.Size(125, 31);
+            this.btnTemplatePath.Size = new System.Drawing.Size(143, 31);
             this.btnTemplatePath.TabIndex = 13;
             this.btnTemplatePath.Text = "Template Path";
             this.btnTemplatePath.UseVisualStyleBackColor = true;
@@ -101,7 +102,7 @@
             // lblDrawingOutputPath
             // 
             this.lblDrawingOutputPath.AutoSize = true;
-            this.lblDrawingOutputPath.Location = new System.Drawing.Point(143, 137);
+            this.lblDrawingOutputPath.Location = new System.Drawing.Point(157, 137);
             this.lblDrawingOutputPath.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblDrawingOutputPath.Name = "lblDrawingOutputPath";
             this.lblDrawingOutputPath.Size = new System.Drawing.Size(126, 15);
@@ -112,7 +113,7 @@
             // 
             this.btnOutputPath.Location = new System.Drawing.Point(4, 123);
             this.btnOutputPath.Name = "btnOutputPath";
-            this.btnOutputPath.Size = new System.Drawing.Size(125, 43);
+            this.btnOutputPath.Size = new System.Drawing.Size(143, 43);
             this.btnOutputPath.TabIndex = 15;
             this.btnOutputPath.Text = "Drawing Output Path";
             this.btnOutputPath.UseVisualStyleBackColor = true;
@@ -121,7 +122,7 @@
             // lblSiteID
             // 
             this.lblSiteID.AutoSize = true;
-            this.lblSiteID.Location = new System.Drawing.Point(143, 222);
+            this.lblSiteID.Location = new System.Drawing.Point(157, 222);
             this.lblSiteID.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSiteID.Name = "lblSiteID";
             this.lblSiteID.Size = new System.Drawing.Size(19, 15);
@@ -161,7 +162,7 @@
             // lblExcelFile
             // 
             this.lblExcelFile.AutoSize = true;
-            this.lblExcelFile.Location = new System.Drawing.Point(143, 57);
+            this.lblExcelFile.Location = new System.Drawing.Point(157, 57);
             this.lblExcelFile.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblExcelFile.Name = "lblExcelFile";
             this.lblExcelFile.Size = new System.Drawing.Size(65, 15);
@@ -172,7 +173,7 @@
             // 
             this.btnExcelFile.Location = new System.Drawing.Point(3, 49);
             this.btnExcelFile.Name = "btnExcelFile";
-            this.btnExcelFile.Size = new System.Drawing.Size(125, 31);
+            this.btnExcelFile.Size = new System.Drawing.Size(143, 31);
             this.btnExcelFile.TabIndex = 21;
             this.btnExcelFile.Text = "Excel File";
             this.btnExcelFile.UseVisualStyleBackColor = true;
@@ -181,7 +182,7 @@
             // lblResultOutputPath
             // 
             this.lblResultOutputPath.AutoSize = true;
-            this.lblResultOutputPath.Location = new System.Drawing.Point(142, 186);
+            this.lblResultOutputPath.Location = new System.Drawing.Point(156, 186);
             this.lblResultOutputPath.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblResultOutputPath.Name = "lblResultOutputPath";
             this.lblResultOutputPath.Size = new System.Drawing.Size(114, 15);
@@ -192,7 +193,7 @@
             // 
             this.btnResultOutputPath.Location = new System.Drawing.Point(3, 172);
             this.btnResultOutputPath.Name = "btnResultOutputPath";
-            this.btnResultOutputPath.Size = new System.Drawing.Size(125, 43);
+            this.btnResultOutputPath.Size = new System.Drawing.Size(143, 43);
             this.btnResultOutputPath.TabIndex = 19;
             this.btnResultOutputPath.Text = "Result Output Path";
             this.btnResultOutputPath.UseVisualStyleBackColor = true;
@@ -206,11 +207,24 @@
             this.panel3.Size = new System.Drawing.Size(755, 75);
             this.panel3.TabIndex = 21;
             // 
+            // btnLoadTestConfig
+            // 
+            this.btnLoadTestConfig.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.btnLoadTestConfig.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnLoadTestConfig.Location = new System.Drawing.Point(7, 361);
+            this.btnLoadTestConfig.Name = "btnLoadTestConfig";
+            this.btnLoadTestConfig.Size = new System.Drawing.Size(242, 43);
+            this.btnLoadTestConfig.TabIndex = 22;
+            this.btnLoadTestConfig.Text = "Load Test Config";
+            this.btnLoadTestConfig.UseVisualStyleBackColor = false;
+            this.btnLoadTestConfig.Click += new System.EventHandler(this.btnLoadTestConfig_Click);
+            // 
             // frmLoopUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 356);
+            this.ClientSize = new System.Drawing.Size(800, 424);
+            this.Controls.Add(this.btnLoadTestConfig);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Name = "frmLoopUI";
@@ -239,5 +253,6 @@
         private Label lblExcelFile;
         private Button btnExcelFile;
         private Panel panel3;
+        private Button btnLoadTestConfig;
     }
 }

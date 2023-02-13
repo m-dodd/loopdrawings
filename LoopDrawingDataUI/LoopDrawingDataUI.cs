@@ -29,11 +29,11 @@ namespace LoopDrawingDataUI
 
         private void btnBuildObjects_Click(object sender, EventArgs e)
         {
-            if(!FilesAndFoldersValid())
+            if (!FilesAndFoldersValid())
             {
                 string invalidFilesMessage = "Please check configuration. One or more paths / filenames are invalid.";
                 string invalidCaption = "Invalid Input";
-                MessageBox.Show(invalidFilesMessage, invalidCaption, MessageBoxButtons.OK , MessageBoxIcon.Error);
+                MessageBox.Show(invalidFilesMessage, invalidCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -47,11 +47,20 @@ namespace LoopDrawingDataUI
             loopConfig.OutputDrawingPath = outputDrawingPath;
             loopConfig.SiteID = siteId;
 
-            string jsonOutputFilename = Path.Combine(outputResultPath, "output_test_data.json");
             AcadDrawingController controller = new(dataLoader, loopConfig);
             controller.BuildDrawings();
-            controller.SaveDrawingsToFile(jsonOutputFilename);
+            controller.SaveDrawingsToFile(TestOutputFileName(outputResultPath));
             MessageBox.Show("Drawings completed!");
+        }
+
+        private string TestOutputFileName(string outputResultPath)
+        {
+            // wanted to create a better file name, but complexity not worht it right now
+            // want to basically add a date to the end, and then look at directory to see if it exists
+            // and if it does then add a number behind it - but hte number would have to increment
+            // so what's the real value?
+            //string date = DateTime.Now.ToString("YYYY.MM.DD");
+            return Path.Combine(outputResultPath, "output_test_data.json");
         }
 
         private void frmLoopUI_Load(object sender, EventArgs e)
@@ -78,7 +87,7 @@ namespace LoopDrawingDataUI
         private void btnOutputPath_Click(object sender, EventArgs e)
         {
             outputDrawingPath = GetFolderName();
-            lblDrawingOutputPath.Text = GetShortPath(outputDrawingPath); 
+            lblDrawingOutputPath.Text = GetShortPath(outputDrawingPath);
         }
 
         private void btnResultOutputPath_Click(object sender, EventArgs e)
@@ -92,6 +101,21 @@ namespace LoopDrawingDataUI
         {
             excelFileName = GetFileName();
             lblExcelFile.Text = GetShortPath(excelFileName);
+        }
+
+        private void btnLoadTestConfig_Click(object sender, EventArgs e)
+        {
+            configFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\loop_drawing_config_v3.json";
+            excelFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\2023.02.02 - Automation Wiring Data.xlsx";
+            templatePath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\templates";
+            outputResultPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output";
+            outputDrawingPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output";
+
+            lblConfigFile.Text = GetShortPath(configFileName);
+            lblExcelFile.Text = GetShortPath(excelFileName);
+            lblTemplatePath.Text = GetShortPath(templatePath);
+            lblDrawingOutputPath.Text = GetShortPath(outputDrawingPath);
+            lblResultOutputPath.Text = GetShortPath(outputResultPath);
         }
     }
 }

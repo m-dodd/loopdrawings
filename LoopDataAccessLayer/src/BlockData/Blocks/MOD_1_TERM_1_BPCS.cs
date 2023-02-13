@@ -35,8 +35,6 @@ namespace LoopDataAccessLayer
             Attributes["ALARM5"] = data.HiControl;
             Attributes["ALARM6"] = data.LoControl;
 
-
-
             Attributes["DRAWING_NO"] = data.PidDrawingNumber;
         }
 

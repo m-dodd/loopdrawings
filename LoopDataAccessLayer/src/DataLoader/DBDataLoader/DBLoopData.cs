@@ -4,6 +4,15 @@
     {
         public const int CALERROR = -9999;
         public const int RACKERROR = -99;
+        
+        private string failPosition;
+        private string lolo, lo, hi, hihi, hiControl, loControl;
+
+        public DBLoopData()
+        {
+            failPosition = string.Empty;
+            lolo = lo = hi = hihi = hiControl = loControl = string.Empty;
+        }
 
         public string Tag { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
@@ -20,8 +29,7 @@
         public string MinCalRange { get; set; } = CALERROR.ToString();
         public string MaxCalRange { get; set; } = CALERROR.ToString();
 
-        private string? failPosition;
-        public string? FailPosition
+        public string FailPosition
         {
             get { return failPosition; } 
             set
@@ -50,13 +58,50 @@
                 }
             }
         }
-        public string LoLoAlarm { get; set; } = string.Empty;
-        public string LoAlarm { get; set; } = string.Empty;
-        public string HiAlarm { get; set; } = string.Empty;
-        public string HiHiAlarm { get; set; } = string.Empty;
-        public string LoControl { get; set; } = string.Empty;
-        public string HiControl { get; set; } = string.Empty;
+        public string LoLoAlarm
+        {
+            get => lolo;
+            set { lolo = BuildAlarmString("LL", value); }
+        }
+
+        public string LoAlarm
+        {
+            get => lo;
+            set { lo = BuildAlarmString("L", value); }
+        }
+
+        public string HiAlarm
+        {
+            get => hi;
+            set { hi = BuildAlarmString("H", value); }
+        }
+
+        public string HiHiAlarm
+        {
+            get => hihi;
+            set { hihi = BuildAlarmString("HH", value); }
+        }
+
+        public string LoControl
+        {
+            get => loControl;
+            set { loControl = BuildAlarmString("LC", value); }
+        }
+
+        public string HiControl
+        {
+            get => hiControl;
+            set { hiControl = BuildAlarmString("HC", value); }
+        }
+        
         public string IoPanel { get; set; } = string.Empty;
+
+        private string BuildAlarmString(string prefix, string value)
+        {
+            return (string.IsNullOrEmpty(value) || value == "---")
+                ? string.Empty
+                : prefix + "=" + value;
+        }
 
         // additional fields that may be useful
         public string LoopNo { get; set; } = string.Empty;
