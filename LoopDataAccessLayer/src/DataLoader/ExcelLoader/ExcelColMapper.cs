@@ -57,7 +57,7 @@ namespace LoopDataAccessLayer
                 {
                     TerminalPlus = GetColNumber(header, "IO_TERM_PLUS") ?? -1,
                     TerminalNeg = GetColNumber(header, "IO_TERM_NEG") ?? -1,
-                    TerminalShld = GetColNumber(header, "IO_SHLD") ?? -1,
+                    TerminalShld = GetColNumber(header, "IO_TERM_SHLD") ?? -1,
                     WireTagPlus = GetColNumber(header, "IO_TAG_PLUS") ?? -1,
                     WireTagNeg = GetColNumber(header, "IO_TAG_NEG") ?? -1,
                     WireColorPlus = GetColNumber(header, "IO_COLOR_PLUS") ?? -1,
