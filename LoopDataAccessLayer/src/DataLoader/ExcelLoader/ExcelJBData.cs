@@ -24,15 +24,27 @@ namespace LoopDataAccessLayer
 
         private IExcelJBRowData<string> GetJBData(IXLRow row)
         {
-            return new ExcelJBRowData()
+            return new ExcelJBRowData<string>()
             {
                 JBTag = ExcelHelper.GetRowString(row, jbCols.JBTag),
                 TerminalStrip = ExcelHelper.GetRowString(row, jbCols.TerminalStrip),
                 Terminal = ExcelHelper.GetRowString(row, jbCols.Terminal),
                 SignalType = ExcelHelper.GetRowString(row, jbCols.SignalType),
                 DeviceTag = ExcelHelper.GetRowString(row, jbCols.DeviceTag),
-                LeftSide = new ExcelJBRowSideMapped(row, jbCols.LeftSide),
-                RightSide = new ExcelJBRowSideMapped(row, jbCols.RightSide)
+                LeftSide = new ExcelJBRowSide<string>()
+                {
+                    Cable = ExcelHelper.GetRowString(row, jbCols.LeftSide.Cable),
+                    Core = ExcelHelper.GetRowString(row, jbCols.LeftSide.Core),
+                    Color = ExcelHelper.GetRowString(row, jbCols.LeftSide.Color),
+                    WireTag = ExcelHelper.GetRowString(row, jbCols.LeftSide.WireTag)
+                },
+                RightSide = new ExcelJBRowSide<string>()
+                {
+                    Cable = ExcelHelper.GetRowString(row, jbCols.RightSide.Cable),
+                    Core = ExcelHelper.GetRowString(row, jbCols.RightSide.Core),
+                    Color = ExcelHelper.GetRowString(row, jbCols.RightSide.Color),
+                    WireTag = ExcelHelper.GetRowString(row, jbCols.RightSide.WireTag)
+                }
             };
         }
     }

@@ -11,8 +11,6 @@ namespace LoopDataAccessLayer
 
     public class DataLoader : IDataLoader
     {
-        public TitleBlockData TitleBlock { get; set; }
-
         private readonly IExcelLoader excelLoader;
         private readonly IDBLoader dbLoader;
         private readonly Dictionary<string, DBLoopData> loopData;
@@ -27,11 +25,11 @@ namespace LoopDataAccessLayer
         //private readonly ILogger logger;
 
         //public DataLoader(IExcelLoader excelLoader, IDBLoader dbLoader, ILogger logger)
-        public DataLoader(IExcelLoader excelLoader, IDBLoader dbLoader, TitleBlockData titleBlock)
+        public DataLoader(IExcelLoader excelLoader, IDBLoader dbLoader)
         {
             this.excelLoader = excelLoader ?? throw new ArgumentNullException(nameof(excelLoader));
             this.dbLoader = dbLoader ?? throw new ArgumentNullException(nameof(dbLoader));
-            this.TitleBlock = titleBlock;
+            
             loopData = new Dictionary<string, DBLoopData>();
             loopTagData = new Dictionary<string, List<LoopTagData>>();
             ioRowData = new Dictionary<string, IXLRow?>();
@@ -145,6 +143,11 @@ namespace LoopDataAccessLayer
                 jbData.Add(tag, data);
                 return data;
             }
+        }
+
+        public IExcelTitleBlockData<string> GetTitleBlockData()
+        {
+            return excelLoader.GetTitleBlockData();
         }
     }
         

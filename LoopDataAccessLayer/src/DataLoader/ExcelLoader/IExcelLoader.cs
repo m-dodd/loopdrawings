@@ -17,5 +17,7 @@ namespace LoopDataAccessLayer
 
         public IExcelIOData<string>? GetIOData(string tag);
         public List<ExcelJBData>? GetJBData(string tag);
+
+        public IExcelTitleBlockData<string> GetTitleBlockData();
     }
 }

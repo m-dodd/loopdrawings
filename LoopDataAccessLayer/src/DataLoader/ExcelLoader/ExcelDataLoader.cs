@@ -1,4 +1,6 @@
 ﻿using ClosedXML.Excel;
+using Irony.Parsing;
+using LoopDataAccessLayer.src.DataLoader.ExcelLoader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +14,22 @@ namespace LoopDataAccessLayer
 
     public class ExcelDataLoader : IExcelLoader, IDisposable
     {
-        private readonly IXLWorksheet IOws, JBws;
+        private readonly IXLWorksheet IOws, JBws, TitleBlockWS;
         private readonly XLWorkbook wb;
+        private IExcelColMapper colMapper;
+        
         private readonly IDictionary<string, IXLRow?> ioRowData;
         private readonly IDictionary<string, IXLRows?> jbRowsData;
         private readonly IDictionary<string, IExcelIOData<string>?> ioData;
         private readonly IDictionary<string, List<ExcelJBData>?> jbData;
-        //private readonly IExcelIOData<int> excelIOCols;
         
+        private IExcelTitleBlockData<string> titleBlockData;
+        private bool titleBlockDataPopulated;
+
         public IExcelJBRowData<int> ExcelJBCols { get; private set; }
         public IExcelIOData<int> ExcelIOCols { get; private set; }
+        public IExcelTitleBlockData<int> ExcelTitleBlockCols { get; private set; }
+        
 
         public ExcelDataLoader(string fileName)
         {
@@ -34,15 +42,20 @@ namespace LoopDataAccessLayer
             this.wb = new XLWorkbook(fileName);
             this.IOws = wb.Worksheet("IO_Wiring_Devices");
             this.JBws = wb.Worksheet("JB Wiring");
+            this.TitleBlockWS = wb.Worksheet("Titleblock");
+
+            colMapper = new ExcelColMapper(IOws, JBws, TitleBlockWS);
+            ExcelIOCols = colMapper.GetIOColMap();
+            ExcelJBCols = colMapper.GetJBColMap();
+            ExcelTitleBlockCols = colMapper.GetTitleBlockColMap();
+
             ioRowData = new Dictionary<string, IXLRow?>();
             jbRowsData = new Dictionary<string, IXLRows?>();
             ioData = new Dictionary<string, IExcelIOData<string>?>();
             jbData = new Dictionary<string, List<ExcelJBData>?>();
 
-
-            ExcelColMapper colMapper = new(IOws, JBws);
-            ExcelIOCols = colMapper.GetIOColMap();
-            ExcelJBCols = colMapper.GetJBColMap();
+            titleBlockData = new ExcelTitleBlockData<string>();
+            titleBlockDataPopulated = false;
         }
 
         public IXLRow? GetIORow(string tag)
@@ -87,7 +100,7 @@ namespace LoopDataAccessLayer
                 var row = GetIORow(tag);
                 if (row is not null)
                 {
-                    data = new ExcelIOData()
+                    data = new ExcelIOData<string>()
                     {
                         ModuleTerm01 = ExcelHelper.GetRowString(row, ExcelIOCols.ModuleTerm01),
                         ModuleTerm02 = ExcelHelper.GetRowString(row, ExcelIOCols.ModuleTerm02),
@@ -101,8 +114,32 @@ namespace LoopDataAccessLayer
                         JB2 = ExcelHelper.GetRowString(row, ExcelIOCols.JB2),
                         JB3 = ExcelHelper.GetRowString(row, ExcelIOCols.JB3),
 
-                        Device = new ExcelIODeviceCommonMapped(row, ExcelIOCols.Device),
-                        IO = new ExcelIODeviceCommonMapped(row, ExcelIOCols.IO)
+                        Device = new ExcelIODeviceCommon<string>()
+                        {
+                            CableTag = ExcelHelper.GetRowString(row, ExcelIOCols.Device.CableTag),
+                            TerminalPlus = ExcelHelper.GetRowString(row, ExcelIOCols.Device.TerminalPlus),
+                            TerminalNeg = ExcelHelper.GetRowString(row, ExcelIOCols.Device.TerminalNeg),
+                            TerminalShld = ExcelHelper.GetRowString(row, ExcelIOCols.Device.TerminalShld),
+                            WireTagPlus = ExcelHelper.GetRowString(row, ExcelIOCols.Device.WireTagPlus),
+                            WireTagNeg = ExcelHelper.GetRowString(row, ExcelIOCols.Device.WireTagNeg),
+                            WireColorPlus = ExcelHelper.GetRowString(row, ExcelIOCols.Device.WireColorPlus),
+                            WireColorNeg = ExcelHelper.GetRowString(row, ExcelIOCols.Device.WireColorNeg),
+                            CorePairPlus = ExcelHelper.GetRowString(row, ExcelIOCols.Device.CorePairPlus),
+                            CorePairNeg = ExcelHelper.GetRowString(row, ExcelIOCols.Device.CorePairNeg)
+                        },
+                        IO = new ExcelIODeviceCommon<string>()
+                        {
+                            CableTag = ExcelHelper.GetRowString(row, ExcelIOCols.IO.CableTag),
+                            TerminalPlus = ExcelHelper.GetRowString(row, ExcelIOCols.IO.TerminalPlus),
+                            TerminalNeg = ExcelHelper.GetRowString(row, ExcelIOCols.IO.TerminalNeg),
+                            TerminalShld = ExcelHelper.GetRowString(row, ExcelIOCols.IO.TerminalShld),
+                            WireTagPlus = ExcelHelper.GetRowString(row, ExcelIOCols.IO.WireTagPlus),
+                            WireTagNeg = ExcelHelper.GetRowString(row, ExcelIOCols.IO.WireTagNeg),
+                            WireColorPlus = ExcelHelper.GetRowString(row, ExcelIOCols.IO.WireColorPlus),
+                            WireColorNeg = ExcelHelper.GetRowString(row, ExcelIOCols.IO.WireColorNeg),
+                            CorePairPlus = ExcelHelper.GetRowString(row, ExcelIOCols.IO.CorePairPlus),
+                            CorePairNeg = ExcelHelper.GetRowString(row, ExcelIOCols.IO.CorePairNeg)
+                        }
                     };
                 }
                 else
@@ -141,27 +178,61 @@ namespace LoopDataAccessLayer
             }
         }
 
-        //private ExcelJBRowData? GetJBData(IXLRow row, string tag)
-        //{
+        public IExcelTitleBlockData<string> GetTitleBlockData()
+        {
+            return titleBlockDataPopulated ? titleBlockData : FetchTitleBlockData();
+        }
 
-        //    if (row is not null)
-        //    {
-        //        return new ExcelJBRowData()
-        //        {
-        //            JBTag = ExcelHelper.GetRowString(row, excelJBCols.JBTag),
-        //            TerminalStrip = ExcelHelper.GetRowString(row, excelJBCols.TerminalStrip),
-        //            Terminal = ExcelHelper.GetRowString(row, excelJBCols.Terminal),
-        //            SignalType = ExcelHelper.GetRowString(row, excelJBCols.SignalType),
-        //            DeviceTag = ExcelHelper.GetRowString(row, excelJBCols.DeviceTag),
-        //            LeftSide = new ExcelJBRowSideMapped(row, excelJBCols.LeftSide),
-        //            RightSide = new ExcelJBRowSideMapped(row, excelJBCols.RightSide),
-        //        };
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
+        private IXLRow? GetTitleBlockDataRow()
+        {
+            return TitleBlockWS
+                ?.Column(ExcelTitleBlockCols.SiteNumber)
+                ?.CellsUsed()
+                ?.LastOrDefault()
+                ?.WorksheetRow();
+        }
+
+        private IExcelTitleBlockData<string> FetchTitleBlockData()
+        {
+            IXLRow? row = GetTitleBlockDataRow();
+            if (row is null)
+            {
+                throw new NullReferenceException("Cannot find titleblock row data.");
+            }
+
+            titleBlockData = new ExcelTitleBlockData<string>()
+            {
+                SiteNumber = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.SiteNumber),
+                Sheet = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.Sheet),
+                MaxSheets = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.MaxSheets),
+                Project = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.Project),
+                Scale = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.Scale),
+                GeneralRevData = new ExcelTitleBlockRevData<string>()
+                {
+                    Rev = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.GeneralRevData.Rev),
+                    Description = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.GeneralRevData.Description),
+                    //Date = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.GeneralRevData.Date),
+                    Date = DateTime.Today.ToString("ddMMyy"),
+                    DrawnBy = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.GeneralRevData.DrawnBy),
+                    CheckedBy = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.GeneralRevData.CheckedBy),
+                    ApprovedBy = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.GeneralRevData.ApprovedBy),
+                },
+                RevBlockRevData = new ExcelTitleBlockRevData<string>()
+                {
+                    Rev = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.RevBlockRevData.Rev),
+                    Description = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.RevBlockRevData.Description),
+                    Date = DateTime.Today.ToString("ddMMyy"),
+                    DrawnBy = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.RevBlockRevData.DrawnBy),
+                    CheckedBy = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.RevBlockRevData.CheckedBy),
+                    ApprovedBy = ExcelHelper.GetRowString(row, ExcelTitleBlockCols.RevBlockRevData.ApprovedBy),
+                },
+            };
+
+            titleBlockDataPopulated = true;
+            
+            return titleBlockData;
+        }
+
 
         public void Dispose()
         {

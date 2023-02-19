@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class ExcelJBRowData : IExcelJBRowData<string>
+    public class ExcelJBRowData<T> : IExcelJBRowData<T>
     {
-        public string JBTag {get; set;} = string.Empty;
-        public string TerminalStrip {get; set;} = string.Empty;
-        public string Terminal {get; set;} = string.Empty;
-        public string SignalType {get; set;} = string.Empty;
-        public string DeviceTag {get; set;} = string.Empty;
 #pragma warning disable CS8618
-        public IExcelJBRowSide<string> LeftSide { get; set; }
-        public IExcelJBRowSide<string> RightSide { get; set; }
+        public T JBTag {get; set;}
+        public T TerminalStrip {get; set;}
+        public T Terminal {get; set;}
+        public T SignalType {get; set;}
+        public T DeviceTag {get; set;}
+        public IExcelJBRowSide<T> LeftSide { get; set; }
+        public IExcelJBRowSide<T> RightSide { get; set; }
 #pragma warning restore CS8618
     }
 

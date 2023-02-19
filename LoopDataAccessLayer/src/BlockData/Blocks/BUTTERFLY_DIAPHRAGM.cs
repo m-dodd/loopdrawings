@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class BUTTERFLY_DIAPHRAGM : BlockDataDB
+    public class VALVE_BODY : BlockDataDB
     {
-        public BUTTERFLY_DIAPHRAGM(IDataLoader dataLoader) : base(dataLoader) { }
+        public VALVE_BODY(IDataLoader dataLoader) : base(dataLoader) { }
 
         protected override void FetchDBData()
         {
@@ -21,6 +21,7 @@ namespace LoopDataAccessLayer
             }
             // NOTE - Can't find SIZE right now so this is just going to be Fail position
             Attributes["SIZE/FAIL_POSITION"] = data.FailPosition;
+            //Attributes["VALVE_TYPE"] = data.io
         }
     }
 }

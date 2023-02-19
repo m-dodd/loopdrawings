@@ -8,6 +8,6 @@ namespace LoopDataAccessLayer
 {
     public interface IAcadBlockFactory
     {
-        BlockDataMappable GetBlock(BlockMapData blockMap, Dictionary<string, string> tagMap);
+        IMappableBlock GetBlock(BlockMapData blockMap, Dictionary<string, string> tagMap);
     }
 }

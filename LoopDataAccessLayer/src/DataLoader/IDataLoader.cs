@@ -8,6 +8,5 @@ namespace LoopDataAccessLayer
 {
     public interface IDataLoader : IExcelLoader, IDBLoader
     {
-        public TitleBlockData TitleBlock { get; set; }
     }
 }

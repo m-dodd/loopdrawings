@@ -29,6 +29,7 @@ namespace LoopDrawingAcadUI
             AcadController controller = new AcadController();
             controller.LoadDrawingsFromFile(sourceFile);
             controller.BuildDrawings();
+            MessageBox.Show("Drawings completed!", "Duco Loop Drawing", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnLoadLoopDrawingsSourceFile_Click(object sender, EventArgs e)

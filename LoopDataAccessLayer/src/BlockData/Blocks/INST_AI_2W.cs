@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class INST_AI_2W : BlockDataExcelDB
+    public class INST_AI_2W : BlockFieldDevice
     {
         public INST_AI_2W(IDataLoader dataLoader) : base(dataLoader) { }
 
@@ -16,22 +17,13 @@ namespace LoopDataAccessLayer
 
             Attributes["MANUFACTURER"] = data.Manufacturer;
             Attributes["MODEL"] = data.Model;
+            Attributes["RANGE"] = data.Range;
 
-            if (data.MinCalRange != DBLoopData.CALERROR.ToString() && data.MaxCalRange != DBLoopData.CALERROR.ToString())
+            string[] descriptions = GetFourLineDescription(data.Description, 14);
+            for (int i = 0; i < 4; i++)
             {
-                Attributes["RANGE"] = data.MinCalRange + "-" + data.MaxCalRange;
+                Attributes["DESCRIPTION_LINE" + (i + 1).ToString()] = descriptions[i];
             }
-            else
-            {
-                // this entire else statement needs to be removed, but for testing I want to see a value in that attribute
-                Attributes["RANGE"] = "ERROR";
-            }
-
-            // TODO: Break the description up into multiple lines
-            Attributes["DESCRIPTION_LINE1"] = data.Description;
-            Attributes["DESCRIPTION_LINE2"] = string.Empty;
-            Attributes["DESCRIPTION_LINE3"] = string.Empty;
-            Attributes["DESCRIPTION_LINE4"] = string.Empty;
 
             string[] tagComponents = Tag.Split('-');
             if (tagComponents.Length == 2)
@@ -56,5 +48,4 @@ namespace LoopDataAccessLayer
             }
         }
     }
-
 }

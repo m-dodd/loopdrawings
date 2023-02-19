@@ -21,11 +21,6 @@ namespace LoopDrawingDataUI
             siteId = lblSiteID.Text;
         }
 
-        private TitleBlockData BuildTitleBlock()
-        {
-            //throw new NotImplementedException();
-            return new TitleBlockData();
-        }
 
         private void btnBuildObjects_Click(object sender, EventArgs e)
         {
@@ -39,7 +34,7 @@ namespace LoopDrawingDataUI
 
             ExcelDataLoader excelLoader = new(excelFileName);
             DBDataLoader dbLoader = new();
-            DataLoader dataLoader = new(excelLoader, dbLoader, BuildTitleBlock());
+            DataLoader dataLoader = new(excelLoader, dbLoader);
 
             LoopDataConfig loopConfig = new(configFileName);
             loopConfig.LoadConfig();
@@ -50,7 +45,7 @@ namespace LoopDrawingDataUI
             AcadDrawingController controller = new(dataLoader, loopConfig);
             controller.BuildDrawings();
             controller.SaveDrawingsToFile(TestOutputFileName(outputResultPath));
-            MessageBox.Show("Drawings completed!");
+            MessageBox.Show("Drawings completed!", "Duco Loop Drawing", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private string TestOutputFileName(string outputResultPath)
@@ -60,7 +55,8 @@ namespace LoopDrawingDataUI
             // and if it does then add a number behind it - but hte number would have to increment
             // so what's the real value?
             //string date = DateTime.Now.ToString("YYYY.MM.DD");
-            return Path.Combine(outputResultPath, "output_test_data.json");
+            //return Path.Combine(outputResultPath, "output_test_data.json");
+            return outputResultPath;
         }
 
         private void frmLoopUI_Load(object sender, EventArgs e)
@@ -93,7 +89,7 @@ namespace LoopDrawingDataUI
         private void btnResultOutputPath_Click(object sender, EventArgs e)
         {
             //GetFolderSetLabel(lblResultOutputPath);
-            outputResultPath = GetFolderName();
+            outputResultPath = SetFileName();
             lblResultOutputPath.Text = GetShortPath(outputResultPath);
         }
 
@@ -108,7 +104,7 @@ namespace LoopDrawingDataUI
             configFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\loop_drawing_config_v3.json";
             excelFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\2023.02.02 - Automation Wiring Data.xlsx";
             templatePath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\templates";
-            outputResultPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output";
+            outputResultPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\output_test_data.json";
             outputDrawingPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output";
 
             lblConfigFile.Text = GetShortPath(configFileName);

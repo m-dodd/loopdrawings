@@ -1,4 +1,6 @@
 ﻿
+using WTEdge.Entities;
+
 namespace LoopDataAccessLayer
 {
     public class DBDataLoader : IDBLoader
@@ -56,28 +58,31 @@ namespace LoopDataAccessLayer
                     d => new DBLoopData
                     {
                         Tag = d.Tag,
-                        LoopNo = (d.Loopno ?? string.Empty).Trim(),
-                        Description = (d.Servicedescription ?? string.Empty).Trim(),
-                        Manufacturer = (d.Manufacturer ?? string.Empty).Trim(),
-                        Model = (d.Model ?? string.Empty).Trim(),
-                        JB1Tag = (d.Jb1tag ?? string.Empty).Trim(),
-                        JB2Tag = (d.Jb2tag ?? string.Empty).Trim(),
+                        LoopNo = GetCleanString(d.Loopno),
+                        Description = GetCleanString(d.Servicedescription),
+                        Manufacturer = GetCleanString(d.Manufacturer),
+                        Model = GetCleanString(d.Model),
+                        JB1Tag = GetCleanString(d.Jb1tag),
+                        JB2Tag = GetCleanString(d.Jb2tag),
 
-                        Rack = ((d.Rack == null) ? -1 : (int)d.Rack).ToString().Trim(),
-                        Slot = ((d.Slot == null) ? -1 : (int)d.Slot).ToString().Trim(),
-                        Channel = ((d.Channel == null) ? -1 : (int)d.Channel).ToString(),
+                        Rack = FetchRackSlotChannel(d, "rack"),
+                        Slot = FetchRackSlotChannel(d, "slot"),
+                        Channel = FetchRackSlotChannel(d, "channel"),
 
-                        PidDrawingNumber = (d.Pid ?? string.Empty).Trim(),
+                        PidDrawingNumber = GetCleanString(d.Pid),
 
-                        MinCalRange = ((d.Tblarss == null) ? DBLoopData.CALERROR : (int)(d.Tblarss.Mincalibrange ?? DBLoopData.CALERROR)).ToString().Trim(),
-                        MaxCalRange = ((d.Tblarss == null) ? DBLoopData.CALERROR : (int)(d.Tblarss.Maxcalibrange ?? DBLoopData.CALERROR)).ToString().Trim(),
-                        LoLoAlarm = ((d.Tblarss == null) ? string.Empty : d.Tblarss.Llalarm ?? string.Empty).Trim(),
-                        LoAlarm = ((d.Tblarss == null) ? string.Empty : d.Tblarss.Loalarm ?? string.Empty).Trim(),
-                        HiAlarm = ((d.Tblarss == null) ? string.Empty : d.Tblarss.Hialarm ?? string.Empty).Trim(),
-                        HiHiAlarm = ((d.Tblarss == null) ? string.Empty : d.Tblarss.Hhalarm ?? string.Empty).Trim(),
-                        LoControl = ((d.Tblarss == null) ? string.Empty : d.Tblarss.Lowctrl ?? string.Empty).Trim(),
-                        HiControl = ((d.Tblarss == null) ? string.Empty : d.Tblarss.Highctrl ?? string.Empty).Trim(),
-                        FailPosition = d.Failposition,
+                        MinCalRange = FetchCalRange(d.Tblarss, "min"),
+                        MaxCalRange = FetchCalRange(d.Tblarss, "max"),
+                        RangeUnits = FetchCalRange(d.Tblarss, "units"),
+
+                        LoLoAlarm = FetchAlarmString(d.Tblarss, "ll"),
+                        LoAlarm = FetchAlarmString(d.Tblarss, "l"),
+                        HiAlarm = FetchAlarmString(d.Tblarss, "h"),
+                        HiHiAlarm = FetchAlarmString(d.Tblarss, "hh"),
+                        LoControl = FetchAlarmString(d.Tblarss, "lc"),
+                        HiControl = FetchAlarmString(d.Tblarss, "hc"),
+
+                        FailPosition = GetCleanString(d.Failposition),
 
                     }).FirstOrDefault();
                 loopData[tag] = data ?? new DBLoopData();
@@ -86,25 +91,80 @@ namespace LoopDataAccessLayer
             }
         }
 
-        private string GetFailPosition(string? failPosition)
+        private static string FetchRackSlotChannel(Tblindex index, string rackSlotChannel)
         {
-            string[] failPositionsOK = new string[] {"FC", "FO", "FL"};
-            if(!string.IsNullOrEmpty(failPosition))
+            if (index is null)
             {
-                if (failPosition.ToUpper() == "CLOSED")
-                {
-                    return "FC";
-                }
-                if (failPosition.ToUpper() == "OPEN")
-                {
-                    return "FO";
-                }
-                if (failPositionsOK.Contains(failPosition))
-                {
-                    return failPosition;
-                }
+                return "-1";
             }
-            return string.Empty;
+
+            return rackSlotChannel.ToLower() switch
+            {
+                "rack" => (index.Rack ?? -1).ToString(),
+                "slot" => (index.Slot ?? -1).ToString(),
+                "channel" => (index.Channel ?? -1).ToString(),
+                _ => string.Empty
+            };
         }
+
+        private static string FetchAlarmString(Tblarss? tblarss, string alarm)
+        {
+            if (tblarss is null)
+            {
+                return string.Empty;
+            }
+
+            return alarm.ToLower() switch
+            {
+                "ll" => GetCleanString(tblarss.Llalarm),
+                "l" => GetCleanString(tblarss.Loalarm),
+                "h" => GetCleanString(tblarss.Hialarm),
+                "hh" => GetCleanString(tblarss.Hhalarm),
+                "lc" => GetCleanString(tblarss.Lowctrl),
+                "hc" => GetCleanString(tblarss.Lowctrl),
+                _ => string.Empty,
+            };
+            
+        }
+
+        private static string FetchCalRange(Tblarss? tblarss, string alarm)
+        {
+            if (tblarss is null)
+            {
+                return DBLoopData.CALERROR.ToString();
+            }
+
+            return alarm.ToLower() switch
+            {
+                "min" => ((int)(tblarss.Mincalibrange ?? DBLoopData.CALERROR)).ToString(),
+                "max" => ((int)(tblarss.Maxcalibrange ?? DBLoopData.CALERROR)).ToString(),
+                "units" => GetCleanString(tblarss.Calibrangeunits),
+                _ => DBLoopData.CALERROR.ToString(),
+            };
+
+        }
+
+        private static string GetCleanString(string? inputString) => (inputString ?? string.Empty).Trim();
+
+        //private string GetFailPosition(string? failPosition)
+        //{
+        //    string[] failPositionsOK = new string[] {"FC", "FO", "FL"};
+        //    if(!string.IsNullOrEmpty(failPosition))
+        //    {
+        //        if (failPosition.ToUpper() == "CLOSED")
+        //        {
+        //            return "FC";
+        //        }
+        //        if (failPosition.ToUpper() == "OPEN")
+        //        {
+        //            return "FO";
+        //        }
+        //        if (failPositionsOK.Contains(failPosition))
+        //        {
+        //            return failPosition;
+        //        }
+        //    }
+        //    return string.Empty;
+        //}
     }
 }

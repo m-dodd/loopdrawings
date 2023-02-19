@@ -1,109 +1,191 @@
 ﻿using ClosedXML.Excel;
 using Irony.Parsing;
+using LoopDataAccessLayer.src.DataLoader.ExcelLoader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class ExcelColMapper
+    public class ExcelColMapper : IExcelColMapper
     {
-        private readonly IXLWorksheet IOws, JBws;
+        private readonly IXLWorksheet IOws, JBws, titleBlockWS;
         private const int IOHeaderRow = 2;
         private const int JBHeaderRow = 2;
+        private const int TitleBlockHeaderRow = 3;
+        public int TitleBlockDataRow { get; set; } = 4;
 
-        public ExcelColMapper(IXLWorksheet IOws, IXLWorksheet JBws)
+        public ExcelColMapper(IXLWorksheet IOws, IXLWorksheet JBws, IXLWorksheet TitleBlockWS)
         {
             this.IOws = IOws;
             this.JBws = JBws;
-
+            this.titleBlockWS = TitleBlockWS;
         }
 
-        public ExcelIOCols GetIOColMap()
+        public IExcelIOData<int> GetIOColMap()
         {
-            var header = IOws.Row(IOHeaderRow);
-            return new ExcelIOCols
+            ExcelColumnProvider excelColumnProvider = new(GetIOHeaderRow());
+            return new ExcelIOData<int>
             {
-                ModuleTerm01 = GetColNumber(header, "IO_MOD_TERM_1") ?? -1,
-                ModuleTerm02 = GetColNumber(header, "IO_MOD_TERM_2") ?? -1,
-                ModuleWireTag01 = GetColNumber(header, "IO_MOD_WIRE_1") ?? -1,
-                ModuleWireTag02 = GetColNumber(header, "IO_MOD_WIRE_2") ?? -1,
-                PanelTag = GetColNumber(header, "CABINET") ?? -1,
-                BreakerNumber = GetColNumber(header, "BREAKER") ?? -1,
-                Tag = GetColNumber(header, "TAG") ?? -1,
-                PanelTerminalStrip = GetColNumber(header, "IO_TERM_STRIP") ?? -1,
-                JB1 = GetColNumber(header, "JB1") ?? -1,
-                JB2 = GetColNumber(header, "JB2") ?? -1,
-                JB3 = GetColNumber(header, "JB3") ?? -1,
+                ModuleTerm01 = excelColumnProvider.GetColumnNumber("IO_MOD_TERM_1"),
+                ModuleTerm02 = excelColumnProvider.GetColumnNumber("IO_MOD_TERM_2"),
+                ModuleWireTag01 = excelColumnProvider.GetColumnNumber("IO_MOD_WIRE_1"),
+                ModuleWireTag02 = excelColumnProvider.GetColumnNumber("IO_MOD_WIRE_2"),
+                PanelTag = excelColumnProvider.GetColumnNumber("CABINET"),
+                BreakerNumber = excelColumnProvider.GetColumnNumber("BREAKER"),
+                Tag = excelColumnProvider.GetColumnNumber("TAG"),
+                PanelTerminalStrip = excelColumnProvider.GetColumnNumber("IO_TERM_STRIP"),
+                JB1 = excelColumnProvider.GetColumnNumber("JB1"),
+                JB2 = excelColumnProvider.GetColumnNumber("JB2"),
+                JB3 = excelColumnProvider.GetColumnNumber("JB3"),
 
                 Device = new ExcelIODeviceCommon<int>
                 {
-                    CableTag = GetColNumber(header, "DEVICE_CABLE") ?? -1,
-                    TerminalPlus = GetColNumber(header, "DEVICE_TERM_PLUS") ?? -1,
-                    TerminalNeg = GetColNumber(header, "DEVICE_TERM_NEG") ?? -1,
-                    //TerminalShld = GetColNumber(header, "DEVICE_TERM_SHLD") ?? -1,
+                    CableTag = excelColumnProvider.GetColumnNumber("DEVICE_CABLE"),
+                    TerminalPlus = excelColumnProvider.GetColumnNumber("DEVICE_TERM_PLUS"),
+                    TerminalNeg = excelColumnProvider.GetColumnNumber("DEVICE_TERM_NEG"),
                     TerminalShld = 9999, // there is never a shield colunn but this should ensure the string will jsut be mpty  
-                    WireTagPlus = GetColNumber(header, "DEVICE_WIRE_PLUS") ?? -1,
-                    WireTagNeg = GetColNumber(header, "DEVICE_WIRE_NEG") ?? -1,
-                    WireColorPlus = GetColNumber(header, "DEVICE_COLOR_PLUS") ?? -1,
-                    WireColorNeg = GetColNumber(header, "DEVICE_COLOR_NEG") ?? -1,
-                    CorePairPlus = GetColNumber(header, "DEVICE_CORE_PLUS") ?? -1,
-                    CorePairNeg = GetColNumber(header, "DEVICE_CORE_NEG") ?? -1,
+                    WireTagPlus = excelColumnProvider.GetColumnNumber("DEVICE_WIRE_PLUS"),
+                    WireTagNeg = excelColumnProvider.GetColumnNumber("DEVICE_WIRE_NEG"),
+                    WireColorPlus = excelColumnProvider.GetColumnNumber("DEVICE_COLOR_PLUS"),
+                    WireColorNeg = excelColumnProvider.GetColumnNumber("DEVICE_COLOR_NEG"),
+                    CorePairPlus = excelColumnProvider.GetColumnNumber("DEVICE_CORE_PLUS"),
+                    CorePairNeg = excelColumnProvider.GetColumnNumber("DEVICE_CORE_NEG"),
                 },
 
                 IO = new ExcelIODeviceCommon<int>
                 {
-                    TerminalPlus = GetColNumber(header, "IO_TERM_PLUS") ?? -1,
-                    TerminalNeg = GetColNumber(header, "IO_TERM_NEG") ?? -1,
-                    TerminalShld = GetColNumber(header, "IO_TERM_SHLD") ?? -1,
-                    WireTagPlus = GetColNumber(header, "IO_TAG_PLUS") ?? -1,
-                    WireTagNeg = GetColNumber(header, "IO_TAG_NEG") ?? -1,
-                    WireColorPlus = GetColNumber(header, "IO_COLOR_PLUS") ?? -1,
-                    WireColorNeg = GetColNumber(header, "IO_COLOR_NEG") ?? -1,
-                    CorePairPlus = GetColNumber(header, "IO_PAIR_PLUS") ?? -1,
-                    CorePairNeg = GetColNumber(header, "IO_PAIR_NEG") ?? -1,
-                    CableTag = GetColNumber(header, "IO_CABLE") ?? -1
+                    TerminalPlus = excelColumnProvider.GetColumnNumber("IO_TERM_PLUS"),
+                    TerminalNeg = excelColumnProvider.GetColumnNumber("IO_TERM_NEG"),
+                    TerminalShld = excelColumnProvider.GetColumnNumber("IO_TERM_SHLD"),
+                    WireTagPlus = excelColumnProvider.GetColumnNumber("IO_TAG_PLUS"),
+                    WireTagNeg = excelColumnProvider.GetColumnNumber("IO_TAG_NEG"),
+                    WireColorPlus = excelColumnProvider.GetColumnNumber("IO_COLOR_PLUS"),
+                    WireColorNeg = excelColumnProvider.GetColumnNumber("IO_COLOR_NEG"),
+                    CorePairPlus = excelColumnProvider.GetColumnNumber("IO_PAIR_PLUS"),
+                    CorePairNeg = excelColumnProvider.GetColumnNumber("IO_PAIR_NEG"),
+                    CableTag = excelColumnProvider.GetColumnNumber("IO_CABLE")
                 },
             };
         }
 
-        public ExcelJBCols GetJBColMap()
+        public IExcelJBRowData<int> GetJBColMap()
         {
-            var header = JBws.Row(IOHeaderRow);
-            return new ExcelJBCols
+            ExcelColumnProvider excelColumnProvider = new(GetJBHeaderRow());
+
+            return new ExcelJBRowData<int>
             {
 
-                JBTag = GetColNumber(header, "JB_TAG") ?? -1,
-                TerminalStrip = GetColNumber(header, "TS") ?? -1,
-                Terminal = GetColNumber(header, "TERMINAL") ?? -1,
-                SignalType = GetColNumber(header, "SIGNAL_TYPE") ?? -1,
-                DeviceTag = GetColNumber(header, "DEVICE_TAG") ?? -1,
+                JBTag = excelColumnProvider.GetColumnNumber("JB_TAG"),
+                TerminalStrip = excelColumnProvider.GetColumnNumber("TS"),
+                Terminal = excelColumnProvider.GetColumnNumber("TERMINAL"),
+                SignalType = excelColumnProvider.GetColumnNumber("SIGNAL_TYPE"),
+                DeviceTag = excelColumnProvider.GetColumnNumber("DEVICE_TAG"),
+                
                 LeftSide = new ExcelJBRowSide<int>
                 {
-                    Cable = GetColNumber(header, "LEFT_CABLE") ?? -1,
-                    Core = GetColNumber(header, "LEFT_PAIR") ?? -1,
-                    Color = GetColNumber(header, "LEFT_COLOR") ?? -1,
-                    WireTag = GetColNumber(header, "LEFT_WIRE_TAG") ?? -1,
+                    Cable = excelColumnProvider.GetColumnNumber("LEFT_CABLE"),
+                    Core = excelColumnProvider.GetColumnNumber("LEFT_PAIR"),
+                    Color = excelColumnProvider.GetColumnNumber("LEFT_COLOR"),
+                    WireTag = excelColumnProvider.GetColumnNumber("LEFT_WIRE_TAG"),
                 },
+                
                 RightSide = new ExcelJBRowSide<int>
                 {
-                    Cable = GetColNumber(header, "RIGHT_CABLE") ?? -1,
-                    Core = GetColNumber(header, "RIGHT_PAIR") ?? -1,
-                    Color = GetColNumber(header, "RIGHT_COLOR") ?? -1,
-                    WireTag = GetColNumber(header, "RIGHT_WIRE_TAG") ?? -1,
+                    Cable = excelColumnProvider.GetColumnNumber("RIGHT_CABLE"),
+                    Core = excelColumnProvider.GetColumnNumber("RIGHT_PAIR"),
+                    Color = excelColumnProvider.GetColumnNumber("RIGHT_COLOR"),
+                    WireTag = excelColumnProvider.GetColumnNumber("RIGHT_WIRE_TAG"),
                 }
             };
         }
 
-        private int? GetColNumber(IXLRow row, string colName)
+        public IExcelTitleBlockData<int> GetTitleBlockColMap()
         {
-            return row
-                ?.CellsUsed(cell => cell.GetString().ToUpper() == colName.ToUpper())
-                ?.FirstOrDefault()
-                ?.WorksheetColumn()
-                ?.ColumnNumber();
+            ExcelColumnProvider excelColumnProvider = new(GetTitleBlockHeaderRow());
+
+            return new ExcelTitleBlockData<int>()
+            {
+                SiteNumber = excelColumnProvider.GetColumnNumber("SITE_NUM"),
+                Sheet = excelColumnProvider.GetColumnNumber("SHEET"),
+                MaxSheets = excelColumnProvider.GetColumnNumber("MAX_SHEETS"),
+                Project = excelColumnProvider.GetColumnNumber("PROJECT"),
+                Scale = excelColumnProvider.GetColumnNumber("SCALE"),
+                
+                GeneralRevData = new ExcelTitleBlockRevData<int>()
+                {
+                    Rev = excelColumnProvider.GetColumnNumber("GENERAL_REV"),
+                    Description = excelColumnProvider.GetColumnNumber("GENERAL_DESCRIPTION"),
+                    Date = excelColumnProvider.GetColumnNumber("GENERAL_DATE"),
+                    DrawnBy = excelColumnProvider.GetColumnNumber("GENERAL_DRAWNBY"),
+                    CheckedBy = excelColumnProvider.GetColumnNumber("GENERAL_CHECKEDBY"),
+                    ApprovedBy = excelColumnProvider.GetColumnNumber("GENERAL_APPROVEDBY"),
+                },
+                RevBlockRevData = new ExcelTitleBlockRevData<int>()
+                {
+                    Rev = excelColumnProvider.GetColumnNumber("REV_REV"),
+                    Description = excelColumnProvider.GetColumnNumber("REV_DESCRIPTION"),
+                    Date = excelColumnProvider.GetColumnNumber("REV_DATE"),
+                    DrawnBy = excelColumnProvider.GetColumnNumber("REV_DRAWNBY"),
+                    CheckedBy = excelColumnProvider.GetColumnNumber("REV_CHECKEDBY"),
+                    ApprovedBy = excelColumnProvider.GetColumnNumber("REV_APPROVEDBY"),
+                },
+            };
+        }
+
+        private IXLRow GetIOHeaderRow() => IOws.Row(IOHeaderRow);
+        private IXLRow GetJBHeaderRow() => JBws.Row(JBHeaderRow);
+        private IXLRow GetTitleBlockHeaderRow() => titleBlockWS.Row(TitleBlockHeaderRow);
+    }
+    
+    public interface IExcelColumnProvider
+    {
+        int GetColumnNumber(string columnName);
+    }
+    public class ExcelColumnProvider
+    {
+        private readonly IXLRow headerRow;
+        public ExcelColumnProvider(IXLRow header)
+        {
+            this.headerRow = header;
+        }
+
+        public int GetColumnNumber(string columnName)
+        {
+            int? colNum = headerRow
+                    ?.CellsUsed(cell => cell.GetString().ToUpper() == columnName.ToUpper())
+                    ?.FirstOrDefault()
+                    ?.WorksheetColumn()
+                    ?.ColumnNumber();
+
+            if (colNum is null)
+            {
+                throw new ExcelColumnNotFoundException(columnName);
+            }
+
+            return (int)colNum;
+        }
+    }
+
+    public class ExcelColumnNotFoundException : Exception
+    {
+        public ExcelColumnNotFoundException()
+        {
+        }
+
+        public ExcelColumnNotFoundException(string? message) : base(message)
+        {
+        }
+
+        public ExcelColumnNotFoundException(string? message, Exception? innerException) : base(message, innerException)
+        {
+        }
+
+        protected ExcelColumnNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

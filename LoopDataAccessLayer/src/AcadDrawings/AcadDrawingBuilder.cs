@@ -66,8 +66,9 @@ namespace LoopDataAccessLayer
 
         private AcadDrawingDataMappable ConstructDrawing(LoopNoTemplatePair loop, TemplateConfig template, Dictionary<string, string> tagMap)
         {
-            var blocks = BuildBlocks(template, tagMap);
             var drawingName = BuildDrawingIdentifier(loop);
+            tagMap["DRAWING_NAME"] = drawingName;
+            var blocks = BuildBlocks(template, tagMap);
 
             var drawing = new AcadDrawingDataMappable
             {
@@ -115,20 +116,8 @@ namespace LoopDataAccessLayer
 
         private List<IMappableBlock> BuildBlocks(TemplateConfig template, Dictionary<string, string> tagMap)
         {
-            //List<IMappableBlock> blocks = new();
-            //foreach (BlockMapData blockMap in template.BlockMap)
-            //{
-            //    IMappableBlock block = blockFactory.GetBlock(blockMap, tagMap);
-
-            //    if (block is not EMPTY_BLOCK)
-            //    {
-            //        blocks.Add(block);
-            //    }
-            //}
-
-            //return blocks;
             return template.BlockMap
-                .Select(blockMap => (IMappableBlock)blockFactory.GetBlock(blockMap, tagMap))
+                .Select(blockMap => blockFactory.GetBlock(blockMap, tagMap))
                 .Where(block => block is not EMPTY_BLOCK)
                 .ToList();
         }

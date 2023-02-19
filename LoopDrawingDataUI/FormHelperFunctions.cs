@@ -66,6 +66,23 @@ namespace LoopDrawingDataUI
             return fileName;
         }
 
+        private string SetFileName()
+        {
+            string fileName = string.Empty;
+            using (SaveFileDialog saveFileDialog1 = new())
+            {
+                saveFileDialog1.DefaultExt = ".json";
+                saveFileDialog1.Title = "Save output drawing file json";
+                saveFileDialog1.Filter = "json files (*.json)|*.json";
+                saveFileDialog1.FilterIndex = 2;
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    fileName = saveFileDialog1.FileName;
+                }
+            }
+            return fileName;
+        }
+
         private bool FilesAndFoldersValid()
         {
             return
