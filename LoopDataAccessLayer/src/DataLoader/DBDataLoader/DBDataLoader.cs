@@ -146,25 +146,5 @@ namespace LoopDataAccessLayer
 
         private static string GetCleanString(string? inputString) => (inputString ?? string.Empty).Trim();
 
-        //private string GetFailPosition(string? failPosition)
-        //{
-        //    string[] failPositionsOK = new string[] {"FC", "FO", "FL"};
-        //    if(!string.IsNullOrEmpty(failPosition))
-        //    {
-        //        if (failPosition.ToUpper() == "CLOSED")
-        //        {
-        //            return "FC";
-        //        }
-        //        if (failPosition.ToUpper() == "OPEN")
-        //        {
-        //            return "FO";
-        //        }
-        //        if (failPositionsOK.Contains(failPosition))
-        //        {
-        //            return failPosition;
-        //        }
-        //    }
-        //    return string.Empty;
-        //}
     }
 }
