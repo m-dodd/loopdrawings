@@ -14,6 +14,8 @@ namespace LoopDrawingAcadUI
             // also this exception
             // Autodesk.AutoCAD.Runtime.Exception: 'eRepeatedDwgRead'
             Database database = new Database(false, true);
+
+            // TO DO - add error handling if file is open
             database.ReadDwgFile(drawingData.TemplateDrawingFileName, System.IO.FileShare.Read, false, "");
 
             return new AcadDrawing(database, drawingData);

@@ -9,59 +9,6 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public abstract class BlockDataMappable : AcadBlockData, IMappableBlock
-    {
-        protected readonly IDataLoader dataLoader;
-
-        public BlockDataMappable(IDataLoader dataLoader)
-        {
-            this.dataLoader = dataLoader;
-        }
-
-        public abstract void MapData(); 
-    }
-
-    public abstract class BlockDataExcel : BlockDataMappable
-    {
-
-        public BlockDataExcel(IDataLoader dataLoader) : base(dataLoader) { }
-
-        public override void MapData()
-        {
-            FetchExcelData();
-        }
-
-        protected abstract void FetchExcelData();
-    }
-
-
-    public abstract class BlockDataDB : BlockDataMappable
-    {
-        public BlockDataDB(IDataLoader dataLoader) : base(dataLoader) { }
-
-        public override void MapData()
-        {
-            FetchDBData();
-        }
-
-        protected abstract void FetchDBData();
-    }
-
-
-    public abstract class BlockDataExcelDB : BlockDataMappable
-    {
-        public BlockDataExcelDB(IDataLoader dataLoader) : base(dataLoader) { }
-
-        public override void MapData()
-        {
-            FetchExcelData(); 
-            FetchDBData();
-        }
-
-        protected abstract void FetchExcelData();
-        protected abstract void FetchDBData();
-    }
-
     public abstract class BlockFieldDevice : BlockDataExcelDB
     {
         public BlockFieldDevice(IDataLoader dataLoader) : base(dataLoader) { }
@@ -80,7 +27,9 @@ namespace LoopDataAccessLayer
             // https://stackoverflow.com/questions/11416191/converting-a-matchcollection-to-string-array
             return Regex.Matches(stringToSplit, @"(.{1," + maximumLineLength +@"})(?:\s|$)")
                 .Cast<Match>()
-                .Select(m => m.Value.Trim()) // if not then the regex gives whitespace at the end
+                // regex gives whitespace at the end, it is not supposed to but I'm not going to troubleshoot it
+                // Trim is a simple solution
+                .Select(m => m.Value.Trim()) 
                 .Take(4)
                 .ToList();
         }
@@ -95,11 +44,5 @@ namespace LoopDataAccessLayer
             return descriptions;
         } 
         
-    }
-
-    public class EMPTY_BLOCK : BlockDataMappable
-    {
-        public EMPTY_BLOCK(IDataLoader dataLoader) : base(dataLoader) { }
-        public override void MapData() { }
     }
 }

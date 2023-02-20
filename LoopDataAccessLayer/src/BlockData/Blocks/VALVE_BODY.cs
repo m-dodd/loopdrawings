@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class VALVE_BODY : BlockDataDB
+    public class VALVE_BODY : BlockValve
     {
         public VALVE_BODY(IDataLoader dataLoader) : base(dataLoader) { }
 
@@ -19,9 +19,9 @@ namespace LoopDataAccessLayer
                 Attributes["TAG1"] = tagComponents[0];
                 Attributes["TAG2"] = tagComponents[1];
             }
-            // NOTE - Can't find SIZE right now so this is just going to be Fail position
+            
             Attributes["SIZE/FAIL_POSITION"] = data.FailPosition;
-            //Attributes["VALVE_TYPE"] = data.io
+            Attributes["VALVE_TYPE"] = GetValveType(data.InstrumentType);
         }
     }
 }

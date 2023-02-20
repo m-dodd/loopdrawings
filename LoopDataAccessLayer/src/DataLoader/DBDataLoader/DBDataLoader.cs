@@ -83,6 +83,7 @@ namespace LoopDataAccessLayer
                         HiControl = FetchAlarmString(d.Tblarss, "hc"),
 
                         FailPosition = GetCleanString(d.Failposition),
+                        InstrumentType = GetCleanString(d.Instrumenttype),
 
                     }).FirstOrDefault();
                 loopData[tag] = data ?? new DBLoopData();

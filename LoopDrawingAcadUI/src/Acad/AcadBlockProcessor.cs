@@ -1,5 +1,6 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 using LoopDataAdapterLayer;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,15 @@ namespace LoopDrawingAcadUI
             BlockReference br = GetAcadBlockReference(block.Name);
             if (br != null)
             {
+                if(block.Name == "VALVE_BODY")
+                {
+                    SetDynamicPropertyValue(br, "Visibility1", block.Attributes["VALVE_TYPE"]);
+                }
                 ProcessBlockRefAttributes(br, block.Attributes);
             }
         }
+
+        private BlockTable GetBlocktable() => tr.GetObject(db.BlockTableId, OpenMode.ForRead) as BlockTable;
 
         private void ProcessBlockRefAttributes(BlockReference br, Dictionary<string, string> attributeData)
         {
@@ -60,25 +67,45 @@ namespace LoopDrawingAcadUI
             HostApplicationServices.WorkingDatabase = activeDB;
         }
 
-
         private BlockReference GetAcadBlockReference(string blockName)
         {
-            BlockTable bt = GetBlocktable();
-            if (bt.Has(blockName))
-            {
-                BlockTableRecord btr = (BlockTableRecord)tr.GetObject(bt[blockName], OpenMode.ForRead);
-                var ids = btr.GetBlockReferenceIds(true, true);
-                return tr.GetObject(ids[0], OpenMode.ForRead) as BlockReference;
-            }
-            else
-            {
-                return null;
-            }
+            ObjectIdCollection ids = GetAllBlockReferences(blockName);
+            return ids.Count > 0 ? (BlockReference)tr.GetObject(ids[0], OpenMode.ForWrite) : null;
         }
 
-        private BlockTable GetBlocktable()
+        private ObjectIdCollection GetAllBlockReferences(string blockName)
         {
-            return tr.GetObject(db.BlockTableId, OpenMode.ForRead) as BlockTable;
+            var blockReferenceIds = new ObjectIdCollection();
+            var bt = GetBlocktable();
+            if (bt.Has(blockName))
+            {
+                var btr = (BlockTableRecord)tr.GetObject(bt[blockName], OpenMode.ForRead);
+                foreach (ObjectId id in btr.GetBlockReferenceIds(true, false))
+                {
+                    blockReferenceIds.Add(id);
+                }
+                foreach (ObjectId anonymousBlockId in btr.GetAnonymousBlockIds())
+                {
+                    var anonymousBtr = (BlockTableRecord)tr.GetObject(anonymousBlockId, OpenMode.ForRead);
+                    foreach (ObjectId id in anonymousBtr.GetBlockReferenceIds(true, false))
+                    {
+                        blockReferenceIds.Add(id);
+                    }
+                }
+            }
+            return blockReferenceIds;
+        }
+
+        private void SetDynamicPropertyValue(BlockReference br, string propertyName, object value)
+        {
+            foreach (DynamicBlockReferenceProperty property in br.DynamicBlockReferencePropertyCollection)
+            {
+                if (property.PropertyName == propertyName)
+                {
+                    property.Value = value;
+                    break;
+                }
+            }
         }
     }
 }

@@ -59,12 +59,11 @@
                     ValveTag = tagMap[blockMap.Tags[1]]
                 },
 
-                "VALVE_BODY" =>
-                    //new VALVE_BODY(dataLoader) { Name = blockMap.Name, Tag = tagMap[blockMap.Tags[0]] },
-                    // until I get the dynamic block working this mapping doesn't work - Autocad finds a block reference
-                    // but that is the wrong type and it throws an error when trying to cast to that type
-                    // FIX AUTOCAD then re-enable this.
-                    new EMPTY_BLOCK(dataLoader),
+                "VALVE_BODY" => new VALVE_BODY(dataLoader) 
+                {
+                    Name = blockMap.Name,
+                    Tag = tagMap[blockMap.Tags[0]]
+                },
 
                 "STD B SIZE SHEET" => new TITLE_BLOCK(dataLoader)
                 {

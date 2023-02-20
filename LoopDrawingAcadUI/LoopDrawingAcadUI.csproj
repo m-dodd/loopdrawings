@@ -70,12 +70,6 @@
     <Compile Include="src\Acad\IAcadDrawing.cs" />
     <Compile Include="src\Acad\IAcadDrawingFactory.cs" />
     <Compile Include="src\Acad\IAcadDrawingProcessor.cs" />
-    <Compile Include="src\ChatGPT\chat_gpt_idea.cs" />
-    <Compile Include="src\Obsolete\AcadLoopDrawingTest.cs" />
-    <Compile Include="src\Obsolete\DrawingsBuilder.cs" />
-    <Compile Include="src\Obsolete\AutoCadHelper.cs" />
-    <Compile Include="src\ChatGPT\ChatGPT.cs" />
-    <Compile Include="src\ChatGPT\chatgpt2.cs" />
     <Compile Include="src\UI\LoopDrawingUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,9 +77,6 @@
       <DependentUpon>LoopDrawingUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Obsolete\TestData.cs" />
-    <Compile Include="src\ChatGPT\x.cs" />
-    <Compile Include="src\ChatGPT\xxx.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="src\UI\LoopDrawingUI.resx">
@@ -101,5 +92,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

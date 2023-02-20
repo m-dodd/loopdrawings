@@ -38,6 +38,7 @@
         public string MinCalRange { get; set; } = CALERROR.ToString();
         public string MaxCalRange { get; set; } = CALERROR.ToString();
         public string RangeUnits { get; set; } = string.Empty;
+        public string InstrumentType { get; set; } = string.Empty;
 
         public string FailPosition
         {
