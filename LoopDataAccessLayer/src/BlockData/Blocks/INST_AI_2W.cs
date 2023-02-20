@@ -19,10 +19,10 @@ namespace LoopDataAccessLayer
             Attributes["MODEL"] = data.Model;
             Attributes["RANGE"] = data.Range;
 
-            string[] descriptions = GetFourLineDescription(data.Description, 14);
+            IEnumerable<string> descriptions = GetFourLineDescription(data.Description, 14);
             for (int i = 0; i < 4; i++)
             {
-                Attributes["DESCRIPTION_LINE" + (i + 1).ToString()] = descriptions[i];
+                Attributes["DESCRIPTION_LINE" + (i + 1).ToString()] = descriptions.ElementAt(i);
             }
 
             string[] tagComponents = Tag.Split('-');

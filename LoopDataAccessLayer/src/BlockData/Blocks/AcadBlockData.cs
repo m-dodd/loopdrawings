@@ -66,7 +66,7 @@ namespace LoopDataAccessLayer
     {
         public BlockFieldDevice(IDataLoader dataLoader) : base(dataLoader) { }
 
-        protected static string[] SplitDeviceDescriptionToFourLines(string stringToSplit, int maximumLineLength)
+        protected static List<string> SplitDeviceDescriptionToFourLines(string stringToSplit, int maximumLineLength)
         {
             // This is a bit tricky, but we use a fancy regex expression to look for any characters (except terminators)
             // between 1-maximumLineLength in length, but less than the white space
@@ -82,27 +82,15 @@ namespace LoopDataAccessLayer
                 .Cast<Match>()
                 .Select(m => m.Value.Trim()) // if not then the regex gives whitespace at the end
                 .Take(4)
-                .ToArray();
+                .ToList();
         }
 
-        protected static string[] GetFourLineDescription(string deviceDescription, int maximumLineLength)
+        protected static IEnumerable<string> GetFourLineDescription(string deviceDescription, int maximumLineLength)
         {
-            string[] descriptions = SplitDeviceDescriptionToFourLines(deviceDescription, maximumLineLength);
-            if (descriptions.Length < 4)
+            List<string> descriptions = SplitDeviceDescriptionToFourLines(deviceDescription, maximumLineLength);
+            while (descriptions.Count < 4)
             {
-                string[] paddedDescriptions = new string[4];
-                for (int i = 0; i< 4; i++)
-                {
-                    if (i < descriptions.Length)
-                    {
-                        paddedDescriptions[i] = descriptions[i];
-                    }
-                    else
-                    {
-                        paddedDescriptions[i] = string.Empty;
-                    }
-                }
-                return paddedDescriptions;
+                descriptions.Add(string.Empty);
             }
             return descriptions;
         } 
