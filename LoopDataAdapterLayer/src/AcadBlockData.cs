@@ -10,6 +10,7 @@ namespace LoopDataAdapterLayer
     {
         public string Name { get; set; } = string.Empty;
         public string Tag { get; set; } = string.Empty;
+        public string UID { get; set; } = string.Empty;
         public Dictionary<string, string> Attributes { get; } = new Dictionary<string, string>();
     }
 }

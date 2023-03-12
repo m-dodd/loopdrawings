@@ -28,16 +28,17 @@ namespace LoopDataAccessLayer
                       .ToList();
         }
 
-        public List<LoopTagData> GetLoopTags(LoopNoTemplatePair loop)
+        public IEnumerable<LoopTagData> GetLoopTags(LoopNoTemplatePair loop)
         {
             string[] badStatus = { "OUT OF SCOPE", "DELETE", "HOLD" };
             return db.Tblindices
                      .Where(t => (t.Loopno == loop.LoopNo) && !badStatus.Contains(t.Status))
                      .Select(tag => new LoopTagData
                      {
-                         Tag = tag.Tag ?? string.Empty,
-                         IOType = tag.Iotype ?? string.Empty,
-                         InstrumentType = tag.Instrumenttype ?? string.Empty,
+                         Tag = GetCleanString(tag.Tag),
+                         IOType = GetCleanString(tag.Iotype),
+                         InstrumentType = GetCleanString(tag.Instrumenttype),
+                         System = GetCleanString(tag.System)
                      })
                      .ToList();
         }
@@ -60,8 +61,10 @@ namespace LoopDataAccessLayer
                         Tag = d.Tag,
                         LoopNo = GetCleanString(d.Loopno),
                         Description = GetCleanString(d.Servicedescription),
-                        Manufacturer = GetCleanString(d.Manufacturer),
-                        Model = GetCleanString(d.Model),
+
+                        Manufacturer = FetchManufacturerModel(d.Tblbominstr, "Manufacturer"),
+                        Model = FetchManufacturerModel(d.Tblbominstr, "Model"),
+                        
                         JB1Tag = GetCleanString(d.Jb1tag),
                         JB2Tag = GetCleanString(d.Jb2tag),
 
@@ -85,6 +88,8 @@ namespace LoopDataAccessLayer
                         FailPosition = GetCleanString(d.Failposition),
                         InstrumentType = GetCleanString(d.Instrumenttype),
 
+                        System = GetCleanString(d.System),
+
                     }).FirstOrDefault();
                 loopData[tag] = data ?? new DBLoopData();
 
@@ -104,6 +109,21 @@ namespace LoopDataAccessLayer
                 "rack" => (index.Rack ?? -1).ToString(),
                 "slot" => (index.Slot ?? -1).ToString(),
                 "channel" => (index.Channel ?? -1).ToString(),
+                _ => string.Empty
+            };
+        }
+
+        private static string FetchManufacturerModel(Tblbominstr? bom, string manufacturerModel)
+        {
+            if (bom is null)
+            {
+                return string.Empty;
+            }
+
+            return manufacturerModel.ToLower() switch
+            {
+                "manufacturer" => (bom.Manufacturer ?? string.Empty).ToString(),
+                "model" => (bom.Model ?? string.Empty).ToString(),
                 _ => string.Empty
             };
         }

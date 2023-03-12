@@ -1,4 +1,6 @@
-﻿namespace LoopDataAccessLayer
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+
+namespace LoopDataAccessLayer
 {
     public class AcadBlockFactory : IAcadBlockFactory
     {
@@ -13,65 +15,35 @@
         {
             return blockMap.Name switch
             {
-                "JB_3-TERM_SINGLE" =>new JB_3_TERM_SINGLE(dataLoader)
-                {
-                    Name = blockMap.Name,
-                    Tag = tagMap[blockMap.Tags[0]]
-                },
+                "JB_3-TERM_SINGLE" => new JB_3_TERM_SINGLE(dataLoader, blockMap, tagMap),
+                "JB_2-TERM_SINGLE" 
+                or "JB_2-TERM_SINGLE_JOG" => new JB_2_TERM_SINGLE(dataLoader, blockMap, tagMap),
+                
+                "PNL_2-TERM" => new PNL_2_TERM(dataLoader, blockMap, tagMap),
+                "PNL_3-TERM_24VDC-1" => new PNL_2_TERM_24VDC(dataLoader, blockMap, tagMap),
+                "PNL_3-TERM_24VDC-2" => new PNL_3_TERM_24VDC(dataLoader, blockMap, tagMap),
+                "PNL_3-TERM" => new PNL_3_TERM(dataLoader, blockMap, tagMap),
+                "PNL_4-TERM_24VDC" => new PNL_4_TERM_24VDC(dataLoader, blockMap, tagMap),
+                
+                "MOD_1-TERM_1-BPCS" => new MOD_1_TERM_1(dataLoader, blockMap, tagMap),
+                "MOD_2-TERM_1-BPCS" => new MOD_2_TERM_1(dataLoader, blockMap, tagMap),
+                "MOD_2-TERM_1-SIS"
+                or "MOD_2-TERM_1-BPCS_MIR" => new MOD_2_TERM_1_DISCRETE(dataLoader, blockMap, tagMap),
+                "MOD_2-TERM_2-BPCS" => new MOD_2_TERM_2_BPCS(dataLoader, blockMap, tagMap),
+                
+                "RELAY_24VDC-2" => new RELAY_24VDC_2(dataLoader, blockMap, tagMap),
+                
+                "INST_AI_2W" => new INST_AI_2W(dataLoader, blockMap, tagMap),
+                "INST_AO_2W" => new INST_AO_2W(dataLoader, blockMap, tagMap),
+                "INST_DI_4W_ZS" => new INST_DI_4W_ZS(dataLoader, blockMap, tagMap),
+                "INST_DO_2W" => new INST_DO_2W(dataLoader, blockMap, tagMap),
 
-                "PNL_3-TERM_24VDC-2" => new PNL_3_TERM_24VDC(dataLoader)
-                {
-                    Name = blockMap.Name,
-                    Tag = tagMap[blockMap.Tags[0]]
-                },
-
-                "PNL_3-TERM" => new PNL_3_TERM(dataLoader)
-                {
-                    Name = blockMap.Name,
-                    Tag = tagMap[blockMap.Tags[0]]
-                },
-
-                "MOD_1-TERM_1-BPCS" => new MOD_1_TERM_1_BPCS(dataLoader)
-                {
-                    Name = blockMap.Name,
-                    Tag = tagMap[blockMap.Tags[0]],
-                    ControllerTag = tagMap[blockMap.Tags[1]],
-                },
-
-                "MOD_2-TERM_1-BPCS" => new MOD_2_TERM_1_BPCS(dataLoader)
-                {
-                    Name = blockMap.Name,
-                    Tag = tagMap[blockMap.Tags[0]],
-                    ControllerTag = tagMap[blockMap.Tags[1]],
-                    AITag = tagMap[blockMap.Tags[2]],
-                },
-
-                "INST_AI_2W" => new INST_AI_2W(dataLoader)
-                {
-                    Name = blockMap.Name,
-                    Tag = tagMap[blockMap.Tags[0]]
-                },
-
-                "INST_AO_2W" => new INST_AO_2W(dataLoader)
-                {
-                    Name = blockMap.Name,
-                    Tag = tagMap[blockMap.Tags[0]],
-                    ValveTag = tagMap[blockMap.Tags[1]]
-                },
-
-                "VALVE_BODY" => new VALVE_BODY(dataLoader) 
-                {
-                    Name = blockMap.Name,
-                    Tag = tagMap[blockMap.Tags[0]]
-                },
-
-                "STD B SIZE SHEET" => new TITLE_BLOCK(dataLoader)
-                {
-                    Name = blockMap.Name,
-                    Tag = tagMap[blockMap.Tags[0]],
-                    DescriptionTag = tagMap[blockMap.Tags[1]]
-                },
-
+                "VALVE_BODY" => new VALVE_BODY(dataLoader, blockMap, tagMap),
+                "VALVE_2-SOL" => new VALVE_TWO_SOL(dataLoader, blockMap, tagMap),
+                
+                "STD B SIZE SHEET" => new TITLE_BLOCK(dataLoader, blockMap, tagMap),
+                "MATERIAL_LIST_5-ROW" => new MATERIAL_LIST_5_ROW(dataLoader, blockMap, tagMap),
+                
                 _ => new EMPTY_BLOCK(dataLoader)
             };
         }

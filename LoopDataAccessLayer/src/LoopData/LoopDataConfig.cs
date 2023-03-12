@@ -59,6 +59,7 @@ namespace LoopDataAccessLayer
     public class BlockMapData
     {
         public string Name { get; set; } = string.Empty;
+        public string UID { get; set; } = string.Empty;
         public List<string> Tags { get; set; } = new List<string>();
     }
 }

@@ -12,13 +12,38 @@ namespace LoopDataAccessLayer
     public abstract class BlockDataMappable : AcadBlockData, IMappableBlock
     {
         protected readonly IDataLoader dataLoader;
-
         public BlockDataMappable(IDataLoader dataLoader)
         {
-            this.dataLoader = dataLoader;
+            this.dataLoader = dataLoader ?? throw new ArgumentNullException(nameof(dataLoader));
         }
 
         public abstract void MapData(); 
+
+        protected void PopulateTag1Tag2()
+        {
+            PopulateTag1Tag2(Tag, "TAG1", "TAG2");
+        }
+
+        protected void PopulateTag1Tag2(string tag)
+        {
+            PopulateTag1Tag2(tag, "TAG1", "TAG2");
+        }
+
+        protected void PopulateTag1Tag2(string tag, string attribute1, string attribute2)
+        {
+            if (string.IsNullOrEmpty(tag))
+            {
+                throw new ArgumentException("Tag cannot be null or empty", nameof(tag));
+            }
+
+            string[] tagComponents = tag.Split('-');
+            if (tagComponents.Length == 2)
+            {
+                Attributes[attribute1] = tagComponents[0];
+                Attributes[attribute2] = tagComponents[1];
+            }
+        }
+
     }
 
     public abstract class BlockDataExcel : BlockDataMappable

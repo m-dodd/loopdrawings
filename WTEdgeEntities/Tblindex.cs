@@ -82,12 +82,13 @@ namespace WTEdge.Entities
         public string? Ioterminals { get; set; }
 
         public virtual Tblindex? ItpmparentNavigation { get; set; }
-        public virtual Tblloopno? LoopnoNavigation { get; set; }
+        public virtual Tblloop? LoopnoNavigation { get; set; }
         public virtual Tblindex? Parenttag1Navigation { get; set; }
         public virtual Tblindex? Parenttag2Navigation { get; set; }
         public virtual Tblindex? Parenttag3Navigation { get; set; }
         public virtual Tblsystem? SystemNavigation { get; set; }
         public virtual Tblarss? Tblarss { get; set; }
+        public virtual Tblbominstr? Tblbominstr { get; set; }
         public virtual ICollection<Tblindex> InverseItpmparentNavigation { get; set; }
         public virtual ICollection<Tblindex> InverseParenttag1Navigation { get; set; }
         public virtual ICollection<Tblindex> InverseParenttag2Navigation { get; set; }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class PNL_3_TERM : PNL_3_TERM_24VDC
+    public class PNL_2_TERM : PNL_2_TERM_24VDC
     {
-        public PNL_3_TERM(
+        public PNL_2_TERM(
             IDataLoader dataLoader, 
             BlockMapData blockMap,
             Dictionary<string, string> tagMap) : base(dataLoader, blockMap, tagMap) { }

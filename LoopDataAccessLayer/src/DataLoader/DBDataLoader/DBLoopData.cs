@@ -1,4 +1,6 @@
-﻿namespace LoopDataAccessLayer
+﻿using System.Text.RegularExpressions;
+
+namespace LoopDataAccessLayer
 {
     public class DBLoopData : IDBLoopData
     {
@@ -114,7 +116,7 @@
             {
                 if (IsCalRangeOK())
                 {
-                    return MinCalRange + " - " + MaxCalRange + " " + RangeUnits;
+                    return MinCalRange + " TO " + MaxCalRange + RangeUnits;
                 }
                 else
                 {
@@ -123,6 +125,22 @@
             }
         
         }
+
+        public string System { get; set; } = string.Empty;
+
+        public IEnumerable<string> FourLineDescription
+        {
+            get
+            {
+                List<string> descriptions = SplitDescriptionToFourLines();
+                while (descriptions.Count < 4)
+                {
+                    descriptions.Add(string.Empty);
+                }
+                return descriptions;
+            }
+        }
+
 
         private static string BuildAlarmString(string prefix, string value)
         {
@@ -138,5 +156,29 @@
         {
             return MinCalRange != DBLoopData.CALERROR.ToString() && MaxCalRange != DBLoopData.CALERROR.ToString();
         }
+
+        private List<string> SplitDescriptionToFourLines()
+        {
+            // This is a bit tricky, but we use a fancy regex expression to look for any characters (except terminators)
+            // between 1-maximumLineLength in length, but less than the white space
+            // not entirely sure I understand it, but it is essentially is two regex groups, one captures, and one non-capturing
+            // (.{1,10})(?:\s|$)
+            // the parenthesis are the groups... (.{1,10}) and (?:\s|$)
+            // (.{1,10}) == match any set of characters between 1-10 characters in length
+            // (?:\s|$) == do not capture any white space or terminating charactrs
+            // ?: makes it non-capturing
+            // https://stackoverflow.com/questions/22368434/best-way-to-split-string-into-lines-with-maximum-length-without-breaking-words
+            // https://stackoverflow.com/questions/11416191/converting-a-matchcollection-to-string-array
+            
+            int maximumLineLength = 20; 
+            return Regex.Matches(Description, @"(.{1," + maximumLineLength +@"})(?:\s|$)")
+                .Cast<Match>()
+                // regex gives whitespace at the end, it is not supposed to but I'm not going to troubleshoot it
+                // Trim is a simple solution
+                .Select(m => m.Value.Trim())
+                .Take(4)
+                .ToList();
+        }
+
     }
 }

@@ -13,6 +13,8 @@ namespace LoopDataAccessLayer
         T MaxSheets { get; set; }
         T Project { get; set; }
         T Scale { get; set; }
+        T CityTown { get; set; }
+        T ProvinceState { get; set; }
         IExcelTitleBlockRevData<T> GeneralRevData { get; set; }
         IExcelTitleBlockRevData<T> RevBlockRevData { get; set; }
     }

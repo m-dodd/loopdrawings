@@ -8,8 +8,6 @@ namespace LoopDataAccessLayer
 {
     public interface IExcelColMapper
     {
-        public IExcelIOData<int> GetIOColMap();
-        public IExcelJBRowData<int> GetJBColMap();
-        public IExcelTitleBlockData<int> GetTitleBlockColMap();
+        public IExcelColMaps GetColumnMaps();
     }
 }

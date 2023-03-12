@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class INST_AI_2W : BlockFieldDeviceBase
+    public class INST_DO_2W : BlockFieldDeviceBase
     {
-        public INST_AI_2W(
+        public string ValveTag { get; set; } = string.Empty;
+
+        public INST_DO_2W(
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader) 
+            Dictionary<string, string> tagMap) : base(dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
@@ -22,8 +23,6 @@ namespace LoopDataAccessLayer
         protected override void FetchDBData()
         {
             DBLoopData data = dataLoader.GetLoopData(Tag);
-
-            Attributes["RANGE"] = data.Range;
             PopulateFourLineDescription(data);
             PopulateTag1Tag2();
         }
@@ -31,17 +30,17 @@ namespace LoopDataAccessLayer
         protected override void FetchExcelData()
         {
             var IOData = dataLoader.GetIOData(Tag)?.Device;
-            
+
             if (IOData is not null)
             {
                 var cableData = dataLoader.GetCableData(IOData.CableTag);
 
                 Attributes["TERM1"] = IOData.Terminal1;
                 Attributes["TERM2"] = IOData.Terminal2;
-                Attributes["CLR1"] = IOData.WireColor1;
-                Attributes["CLR2"] = IOData.WireColor2;
-                Attributes["PAIR_NO"] = IOData.CorePair1;
-                Attributes["WIRE_TAG_FIELD"] = IOData.WireTag1;
+                Attributes["COND_NO1"] = IOData.CorePair1;
+                Attributes["COND_NO2"] = IOData.CorePair2;
+                Attributes["WIRE_TAG_FIELD1"] = IOData.WireTag1;
+                Attributes["WIRE_TAG_FIELD2"] = IOData.WireTag2;
                 Attributes["CABLE_TAG_FIELD"] = IOData.CableTag;
                 Attributes["CABLE_SIZE"] = cableData?.CableSizeType ?? string.Empty;
             }

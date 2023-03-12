@@ -16,27 +16,39 @@ namespace LoopDataAccessLayer
         T BreakerNumber { get; set; }
         T Tag { get; set; }
         T PanelTerminalStrip { get; set; }
-        
+
         T JB1 { get; set; }
         T JB2 { get; set; }
         T JB3 { get; set; }
         IExcelIODeviceCommon<T> Device { get; set; }
         IExcelIODeviceCommon<T> IO { get; set; }
-        
+        IExcelIORelay<T> Relay { get; set; }
+
     }
 
     public interface IExcelIODeviceCommon<T>
     {
         T CableTag { get; set; }
-        T TerminalPlus { get; set; }
-        T TerminalNeg { get; set; }
+        T Terminal1 { get; set; }
+        T Terminal2 { get; set; }
         T TerminalShld { get; set; }
-        T WireTagPlus { get; set; }
-        T WireTagNeg { get; set; }
-        T WireColorPlus { get; set; }
-        T WireColorNeg { get; set; }
-        T CorePairPlus { get; set; }
-        T CorePairNeg { get; set; }
+        T WireTag1 { get; set; }
+        T WireTag2 { get; set; }
+        T WireColor1 { get; set; }
+        T WireColor2 { get; set; }
+        T CorePair1 { get; set; }
+        T CorePair2 { get; set; }
+    }
+
+    public interface IExcelIORelay<T>
+    {
+        T Tag { get; set; }
+        T PanelTerminalStrip { get; set; }
+        T Term1 { get; set; }
+        T Term2 { get; set; }
+        T ContactTag { get; set; }
+        T ContactTerm1 { get; set; }
+        T ContactTerm2 { get; set; }
     }
     
 }

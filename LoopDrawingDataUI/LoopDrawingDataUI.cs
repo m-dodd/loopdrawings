@@ -31,8 +31,17 @@ namespace LoopDrawingDataUI
                 MessageBox.Show(invalidFilesMessage, invalidCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            ExcelDataLoader excelLoader = new(excelFileName);
+            // figure out the rigth exception when the excel is open
+            ExcelDataLoader excelLoader;
+            try
+            {
+                excelLoader = new(excelFileName);
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show("Excel must be open - please close it.", "Close Excel File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             DBDataLoader dbLoader = new();
             DataLoader dataLoader = new(excelLoader, dbLoader);
 
@@ -101,8 +110,8 @@ namespace LoopDrawingDataUI
 
         private void btnLoadTestConfig_Click(object sender, EventArgs e)
         {
-            configFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\loop_drawing_config_v3.json";
-            excelFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\2023.02.02 - Automation Wiring Data.xlsx";
+            configFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\loop_drawing_config_v4.json";
+            excelFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\2023.02.02 - Automation Wiring Data (5).xlsm";
             templatePath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\templates";
             outputResultPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\output_test_data.json";
             outputDrawingPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output";

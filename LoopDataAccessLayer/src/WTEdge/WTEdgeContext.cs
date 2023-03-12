@@ -5,23 +5,23 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
-
 {
-    internal partial class WTEdgeContext : DbContext
+    public partial class WTEdgeContext : DbContext
     {
         public WTEdgeContext()
         {
         }
+
         public WTEdgeContext(DbContextOptions<WTEdgeContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Tblarss> Tblarsses { get; set; } = null!;
+        public virtual DbSet<Tblbominstr> Tblbominstrs { get; set; } = null!;
         public virtual DbSet<Tblindex> Tblindices { get; set; } = null!;
         public virtual DbSet<Tblindexrelation> Tblindexrelations { get; set; } = null!;
         public virtual DbSet<Tblloop> Tblloops { get; set; } = null!;
-        public virtual DbSet<Tblloopno> Tblloopnos { get; set; } = null!;
         public virtual DbSet<Tbllooptemplate> Tbllooptemplates { get; set; } = null!;
         public virtual DbSet<Tblsdkrelation> Tblsdkrelations { get; set; } = null!;
         public virtual DbSet<Tblsystem> Tblsystems { get; set; } = null!;
@@ -31,7 +31,7 @@ namespace LoopDataAccessLayer
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=duco2.wtedgeplatform.com;user=mdodd;password=wtedgepassword;database=nutrien_leal", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.25-mariadb"));
+                optionsBuilder.UseMySql("server=duco2.wtedgeplatform.com;user=mdodd;password=wtedgepassword;database=nutrien_leal", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.25-mariadb"), options => options.EnableRetryOnFailure());
             }
         }
 
@@ -210,6 +210,225 @@ namespace LoopDataAccessLayer
                     .HasPrincipalKey<Tblindex>(p => p.Tag)
                     .HasForeignKey<Tblarss>(d => d.Tags)
                     .HasConstraintName("tblarss_ibfk_1");
+            });
+
+            modelBuilder.Entity<Tblbominstr>(entity =>
+            {
+                entity.ToTable("tblbominstr");
+
+                entity.HasIndex(e => e.Supplierquotelineno, "FKsupplierquotelineno");
+
+                entity.HasIndex(e => e.Location, "fkbomlocation");
+
+                entity.HasIndex(e => e.Mrqissued, "fkbommrqissued");
+
+                entity.HasIndex(e => e.Project, "fkbomproject");
+
+                entity.HasIndex(e => e.Purchaser, "fkbompurchasere");
+
+                entity.HasIndex(e => e.Quoteby, "fkbomquoteby");
+
+                entity.HasIndex(e => e.Status, "fkbomstatus");
+
+                entity.HasIndex(e => e.Ducolocation, "fkducolocation");
+
+                entity.HasIndex(e => e.Ducopackinglist, "fkducopackinglist");
+
+                entity.HasIndex(e => e.Tag, "fkequiptag")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Inspectionstatus, "fkinspectionstatus");
+
+                entity.HasIndex(e => e.Model, "fkmodel");
+
+                entity.HasIndex(e => e.Mrno, "fkmrno");
+
+                entity.HasIndex(e => e.Mrpissued, "fkmrpissued");
+
+                entity.HasIndex(e => e.Mrrev, "fkmrrev");
+
+                entity.HasIndex(e => e.Pono, "fkpono");
+
+                entity.HasIndex(e => e.Quotereceived, "fkquotereceived");
+
+                entity.HasIndex(e => e.Sitelabel, "fksitelabel1");
+
+                entity.HasIndex(e => e.Supplier, "fksupplier");
+
+                entity.HasIndex(e => e.Suppliershiplocation, "fksuppliershiplocation");
+
+                entity.HasIndex(e => e.Supplierorder, "fktblbomsupplierorder");
+
+                entity.HasIndex(e => e.Mrlineno, "fktpklineno");
+
+                entity.HasIndex(e => e.Polineno, "fktpkpolineno");
+
+                entity.HasIndex(e => e.Vendordocstatus, "fkvendordocstatus");
+
+                entity.HasIndex(e => e.Id, "id")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Manufacturer, "tblbominstr_manufacturer");
+
+                entity.HasIndex(e => e.Currency, "tblbominstrfkcurrency");
+
+                entity.HasIndex(e => e.Supplierquote, "tblbomsupplierquote");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(50)")
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Actualdelivery).HasColumnName("actualdelivery");
+
+                entity.Property(e => e.Comments)
+                    .HasColumnType("mediumtext")
+                    .HasColumnName("comments");
+
+                entity.Property(e => e.Currency)
+                    .HasMaxLength(25)
+                    .HasColumnName("currency");
+
+                entity.Property(e => e.Description)
+                    .HasColumnType("mediumtext")
+                    .HasColumnName("description");
+
+                entity.Property(e => e.Ducolocation)
+                    .HasMaxLength(100)
+                    .HasColumnName("ducolocation");
+
+                entity.Property(e => e.Ducopackinglist)
+                    .HasMaxLength(100)
+                    .HasColumnName("ducopackinglist");
+
+                entity.Property(e => e.Expecteddelivery).HasColumnName("expecteddelivery");
+
+                entity.Property(e => e.Inspectionstatus)
+                    .HasMaxLength(100)
+                    .HasColumnName("inspectionstatus");
+
+                entity.Property(e => e.Location)
+                    .HasMaxLength(100)
+                    .HasColumnName("location");
+
+                entity.Property(e => e.Manufacturer)
+                    .HasMaxLength(100)
+                    .HasColumnName("manufacturer");
+
+                entity.Property(e => e.Model).HasColumnName("model");
+
+                entity.Property(e => e.Mrlineno)
+                    .HasColumnType("int(25)")
+                    .HasColumnName("mrlineno");
+
+                entity.Property(e => e.Mrno)
+                    .HasMaxLength(100)
+                    .HasColumnName("mrno");
+
+                entity.Property(e => e.Mrpissued).HasColumnName("mrpissued");
+
+                entity.Property(e => e.Mrqissued).HasColumnName("mrqissued");
+
+                entity.Property(e => e.Mrrev)
+                    .HasMaxLength(25)
+                    .HasColumnName("mrrev");
+
+                entity.Property(e => e.Orderdate).HasColumnName("orderdate");
+
+                entity.Property(e => e.Polineno)
+                    .HasColumnType("int(25)")
+                    .HasColumnName("polineno");
+
+                entity.Property(e => e.Pono)
+                    .HasMaxLength(100)
+                    .HasColumnName("pono");
+
+                entity.Property(e => e.Productid)
+                    .HasMaxLength(100)
+                    .HasColumnName("productid");
+
+                entity.Property(e => e.Project)
+                    .HasMaxLength(100)
+                    .HasColumnName("project");
+
+                entity.Property(e => e.Purchaser)
+                    .HasMaxLength(100)
+                    .HasColumnName("purchaser");
+
+                entity.Property(e => e.Qtyordered)
+                    .HasColumnType("int(10)")
+                    .HasColumnName("qtyordered")
+                    .HasDefaultValueSql("'1'");
+
+                entity.Property(e => e.Qtyreceived)
+                    .HasColumnType("int(10)")
+                    .HasColumnName("qtyreceived")
+                    .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.Qtyremaining)
+                    .HasColumnType("int(10)")
+                    .HasColumnName("qtyremaining");
+
+                entity.Property(e => e.Quoteby)
+                    .HasMaxLength(100)
+                    .HasColumnName("quoteby");
+
+                entity.Property(e => e.Quotereceived).HasColumnName("quotereceived");
+
+                entity.Property(e => e.Ros).HasColumnName("ros");
+
+                entity.Property(e => e.Sitelabel)
+                    .HasMaxLength(50)
+                    .HasColumnName("sitelabel");
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(100)
+                    .HasColumnName("status");
+
+                entity.Property(e => e.Supplier)
+                    .HasMaxLength(100)
+                    .HasColumnName("supplier");
+
+                entity.Property(e => e.Supplierorder)
+                    .HasMaxLength(100)
+                    .HasColumnName("supplierorder");
+
+                entity.Property(e => e.Supplierquote)
+                    .HasMaxLength(100)
+                    .HasColumnName("supplierquote");
+
+                entity.Property(e => e.Supplierquotelineno)
+                    .HasColumnType("int(25)")
+                    .HasColumnName("supplierquotelineno");
+
+                entity.Property(e => e.Suppliershiplocation)
+                    .HasMaxLength(100)
+                    .HasColumnName("suppliershiplocation");
+
+                entity.Property(e => e.Tag)
+                    .HasMaxLength(100)
+                    .HasColumnName("tag");
+
+                entity.Property(e => e.Totalpricecad)
+                    .HasPrecision(10, 2)
+                    .HasColumnName("totalpricecad");
+
+                entity.Property(e => e.Totalpriceusd)
+                    .HasPrecision(10, 2)
+                    .HasColumnName("totalpriceusd");
+
+                entity.Property(e => e.Unitprice)
+                    .HasPrecision(10, 2)
+                    .HasColumnName("unitprice");
+
+                entity.Property(e => e.Vendordocstatus)
+                    .HasMaxLength(100)
+                    .HasColumnName("vendordocstatus");
+
+                entity.HasOne(d => d.TagNavigation)
+                    .WithOne(p => p.Tblbominstr)
+                    .HasPrincipalKey<Tblindex>(p => p.Tag)
+                    .HasForeignKey<Tblbominstr>(d => d.Tag)
+                    .HasConstraintName("fkbominstrtag");
             });
 
             modelBuilder.Entity<Tblindex>(entity =>
@@ -582,7 +801,7 @@ namespace LoopDataAccessLayer
 
                 entity.HasOne(d => d.LoopnoNavigation)
                     .WithMany(p => p.Tblindices)
-                    .HasPrincipalKey(p => p.Loopno)
+                    .HasPrincipalKey(p => p.Loop)
                     .HasForeignKey(d => d.Loopno)
                     .HasConstraintName("fkloopno");
 
@@ -650,7 +869,7 @@ namespace LoopDataAccessLayer
 
                 entity.HasIndex(e => e.Looptemplate, "fklooptemplate");
 
-                entity.HasIndex(e => e.Loop, "fktestloop")
+                entity.HasIndex(e => e.Loop, "loopno")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -664,28 +883,6 @@ namespace LoopDataAccessLayer
                 entity.Property(e => e.Looptemplate)
                     .HasMaxLength(100)
                     .HasColumnName("looptemplate");
-
-                entity.HasOne(d => d.LoopNavigation)
-                    .WithOne(p => p.Tblloop)
-                    .HasPrincipalKey<Tblloopno>(p => p.Loopno)
-                    .HasForeignKey<Tblloop>(d => d.Loop)
-                    .HasConstraintName("tblloop_ibfk_2");
-            });
-
-            modelBuilder.Entity<Tblloopno>(entity =>
-            {
-                entity.ToTable("tblloopno");
-
-                entity.HasIndex(e => e.Loopno, "loopno")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(25)")
-                    .HasColumnName("id");
-
-                entity.Property(e => e.Loopno)
-                    .HasMaxLength(100)
-                    .HasColumnName("loopno");
             });
 
             modelBuilder.Entity<Tbllooptemplate>(entity =>

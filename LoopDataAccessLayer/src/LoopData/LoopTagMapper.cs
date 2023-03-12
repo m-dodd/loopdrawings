@@ -2,15 +2,26 @@
 using LoopDataAdapterLayer;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
     public class LoopTagMapper
     {
-        private static string[] definedTagTypes = { "AI", "AO", "CONTROLLER", "VALVE" };
+        private static string[] definedTagTypes = {
+            "AI",
+            "AO",
+            "CONTROLLER",
+            "VALVE",
+            "ZSC",
+            "ZSO",
+            "SOL-BPCS",
+            "SOL-SIS"
+        };
 
         public static Dictionary<string, string> BuildTagMap(
             IEnumerable<LoopTagData> tags, TemplateConfig templateConfig
@@ -54,7 +65,7 @@ namespace LoopDataAccessLayer
                 case "AI":
                     return tags.Where(t => t.IOType == "AI")
                                .First().Tag;
-                
+
                 case "AO":
                     return tags.Where(t => t.IOType == "AO")
                                .First().Tag;
@@ -65,8 +76,33 @@ namespace LoopDataAccessLayer
                                .First().Tag;
 
                 case "VALVE":
-                    string[] valveTypes = { "CV-BALL", "CV-BUTTERFLY", "CV-GLOBE" };
-                    return tags.Where(t => valveTypes.Contains(t.InstrumentType.ToUpper()))
+                    Regex rg = new(@"ball|gate|globe|butterfly", RegexOptions.IgnoreCase);
+                    return tags
+                        .Where(t => (t.IOType == "---"
+                                     || string.IsNullOrEmpty(t.IOType))
+                                    && rg.IsMatch(t.InstrumentType))
+                        .First().Tag;
+
+                case "ZSC":
+                    return tags.Where(t => t.IOType == "DI" 
+                                        && t.Tag.ToUpper().Contains("ZSC"))
+                               .First().Tag;
+
+                case "ZSO":
+                    return tags.Where(t => t.IOType == "DI" 
+                                        && t.Tag.ToUpper().Contains("ZSO"))
+                               .First().Tag;
+
+                case "SOL-BPCS":
+                    return tags.Where(t => t.IOType == "DO" 
+                                        && t.InstrumentType.ToUpper().Contains("SOLENOID")
+                                        && t.System.ToUpper().Contains("BPCS"))
+                               .First().Tag;
+
+                case "SOL-SIS":
+                    return tags.Where(t => t.IOType == "DO"
+                                        && t.InstrumentType.ToUpper().Contains("SOLENOID")
+                                        && t.System.ToUpper().Contains("SIS"))
                                .First().Tag;
 
                 default:

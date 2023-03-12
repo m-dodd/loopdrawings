@@ -6,27 +6,24 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class MOD_2_TERM_1_BPCS : MOD_1_TERM_1_BPCS
+    public class MOD_2_TERM_1 : MOD_1_TERM_1
     {
         public string AITag { get; set; } = string.Empty;
-        public MOD_2_TERM_1_BPCS(IDataLoader dataLoader) : base(dataLoader) { }
+        public MOD_2_TERM_1(IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(dataLoader, blockMap, tagMap)
+        {
+            AITag = tagMap[blockMap.Tags[2]];
+        }
 
         protected override void FetchDBData()
         { 
             base.FetchDBData();
             DBLoopData dataAI = dataLoader.GetLoopData(AITag);
-
-            Attributes["ALARM1"] = dataAI.HiHiAlarm;
-            Attributes["ALARM2"] = dataAI.HiAlarm;
-            Attributes["ALARM3"] = dataAI.LoAlarm;
-            Attributes["ALARM4"] = dataAI.LoLoAlarm;
-            Attributes["ALARM5"] = dataAI.HiControl;
-            Attributes["ALARM6"] = dataAI.LoControl;
+            PopulateAlarms(dataAI);
         }
 
         protected override void FetchExcelData()
         {
-            var IOData = dataLoader.GetIOData(Tag);
+            IExcelIOData<string>? IOData = dataLoader.GetIOData(Tag);
             if (IOData is not null)
             {
                 Attributes["MOD_TERM1"] = IOData.ModuleTerm01;

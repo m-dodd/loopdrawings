@@ -11,8 +11,15 @@ namespace LoopDataAccessLayer
     public class TITLE_BLOCK : BlockDataExcel
     {
         public string DescriptionTag { get; set; } = string.Empty;
-        public TITLE_BLOCK(IDataLoader dataLoader) : base(dataLoader)
+        public TITLE_BLOCK(
+            IDataLoader dataLoader,
+            BlockMapData blockMap,
+            Dictionary<string, string> tagMap) : base(dataLoader)
         {
+            Name = blockMap.Name;
+            UID = blockMap.UID;
+            Tag = tagMap[blockMap.Tags[0]];
+            DescriptionTag = tagMap[blockMap.Tags[1]];
         }
 
         protected override void FetchExcelData()
@@ -41,6 +48,9 @@ namespace LoopDataAccessLayer
             Attributes["REVD_R1"] = titleBlockData.RevBlockRevData.DrawnBy;
             Attributes["CHK_R1"] = titleBlockData.RevBlockRevData.CheckedBy;
             Attributes["APD_R1"] = titleBlockData.RevBlockRevData.ApprovedBy;
+
+            Attributes["LOCATION-CITY/TOWN"] = titleBlockData.CityTown;
+            Attributes["LOCATION-PROVINCE/STATE"] = titleBlockData.ProvinceState;
         }
 
     }

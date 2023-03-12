@@ -10,7 +10,16 @@ namespace LoopDataAccessLayer
     {
         public string ValveTag { get; set; } = string.Empty;
 
-        public INST_AO_2W(IDataLoader dataLoader) : base(dataLoader) { }
+        public INST_AO_2W(
+            IDataLoader dataLoader,
+            BlockMapData blockMap,
+            Dictionary<string, string> tagMap) : base(dataLoader, blockMap, tagMap)
+        {
+            Name = blockMap.Name;
+            UID = blockMap.UID;
+            Tag = tagMap[blockMap.Tags[0]];
+            ValveTag = tagMap[blockMap.Tags[1]];
+        }
 
         protected override void FetchDBData()
         {
@@ -21,10 +30,5 @@ namespace LoopDataAccessLayer
             Attributes["VALVE_FAIL"] = valveData.FailPosition;
 
         }
-
-        //protected override void FetchExcelData()
-        //{
-        //    base.FetchExcelData();
-        //}
     }
 }

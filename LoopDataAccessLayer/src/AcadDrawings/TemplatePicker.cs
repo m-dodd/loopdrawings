@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
+using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
 {
@@ -18,20 +20,14 @@ namespace LoopDataAccessLayer
 
         public TemplateConfig? GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
         {
-            switch (template.TemplateName.ToUpper())
+            return template.TemplateName.ToUpper() switch
             {
-                case "XMITER":
-                    return GetXmitterTemplate(tagMap);
-
-                case "PID_AI_AO":
-                    return GetPidTemplate(tagMap);
-
-                case "PID_AI_NOAO":
-                    return GetPidNoAOTemplate(tagMap);
-
-                default:
-                    return template;
-            }
+                "XMITER" => GetXmitterTemplate(tagMap),
+                "PID_AI_AO" => GetPidTemplate(tagMap),
+                "PID_AI_NOAO" => GetPidNoAOTemplate(tagMap),
+                "XV_2XY" => GetXV2XYTemplate(tagMap),
+                _ => template,
+            };
         }
 
         private TemplateConfig? GetTemplate(string templateName)
@@ -56,6 +52,11 @@ namespace LoopDataAccessLayer
         {
             string templateName = BuildPidName(tagMap).Replace("AO", "noAO");
             return GetTemplate(templateName);
+        }
+
+        private TemplateConfig? GetXV2XYTemplate(Dictionary<string, string> tagMap)
+        {
+            return GetTemplate(BuildXV2XYName(tagMap));
         }
 
         private string BuildXmiterName(Dictionary<string, string> tagMap)
@@ -90,6 +91,32 @@ namespace LoopDataAccessLayer
                     + numberOfAIJbs.ToString()
                     + ","
                     + numberOfAOJbs.ToString()
+                    + ").";
+                throw new ArgumentOutOfRangeException(msg);
+            }
+
+            return templateName;
+        }
+
+        private string BuildXV2XYName(Dictionary<string, string> tagMap)
+        {
+            int numberOfBPCSJbs = CountNumberJbs(tagMap["SOL-BPCS"]);
+            int numberOfSISJbs = CountNumberJbs(tagMap["SOL-SIS"]);
+            string templateName;
+            if ((0 <= numberOfBPCSJbs && numberOfBPCSJbs <= 1) & (0 <= numberOfSISJbs && numberOfSISJbs <= 1))
+            {
+                templateName = "XV_2XY_BPCS_"
+                    + numberOfBPCSJbs.ToString()
+                    + "JB_SIS_"
+                    + numberOfSISJbs.ToString()
+                    + "JB";
+            }
+            else
+            {
+                string msg = "Number of JBs must be between 0 and 2, not ("
+                    + numberOfBPCSJbs.ToString()
+                    + ","
+                    + numberOfSISJbs.ToString()
                     + ").";
                 throw new ArgumentOutOfRangeException(msg);
             }

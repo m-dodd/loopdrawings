@@ -5,6 +5,7 @@
         string Channel { get; set; }
         string Description { get; set; }
         string FailPosition { get; set; }
+        IEnumerable<string> FourLineDescription { get; }
         string HiAlarm { get; set; }
         string HiControl { get; set; }
         string HiHiAlarm { get; set; }
@@ -26,6 +27,7 @@
         string Rack { get; set; }
         string RangeUnits { get; set; }
         string Slot { get; set; }
+        string System { get; set; }
         string Tag { get; set; }
     }
 }

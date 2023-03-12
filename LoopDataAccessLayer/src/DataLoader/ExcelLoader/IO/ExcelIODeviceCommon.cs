@@ -10,15 +10,15 @@ namespace LoopDataAccessLayer
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public T CableTag { get; set; }
-        public T TerminalPlus { get; set; }
-        public T TerminalNeg { get; set; }
+        public T Terminal1 { get; set; }
+        public T Terminal2 { get; set; }
         public T TerminalShld { get; set; }
-        public T WireTagPlus { get; set; }
-        public T WireTagNeg { get; set; }
-        public T WireColorPlus { get; set; }
-        public T WireColorNeg { get; set; }
-        public T CorePairPlus { get; set; }
-        public T CorePairNeg { get; set; }
+        public T WireTag1 { get; set; }
+        public T WireTag2 { get; set; }
+        public T WireColor1 { get; set; }
+        public T WireColor2 { get; set; }
+        public T CorePair1 { get; set; }
+        public T CorePair2 { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     }
 

@@ -14,6 +14,8 @@ namespace LoopDataAccessLayer.src.DataLoader.ExcelLoader
         public T MaxSheets { get; set; }
         public T Project { get; set; }
         public T Scale { get; set; }
+        public T CityTown { get; set; }
+        public T ProvinceState { get; set; }
         public IExcelTitleBlockRevData<T> GeneralRevData { get; set; }
         public IExcelTitleBlockRevData<T> RevBlockRevData { get; set; }
 #pragma warning restore CS8618

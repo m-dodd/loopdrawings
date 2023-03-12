@@ -42,7 +42,7 @@ namespace LoopDataAccessLayer
                 return null;
             }
 
-            var correctTemplate = GetCorrectTemplate(template, tagMap);
+            TemplateConfig? correctTemplate = templatePicker.GetCorrectTemplate(template, tagMap);
             if (correctTemplate is null)
             {
                 return null;
@@ -57,11 +57,6 @@ namespace LoopDataAccessLayer
             return loopConfig.TemplateDefs.TryGetValue(loop.Template, out TemplateConfig? template)
                 ? template
                 : null;
-        }
-
-        private TemplateConfig? GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
-        {
-            return templatePicker.GetCorrectTemplate(template, tagMap);
         }
 
         private AcadDrawingDataMappable ConstructDrawing(LoopNoTemplatePair loop, TemplateConfig template, Dictionary<string, string> tagMap)
@@ -102,7 +97,7 @@ namespace LoopDataAccessLayer
 
         private Dictionary<string, string> GetLoopTagMap(LoopNoTemplatePair loop, TemplateConfig template)
         {
-            List<LoopTagData> tags = dataLoader.GetLoopTags(loop);
+            List<LoopTagData> tags = (List<LoopTagData>)dataLoader.GetLoopTags(loop);
             if (tags.Count > 0) 
             {
                 return LoopTagMapper.BuildTagMap(tags, template);
@@ -117,7 +112,7 @@ namespace LoopDataAccessLayer
         private List<IMappableBlock> BuildBlocks(TemplateConfig template, Dictionary<string, string> tagMap)
         {
             return template.BlockMap
-                .Select(blockMap => blockFactory.GetBlock(blockMap, tagMap))
+                .Select(blockData => blockFactory.GetBlock(blockData, tagMap))
                 .Where(block => block is not EMPTY_BLOCK)
                 .ToList();
         }

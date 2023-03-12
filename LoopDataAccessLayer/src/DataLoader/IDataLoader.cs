@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public interface IDataLoader : IExcelLoader, IDBLoader
+    public interface IDataLoader : IExcelDataLoader, IDBLoader
     {
     }
 }
