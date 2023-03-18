@@ -1,6 +1,6 @@
 {
-  "XMITER": {
-    "TemplateName": "XMITER",
+  "XMTR": {
+    "TemplateName": "XMTR",
     "TemplateFileName": "",
     "BlockMap": [
       {
@@ -38,13 +38,23 @@
       },
       {
         "Name": "EMPTY_BLOCK",
-        "Tags": [ "ZSC", "ZSO", "SOL-BPCS", "SOL-SIS", "VALVE", "RELAY", "SOL-SIS" ]
+        "Tags": [ "ZSC", "ZSO", "SOL-BPCS", "SOL-SIS", "VALVE" ]
       }
     ]
   },
-  "XMITER_1JB": {
-    "TemplateName": "XMITER_1JB",
-    "TemplateFileName": "XMITER_1JB.dwg",
+  "DIN_4W": {
+    "TemplateName": "XMTR",
+    "TemplateFileName": "",
+    "BlockMap": [
+      {
+        "Name": "EMPTY_BLOCK",
+        "Tags": [ "DRAWING_NAME", "DI" ]
+      }
+    ]
+  },
+  "XMTR_1JB": {
+    "TemplateName": "XMTR_1JB",
+    "TemplateFileName": "XMTR_1JB.dwg",
     "BlockMap": [
       {
         "Name": "STD B SIZE SHEET",
@@ -83,9 +93,9 @@
       }
     ]
   },
-  "XMITER_2JB": {
-    "TemplateName": "XMITER_2JB",
-    "TemplateFileName": "XMITER_2JB.dwg",
+  "XMTR_2JB": {
+    "TemplateName": "XMTR_2JB",
+    "TemplateFileName": "XMTR_2JB.dwg",
     "BlockMap": [
       {
         "Name": "STD B SIZE SHEET",
@@ -224,17 +234,21 @@
       {
         "Name": "RELAY_24VDC-2",
         "UID": "RELAY_24VDC-2-1",
-        "Tags": [ "RELAY" ]
+        "Tags": [ "SOL-BPCS" ]
       },
       {
         "Name": "MOD_2-TERM_1-BPCS_MIR",
         "UID": "MOD_2-TERM_1-BPCS_MIR-1",
-        "Tags": [ "RELAY" ]
+        "Tags": [ "SOL-BPCS" ]
       },
-
       {
         "Name": "INST_DO_2W",
-        "UID": "INST_DO_2W-1",
+        "UID": "INST_DO_2W-2",
+        "Tags": [ "SOL-SIS" ]
+      },
+      {
+        "Name": "JB_2-TERM_SINGLE_JOG",
+        "UID": "JB_2-TERM_SINGLE_JOG-1",
         "Tags": [ "SOL-SIS" ]
       },
       {
@@ -251,6 +265,53 @@
         "Name": "MATERIAL_LIST_5-ROW",
         "UID": "MATERIAL_LIST_5-ROW-1",
         "Tags": [ "ZSC", "ZSO", "SOL-BPCS", "SOL-SIS", "VALVE" ]
+      }
+    ]
+  },
+
+  "DIN_4W_1JB": {
+    "TemplateName": "DIN_4W_1JB",
+    "TemplateFileName": "DIN_4W_1JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "DI" ]
+      },
+      {
+        "Name": "SD_TABLE_10-ROW",
+        "UID": "SD_TABLE_10-ROW-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "INST_DI_4W",
+        "UID": "INST_DI_4W-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "JB_4-TERM_SINGLE",
+        "UID": "JB_4-TERM_SINGLE-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "PNL_2-TERM_24VDC",
+        "UID": "PNL_2-TERM_24VDC-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "PNL_2-TERM_EXT_PWR",
+        "UID": "PNL_2-TERM_EXT_PWR-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-SIS",
+        "UID": "MOD_1-TERM_1-SIS-1",
+        "Tags": [ "DI", "DI" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "DI" ]
       }
     ]
   }

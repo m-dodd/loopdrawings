@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class JB_2_TERM_SINGLE : BlockDataExcel
+    public class JB_ANALOG_TERM_SINGLE : BlockDataExcel
     {
-        public JB_2_TERM_SINGLE(
-            IDataLoader dataLoader,
-            BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader)
+        public JB_ANALOG_TERM_SINGLE(IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
@@ -42,8 +39,8 @@ namespace LoopDataAccessLayer
                 }
                 string terminalString = (i + 1).ToString();
                 Attributes["TB" + terminalString + "-1"] = t.Terminal;
-                Attributes["COND_NO" + terminalString + "_L"] = t.LeftSide?.Core ?? string.Empty;
-                Attributes["COND_NO" + terminalString + "_R"] = t.RightSide?.Core ?? string.Empty;
+                Attributes["CLR" + terminalString + "-L1"] = t.LeftSide?.Color ?? string.Empty;
+                Attributes["CLR" + terminalString + "-R1"] = t.RightSide?.Color ?? string.Empty;
 
                 if (i == 0)
                 {

@@ -22,7 +22,9 @@ namespace LoopDataAccessLayer
         {
             return template.TemplateName.ToUpper() switch
             {
-                "XMITER" => GetXmitterTemplate(tagMap),
+                "XMTR" => GetSimpleTemplate(template, tagMap, "AI"),
+                "DIN_4W" => GetSimpleTemplate(template, tagMap, "DI"),
+
                 "PID_AI_AO" => GetPidTemplate(tagMap),
                 "PID_AI_NOAO" => GetPidNoAOTemplate(tagMap),
                 "XV_2XY" => GetXV2XYTemplate(tagMap),
@@ -38,9 +40,9 @@ namespace LoopDataAccessLayer
                 : null;
         }
 
-        private TemplateConfig? GetXmitterTemplate(Dictionary<string, string> tagMap)
+        private TemplateConfig? GetSimpleTemplate(TemplateConfig template, Dictionary<string, string> tagMap, string tagType)
         {
-            return GetTemplate( BuildXmiterName(tagMap) );
+            return GetTemplate( BuildSimpleName(template, tagMap, tagType) );
         }
 
         private TemplateConfig? GetPidTemplate(Dictionary<string, string> tagMap)
@@ -59,13 +61,13 @@ namespace LoopDataAccessLayer
             return GetTemplate(BuildXV2XYName(tagMap));
         }
 
-        private string BuildXmiterName(Dictionary<string, string> tagMap)
+        private string BuildSimpleName(TemplateConfig template, Dictionary<string, string> tagMap, string tagType)
         {
-            int numberOfJbs = CountNumberJbs(tagMap["AI"]);
+            int numberOfJbs = CountNumberJbs(tagMap[tagType]);
             string templateName;
             if (0 <= numberOfJbs && numberOfJbs <= 2)
             {
-                templateName = "XMITER_" + numberOfJbs.ToString() + "JB";
+                templateName = template.TemplateName + "_" + numberOfJbs.ToString() + "JB";
             }
             else
             {

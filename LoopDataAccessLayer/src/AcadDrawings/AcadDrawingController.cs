@@ -29,7 +29,8 @@ namespace LoopDataAccessLayer
             AcadBlockFactory blockFactory = new(dataLoader);
             TemplatePicker templatePicker = new(dataLoader, loopConfig);
             AcadDrawingBuilder drawingBuilder = new(dataLoader, loopConfig, templatePicker, blockFactory);
-            foreach (LoopNoTemplatePair loop in dataLoader.GetLoops())
+            IEnumerable<LoopNoTemplatePair> loops = dataLoader.GetLoops();
+            foreach (LoopNoTemplatePair loop in loops)
             {
                 AcadDrawingDataMappable? drawing = drawingBuilder.BuildDrawing(loop);
                 if (drawing != null)

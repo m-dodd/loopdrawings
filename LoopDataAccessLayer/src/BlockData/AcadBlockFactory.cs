@@ -15,17 +15,23 @@ namespace LoopDataAccessLayer
         {
             return blockMap.Name switch
             {
-                "JB_3-TERM_SINGLE" => new JB_3_TERM_SINGLE(dataLoader, blockMap, tagMap),
+                "JB_3-TERM_SINGLE" => new JB_ANALOG_TERM_SINGLE(dataLoader, blockMap, tagMap),
                 "JB_2-TERM_SINGLE" 
-                or "JB_2-TERM_SINGLE_JOG" => new JB_2_TERM_SINGLE(dataLoader, blockMap, tagMap),
+                or "JB_2-TERM_SINGLE_JOG"
+                or "JB_4-TERM_SINGLE" => new JB_TERM_SINGLE(dataLoader, blockMap, tagMap),
                 
                 "PNL_2-TERM" => new PNL_2_TERM(dataLoader, blockMap, tagMap),
+                "PNL_2-TERM_24VDC" => new PNL_2_TERM_24VDC(dataLoader, blockMap, tagMap),
+
+                "PNL_2-TERM_EXT_PWR" => new PNL_2_TERM_EXT_PWR(dataLoader, blockMap, tagMap),
+                
                 "PNL_3-TERM_24VDC-1" => new PNL_2_TERM_24VDC(dataLoader, blockMap, tagMap),
                 "PNL_3-TERM_24VDC-2" => new PNL_3_TERM_24VDC(dataLoader, blockMap, tagMap),
                 "PNL_3-TERM" => new PNL_3_TERM(dataLoader, blockMap, tagMap),
                 "PNL_4-TERM_24VDC" => new PNL_4_TERM_24VDC(dataLoader, blockMap, tagMap),
                 
-                "MOD_1-TERM_1-BPCS" => new MOD_1_TERM_1(dataLoader, blockMap, tagMap),
+                "MOD_1-TERM_1-BPCS"
+                or "MOD_1-TERM_1-SIS" => new MOD_1_TERM_1(dataLoader, blockMap, tagMap),
                 "MOD_2-TERM_1-BPCS" => new MOD_2_TERM_1(dataLoader, blockMap, tagMap),
                 "MOD_2-TERM_1-SIS"
                 or "MOD_2-TERM_1-BPCS_MIR" => new MOD_2_TERM_1_DISCRETE(dataLoader, blockMap, tagMap),
@@ -35,6 +41,7 @@ namespace LoopDataAccessLayer
                 
                 "INST_AI_2W" => new INST_AI_2W(dataLoader, blockMap, tagMap),
                 "INST_AO_2W" => new INST_AO_2W(dataLoader, blockMap, tagMap),
+                "INST_DI_4W" => new INST_DI_4W(dataLoader, blockMap, tagMap),
                 "INST_DI_4W_ZS" => new INST_DI_4W_ZS(dataLoader, blockMap, tagMap),
                 "INST_DO_2W" => new INST_DO_2W(dataLoader, blockMap, tagMap),
 

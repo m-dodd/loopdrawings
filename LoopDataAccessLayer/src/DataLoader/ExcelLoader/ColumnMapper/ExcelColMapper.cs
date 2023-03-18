@@ -52,19 +52,34 @@ namespace LoopDataAccessLayer
                 JB1 = excelColumnProvider.GetColumnNumber("JB1"),
                 JB2 = excelColumnProvider.GetColumnNumber("JB2"),
                 JB3 = excelColumnProvider.GetColumnNumber("JB3"),
+                PowerTerminalStrip = excelColumnProvider.GetColumnNumber("PWR_TERM_STRIP"),
+                PowerVolts = excelColumnProvider.GetColumnNumber("PWR_VOLTS"),
+                PowerTerm1 = excelColumnProvider.GetColumnNumber("PWR_TERM_1"),
+                PowerTerm2 = excelColumnProvider.GetColumnNumber("PWR_TERM_2"),
+                PowerWireTag1 = excelColumnProvider.GetColumnNumber("PWR_TAG_1"),
+                PowerWireTag2 = excelColumnProvider.GetColumnNumber("PWR_TAG_2"),
+                PowerCore1 = excelColumnProvider.GetColumnNumber("PWR_CORE_1"),
+                PowerCore2 = excelColumnProvider.GetColumnNumber("PWR_CORE_2"),
+                PowerCable = excelColumnProvider.GetColumnNumber("PWR_CABLE"),
 
                 Device = new ExcelIODeviceCommon<int>
                 {
                     CableTag = excelColumnProvider.GetColumnNumber("DEV_CABLE"),
                     Terminal1 = excelColumnProvider.GetColumnNumber("DEV_TERM_1"),
                     Terminal2 = excelColumnProvider.GetColumnNumber("DEV_TERM_2"),
+                    Terminal3 = excelColumnProvider.GetColumnNumber("DEV_TERM_3"),
+                    Terminal4 = excelColumnProvider.GetColumnNumber("DEV_TERM_4"),
                     TerminalShld = 9999, // there is never a shield colunn but this should ensure the string will jsut be mpty  
                     WireTag1 = excelColumnProvider.GetColumnNumber("DEV_WIRE_1"),
                     WireTag2 = excelColumnProvider.GetColumnNumber("DEV_WIRE_2"),
+                    WireTag3 = excelColumnProvider.GetColumnNumber("DEV_WIRE_3"),
+                    WireTag4 = excelColumnProvider.GetColumnNumber("DEV_WIRE_4"),
                     WireColor1 = excelColumnProvider.GetColumnNumber("DEV_COLOR_1"),
                     WireColor2 = excelColumnProvider.GetColumnNumber("DEV_COLOR_2"),
                     CorePair1 = excelColumnProvider.GetColumnNumber("DEV_CORE_1"),
                     CorePair2 = excelColumnProvider.GetColumnNumber("DEV_CORE_2"),
+                    CorePair3 = excelColumnProvider.GetColumnNumber("DEV_CORE_3"),
+                    CorePair4 = excelColumnProvider.GetColumnNumber("DEV_CORE_4"),
                 },
 
                 IO = new ExcelIODeviceCommon<int>

@@ -89,18 +89,34 @@ namespace LoopDataAccessLayer
                         JB2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.JB2),
                         JB3 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.JB3),
 
+                        PowerTerminalStrip = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerTerminalStrip),
+                        PowerVolts = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerVolts),
+                        PowerTerm1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerTerm1),
+                        PowerTerm2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerTerm2),
+                        PowerWireTag1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerWireTag1),
+                        PowerWireTag2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerWireTag2),
+                        PowerCore1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerCore1),
+                        PowerCore2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerCore2),
+                        PowerCable = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerCable),
+
                         Device = new ExcelIODeviceCommon<string>()
                         {
                             CableTag = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.CableTag),
                             Terminal1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.Terminal1),
                             Terminal2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.Terminal2),
+                            Terminal3 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.Terminal3),
+                            Terminal4 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.Terminal4),
                             TerminalShld = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.TerminalShld),
                             WireTag1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.WireTag1),
                             WireTag2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.WireTag2),
+                            WireTag3 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.WireTag3),
+                            WireTag4 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.WireTag4),
                             WireColor1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.WireColor1),
                             WireColor2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.WireColor2),
                             CorePair1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.CorePair1),
-                            CorePair2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.CorePair2)
+                            CorePair2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.CorePair2),
+                            CorePair3 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.CorePair3),
+                            CorePair4 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.CorePair4),
                         },
                         IO = new ExcelIODeviceCommon<string>()
                         {

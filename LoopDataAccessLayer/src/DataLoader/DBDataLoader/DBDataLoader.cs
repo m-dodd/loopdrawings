@@ -16,10 +16,18 @@ namespace LoopDataAccessLayer
 
         public List<LoopNoTemplatePair> GetLoops()
         {
+            string[] currentTestingLoops =
+            {
+                "F-1521",
+                "L-1400",
+                "L-7100",
+                "X-1300"
+            };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future
                       // I'm thinking of a log file message or something, but for now, I don't want it
                       .Where(x => (x.Loop != "---") && (x.Loop != null) && (x.Looptemplate != null))
+                      .Where(x => currentTestingLoops.Contains(x.Loop)) // just to limit the results for testing purposes
                       .Select(loop => new LoopNoTemplatePair
                                       {
                                           LoopNo = loop.Loop ?? string.Empty,

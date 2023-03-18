@@ -7,57 +7,50 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class INST_DI_4W_ZS : BlockFieldDeviceBase
+    public class INST_DI_4W : BlockFieldDeviceBase
     {
-        public string ZSOTag { get; set; } = string.Empty;
-        public string ZSCTag { get; set; } = string.Empty;
-        
-        public INST_DI_4W_ZS(
+        public INST_DI_4W(
             IDataLoader dataLoader,
             BlockMapData blockMap,
             Dictionary<string, string> tagMap) : base(dataLoader) 
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
-            Tag = string.Empty;
-            ZSCTag = tagMap[blockMap.Tags[0]];
-            ZSOTag = tagMap[blockMap.Tags[1]];
+            Tag = tagMap[blockMap.Tags[0]];
         }
 
         protected override void FetchDBData()
         {
-            DBLoopData dataZSC = dataLoader.GetLoopData(ZSOTag);
-            DBLoopData dataZSO = dataLoader.GetLoopData(ZSOTag);
-            PopulateFourLineDescription(dataZSC);
-            PopulateTag1Tag2(ZSCTag);
+            DBLoopData data = dataLoader.GetLoopData(Tag);
+            PopulateFourLineDescription(data);
+            PopulateTag1Tag2();
         }
 
         protected override void FetchExcelData()
         {
-            var ZSCIOData = dataLoader.GetIOData(ZSCTag)?.Device;
-            var ZSOIOData = dataLoader.GetIOData(ZSOTag)?.Device;
+            var IOData = dataLoader.GetIOData(Tag)?.Device;
 
-            if (ZSCIOData is not null && ZSOIOData is not null)
+            if (IOData is not null)
             {
-                var cableData = dataLoader.GetCableData(ZSCIOData.CableTag);
+                var cableData = dataLoader.GetCableData(IOData.CableTag);
 
-                Attributes["TERM1"] = ZSCIOData.Terminal1;
-                Attributes["TERM2"] = ZSCIOData.Terminal2;
-                Attributes["TERM3"] = ZSOIOData.Terminal1;
-                Attributes["TERM4"] = ZSOIOData.Terminal2;
+                Attributes["TERM1"] = IOData.Terminal1;
+                Attributes["TERM2"] = IOData.Terminal2;
+                Attributes["TERM3"] = IOData.Terminal3;
+                Attributes["TERM4"] = IOData.Terminal4;
 
-                Attributes["COND_NO1"] = ZSCIOData.CorePair1;
-                Attributes["COND_NO2"] = ZSCIOData.CorePair2;
-                Attributes["COND_NO3"] = ZSOIOData.CorePair1;
-                Attributes["COND_NO4"] = ZSOIOData.CorePair2;
+                Attributes["COND_NO1"] = IOData.CorePair1;
+                Attributes["COND_NO2"] = IOData.CorePair2;
+                Attributes["COND_NO3"] = IOData.CorePair3;
+                Attributes["COND_NO4"] = IOData.CorePair4;
 
 
-                Attributes["WIRE_TAG_FIELD1"] = ZSCIOData.WireTag1;
-                Attributes["WIRE_TAG_FIELD2"] = ZSCIOData.WireTag2;
-                Attributes["WIRE_TAG_FIELD3"] = ZSOIOData.WireTag1;
-                Attributes["WIRE_TAG_FIELD4"] = ZSOIOData.WireTag2;
+                Attributes["WIRE_TAG_FIELD1"] = IOData.WireTag1;
+                Attributes["WIRE_TAG_FIELD2"] = IOData.WireTag2;
+                Attributes["WIRE_TAG_FIELD3"] = IOData.WireTag3;
+                Attributes["WIRE_TAG_FIELD4"] = IOData.WireTag4;
 
-                Attributes["CABLE_TAG_FIELD"] = ZSCIOData.CableTag;
+                Attributes["CABLE_TAG_FIELD"] = IOData.CableTag;
                 Attributes["CABLE_SIZE"] = cableData?.CableSizeType ?? string.Empty;
             }
         }

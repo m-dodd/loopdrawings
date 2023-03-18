@@ -17,7 +17,7 @@ namespace LoopDataAccessLayer
 
         protected override void FetchExcelData()
         {
-            var IOData = dataLoader.GetIOData(Tag);
+            IExcelIOData<string>? IOData = dataLoader.GetIOData(Tag);
             if (IOData is not null)
             {
                 var cableData = dataLoader.GetCableData(IOData.IO.CableTag);

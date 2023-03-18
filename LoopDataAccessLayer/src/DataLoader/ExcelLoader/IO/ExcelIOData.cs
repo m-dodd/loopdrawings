@@ -20,6 +20,15 @@ namespace LoopDataAccessLayer
         public T JB1 { get; set; }
         public T JB2 { get; set; }
         public T JB3 { get; set; }
+        public T PowerTerminalStrip { get; set; }
+        public T PowerVolts { get; set; }
+        public T PowerTerm1 { get; set; }
+        public T PowerTerm2 { get; set; }
+        public T PowerWireTag1 { get; set; }
+        public T PowerWireTag2 { get; set; }
+        public T PowerCore1 { get; set; }
+        public T PowerCore2 { get; set; }
+        public T PowerCable { get; set; }
         public IExcelIODeviceCommon<T> Device { get; set; }
         public IExcelIODeviceCommon<T> IO { get; set; }
         public IExcelIORelay<T> Relay { get; set; }

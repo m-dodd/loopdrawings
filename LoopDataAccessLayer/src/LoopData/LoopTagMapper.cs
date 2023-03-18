@@ -15,6 +15,7 @@ namespace LoopDataAccessLayer
         private static string[] definedTagTypes = {
             "AI",
             "AO",
+            "DI",
             "CONTROLLER",
             "VALVE",
             "ZSC",
@@ -68,6 +69,10 @@ namespace LoopDataAccessLayer
 
                 case "AO":
                     return tags.Where(t => t.IOType == "AO")
+                               .First().Tag;
+
+                case "DI":
+                    return tags.Where(t => t.IOType == "DI")
                                .First().Tag;
 
                 case "CONTROLLER":
