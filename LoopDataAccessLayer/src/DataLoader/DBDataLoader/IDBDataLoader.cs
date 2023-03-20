@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
 {
     public interface IDBLoader
     {
-        public List<LoopNoTemplatePair> GetLoops();
-        public IEnumerable<LoopTagData> GetLoopTags(LoopNoTemplatePair loop);
-        public DBLoopData GetLoopData(string tag);
-
+        List<LoopNoTemplatePair> GetLoops();
+        IEnumerable<LoopTagData> GetLoopTags(LoopNoTemplatePair loop);
+        DBLoopData GetLoopData(string tag);
+        List<Tblsdkrelation> GetSDs(string tag);
     }
 }

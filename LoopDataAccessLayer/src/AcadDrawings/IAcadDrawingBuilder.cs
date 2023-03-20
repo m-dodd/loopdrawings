@@ -8,6 +8,6 @@ namespace LoopDataAccessLayer
 {
     public interface IAcadDrawingBuilder
     {
-        public AcadDrawingDataMappable? BuildDrawing(LoopNoTemplatePair loop);
+        public (AcadDrawingDataMappable?, AcadDrawingDataMappable?) BuildDrawings(LoopNoTemplatePair loop);
     }
 }

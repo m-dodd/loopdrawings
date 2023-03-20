@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
+using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
 {
@@ -16,6 +17,7 @@ namespace LoopDataAccessLayer
 
         private readonly Dictionary<string, DBLoopData> loopData;
         private readonly Dictionary<string, IEnumerable<LoopTagData>> loopTagData;
+        private readonly Dictionary<string, List<Tblsdkrelation>> sdkData;
 
         private readonly Dictionary<string, IXLRow?> ioRowData;
         private readonly Dictionary<string, IXLRows?> jbRowsData;
@@ -37,6 +39,7 @@ namespace LoopDataAccessLayer
             
             loopData = new Dictionary<string, DBLoopData>();
             loopTagData = new Dictionary<string, IEnumerable<LoopTagData>>();
+            sdkData = new Dictionary<string, List<Tblsdkrelation>>();
 
             ioRowData = new Dictionary<string, IXLRow?>();
             jbRowsData = new Dictionary<string, IXLRows?>();
@@ -54,6 +57,20 @@ namespace LoopDataAccessLayer
         {
             //logger.LogInformation("Getting loops from the database");
             return dbLoader.GetLoops();
+        }
+
+        public List<Tblsdkrelation> GetSDs(string tag)
+        {
+            if (sdkData.TryGetValue(tag, out var data))
+            {
+                return data;
+            }
+            else
+            {
+                sdkData[tag] = dbLoader.GetSDs(tag);
+                return sdkData[tag];
+            }
+
         }
 
         public IEnumerable<LoopTagData> GetLoopTags(LoopNoTemplatePair loop)

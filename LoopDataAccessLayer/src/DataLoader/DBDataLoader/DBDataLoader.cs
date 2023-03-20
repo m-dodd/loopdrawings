@@ -7,21 +7,36 @@ namespace LoopDataAccessLayer
     {
         private readonly WTEdgeContext db;
         private readonly Dictionary<string, DBLoopData> loopData;
-
+        private Dictionary<string, List<Tblsdkrelation>> sdkData;
         public DBDataLoader()
         {
             this.db = new WTEdgeContext();
             loopData = new Dictionary<string, DBLoopData>();
+            sdkData = new Dictionary<string, List<Tblsdkrelation>>();
+        }
+
+        public List<Tblsdkrelation> GetSDs(string tag)
+        {
+            if (sdkData.TryGetValue(tag, out var data))
+            {
+                return data;
+            }
+            else
+            {
+                sdkData[tag] = db.Tblsdkrelations.Where(x => x.Parenttags == tag).ToList();
+                return sdkData[tag];
+            }
+            
         }
 
         public List<LoopNoTemplatePair> GetLoops()
         {
             string[] currentTestingLoops =
             {
-                "F-1521",
-                "L-1400",
+                //"F-1521",
+                //"L-1400",
                 "L-7100",
-                "X-1300"
+                //"X-1300"
             };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future
