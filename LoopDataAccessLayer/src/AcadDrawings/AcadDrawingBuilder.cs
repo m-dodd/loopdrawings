@@ -56,9 +56,19 @@ namespace LoopDataAccessLayer
                 tagMap["DRAWING_NAME"] = tagMap["DRAWING_NAME"] + "-1";
                 var drawingMain = ConstructDrawing(loop, correctTemplate, tagMap);
 
+
+                // so this is my idea right now
+                // figure out how to get the right tag to get the shutdown data
+                // map the sd data to tagmap
+                // blocks will know what to do with tagmap data
+                // oh i guess it doesn't work because tagmap is a dict<string, string>
+                // and I'd need list.... stupid type checking
+                List<Tblsdkrelation> sdkData = dataLoader.GetSDs(tagMap[]);
                 tagMap["DRAWING_NAME"] = tagMap["DRAWING_NAME"] + "-2";
+                tagMap["SDK1"] = sdkData.Take(30);
+                tagMap["SDK2"] = sdkData.Skip(30).Take(30);
                 // need sdk data here
-                var drawingSDK = ConstructSDKDrawing(loop, sdkTemplate, tagMap);
+                var drawingSDK = ConstructDrawing(loop, sdkTemplate, tagMap);
                 return (drawingMain, drawingSDK);
             }
             else
@@ -100,32 +110,32 @@ namespace LoopDataAccessLayer
             return drawing;
         }
 
-        private AcadDrawingDataMappable ConstructSDKDrawing(
-            LoopNoTemplatePair loop,
-            TemplateConfig template,
-            Dictionary<string, string> tagMap,
-            IEnumerable<Tblsdkrelation> sds)
-        {
+        //private AcadDrawingDataMappable ConstructSDKDrawing(
+        //    LoopNoTemplatePair loop,
+        //    TemplateConfig template,
+        //    Dictionary<string, string> tagMap,
+        //    IEnumerable<Tblsdkrelation> sds)
+        //{
 
-            // ok, not done
-            // need to figure out how to populate the shutdown blocks
-            // aslo need to get that shutdown key data, but it is already needed as part of the shutdown key provider
-            // so maybe that class can have an internal member with a property or something
-            string drawingName = tagMap.TryGetValue("DRAWING_NAME", out string? d) ? d : string.Empty;
-            var blocks = BuildBlocks(template, tagMap);
-            var block1 = 
-            var drawing = new AcadDrawingDataMappable
-            {
-                Blocks = blocks,
-                LoopID = loop.LoopNo,
-                TemplateName = template.TemplateName,
-                TemplateDrawingFileName = BuildTemplateDrawingName(template),
-                OutputDrawingFileName = BuildOutputDrawingName(drawingName)
-            };
-            drawing.MapData();
+        //     ok, not done
+        //     need to figure out how to populate the shutdown blocks
+        //     aslo need to get that shutdown key data, but it is already needed as part of the shutdown key provider
+        //     so maybe that class can have an internal member with a property or something
+        //    string drawingName = tagMap.TryGetValue("DRAWING_NAME", out string? d) ? d : string.Empty;
+        //    var blocks = BuildBlocks(template, tagMap);
+        //    var block1 = 
+        //    var drawing = new AcadDrawingDataMappable
+        //    {
+        //        Blocks = blocks,
+        //        LoopID = loop.LoopNo,
+        //        TemplateName = template.TemplateName,
+        //        TemplateDrawingFileName = BuildTemplateDrawingName(template),
+        //        OutputDrawingFileName = BuildOutputDrawingName(drawingName)
+        //    };
+        //    drawing.MapData();
 
-            return drawing;
-        }
+        //    return drawing;
+        //}
 
 
         private string BuildOutputDrawingName(string drawingName)
