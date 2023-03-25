@@ -47,6 +47,10 @@ namespace LoopDataAccessLayer
 
                 "VALVE_BODY" => new VALVE_BODY(dataLoader, blockMap, tagMap),
                 "VALVE_2-SOL" => new VALVE_TWO_SOL(dataLoader, blockMap, tagMap),
+
+                "SD_TABLE_10-ROW"
+                or "SD_TABLE_20-ROW" => new SD_TABLE(dataLoader, blockMap, tagMap),
+                "SD_TABLE_30-ROW" => new SD_TABLE_30(dataLoader, blockMap, tagMap),
                 
                 "STD B SIZE SHEET" => new TITLE_BLOCK(dataLoader, blockMap, tagMap),
                 "MATERIAL_LIST_5-ROW" => new MATERIAL_LIST_5_ROW(dataLoader, blockMap, tagMap),

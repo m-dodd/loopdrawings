@@ -7,15 +7,15 @@ namespace LoopDataAccessLayer
     {
         private readonly WTEdgeContext db;
         private readonly Dictionary<string, DBLoopData> loopData;
-        private Dictionary<string, List<Tblsdkrelation>> sdkData;
+        private Dictionary<string, List<SDKData>> sdkData;
         public DBDataLoader()
         {
             this.db = new WTEdgeContext();
             loopData = new Dictionary<string, DBLoopData>();
-            sdkData = new Dictionary<string, List<Tblsdkrelation>>();
+            sdkData = new Dictionary<string, List<SDKData>>();
         }
 
-        public List<Tblsdkrelation> GetSDs(string tag)
+        public List<SDKData> GetSDs(string tag)
         {
             if (sdkData.TryGetValue(tag, out var data))
             {
@@ -23,7 +23,19 @@ namespace LoopDataAccessLayer
             }
             else
             {
-                sdkData[tag] = db.Tblsdkrelations.Where(x => x.Parenttags == tag).ToList();
+                data = db.Tblsdkrelations
+                    .Where(x => x.Parenttags == tag)
+                    .Select(sd => new SDKData
+                            {
+                                ParentTag = GetCleanString(sd.Parenttags),
+                                InputTag = GetCleanString(sd.Inputtags),
+                                OutputTag = GetCleanString(sd.Outputtag),
+                                OutputDescription = throw new NotImplementedException(), // need a way to get this
+                                SdGroup = GetCleanString(sd.Sdgroup),
+                                SdAction1 = GetCleanString(sd.Sdaction1),
+                                SdAction2 = GetCleanString(sd.Sdaction2)
+                            })
+                    .ToList();
                 return sdkData[tag];
             }
             

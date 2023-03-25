@@ -42,22 +42,43 @@ namespace LoopDataAccessLayer
             }
         }
 
+        public string GetSDTag()
+        {
+            var sdTableBlock = GetSDBlock();
+            if (sdTableBlock is not null)
+            {
+                return tagMap[sdTableBlock.Tags[0]];
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
         private int GetSDKBlockSize()
         {
+            var sdTableBlock = GetSDBlock();
             Regex regex = new(@"\d+");
-            var sdTableBlock = template.BlockMap
-                .FirstOrDefault(b => b.Name.Contains("SD_TABLE", StringComparison.OrdinalIgnoreCase));
-            
+
             return
                 sdTableBlock != null
                 ? int.Parse(regex.Match(sdTableBlock.Name).Value)
                 : 0;
         }
 
-
         private int GetNumberOfSDs()
         {
-            return tagMap.Values.Sum(tag => dataLoader.GetSDs(tag).Count);
+            string tag = GetSDTag();
+            return string.IsNullOrEmpty(tag)
+                ? 0
+                : dataLoader.GetSDs(tag).Count;
+        }
+
+        private BlockMapData? GetSDBlock()
+        {
+            BlockMapData? sdTableBlock = template.BlockMap
+                .FirstOrDefault(b => b.Name.Contains("SD_TABLE", StringComparison.OrdinalIgnoreCase));
+            return sdTableBlock;
         }
     }
 }

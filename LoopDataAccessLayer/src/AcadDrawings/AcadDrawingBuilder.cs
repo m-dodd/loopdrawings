@@ -50,26 +50,30 @@ namespace LoopDataAccessLayer
                 return (null, null);
             }
 
-            SDKDrawingProvider sdk = new SDKDrawingProvider(dataLoader, template, tagMap, loopConfig);
+            SDKDrawingProvider sdk = new GetSDBlock(dataLoader, template, tagMap, loopConfig);
+            // still need to figure out how to flag the original drawing to delete the SDK block
+            // I know I have an idea to write an attribute to the block attributes and then that can be checked
+            // by teh acad portion, but right now I don't have a way to pass that down
             if (sdk.NewDrawingRequired())
             {
                 tagMap["DRAWING_NAME"] = tagMap["DRAWING_NAME"] + "-1";
                 var drawingMain = ConstructDrawing(loop, correctTemplate, tagMap);
 
 
-                // so this is my idea right now
-                // figure out how to get the right tag to get the shutdown data
-                // map the sd data to tagmap
-                // blocks will know what to do with tagmap data
-                // oh i guess it doesn't work because tagmap is a dict<string, string>
-                // and I'd need list.... stupid type checking
-                List<Tblsdkrelation> sdkData = dataLoader.GetSDs(tagMap[]);
-                tagMap["DRAWING_NAME"] = tagMap["DRAWING_NAME"] + "-2";
-                tagMap["SDK1"] = sdkData.Take(30);
-                tagMap["SDK2"] = sdkData.Skip(30).Take(30);
-                // need sdk data here
-                var drawingSDK = ConstructDrawing(loop, sdkTemplate, tagMap);
-                return (drawingMain, drawingSDK);
+                // replace the last two characters of the name
+                tagMap["DRAWING_NAME"] = tagMap["DRAWING_NAME"][..^2] + "-2";
+
+                // get the tag to use for the blocks
+                tagMap["SDK_TAG"] = sdk.GetSDTag();
+                if (!string.IsNullOrEmpty(tagMap["SDK_TAG"]))
+                {
+                    var drawingSDK = ConstructDrawing(loop, sdkTemplate, tagMap);
+                    return (drawingMain, drawingSDK);
+                }
+                else
+                {
+                    return (drawingMain, null);
+                }
             }
             else
             {
