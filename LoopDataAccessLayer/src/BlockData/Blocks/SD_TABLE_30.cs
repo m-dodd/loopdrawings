@@ -12,7 +12,7 @@ namespace LoopDataAccessLayer
         public SD_TABLE_30(
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader) 
+            Dictionary<string, string> tagMap) : base(dataLoader, blockMap, tagMap)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
