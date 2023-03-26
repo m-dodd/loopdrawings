@@ -59,20 +59,6 @@ namespace LoopDataAccessLayer
             return dbLoader.GetLoops();
         }
 
-        public List<SDKData> GetSDs(string tag)
-        {
-            if (sdkData.TryGetValue(tag, out var data))
-            {
-                return data;
-            }
-            else
-            {
-                sdkData[tag] = dbLoader.GetSDs(tag);
-                return sdkData[tag];
-            }
-
-        }
-
         public IEnumerable<LoopTagData> GetLoopTags(LoopNoTemplatePair loop)
         {
             //logger.LogInformation("Getting loop tags from the database");
@@ -87,6 +73,12 @@ namespace LoopDataAccessLayer
                 return data;
             }
         }
+
+        public List<SDKData> GetSDs(string tag)
+        {
+            return GetDataOrMemoizeGetData<List<SDKData>>(tag, sdkData!, dbLoader.GetSDs)!;
+        }
+
 
         public DBLoopData GetLoopData(string tag)
         {
