@@ -7,7 +7,7 @@ namespace LoopDataAccessLayer
     {
         private readonly WTEdgeContext db;
         private readonly Dictionary<string, DBLoopData> loopData;
-        private Dictionary<string, List<SDKData>> sdkData;
+        private readonly Dictionary<string, List<SDKData>> sdkData;
         public DBDataLoader()
         {
             this.db = new WTEdgeContext();
@@ -30,15 +30,18 @@ namespace LoopDataAccessLayer
                                 ParentTag = GetCleanString(sd.Parenttags),
                                 InputTag = GetCleanString(sd.Inputtags),
                                 OutputTag = GetCleanString(sd.Outputtag),
-                                OutputDescription = throw new NotImplementedException(), // need a way to get this
+                                OutputDescription = sd.OutputtagNavigation == null ?
+                                                    string.Empty :
+                                                    GetCleanString(sd.OutputtagNavigation.Servicedescription),
+                                //OutputDescription = throw new NotImplementedException(), // need a way to get this
                                 SdGroup = GetCleanString(sd.Sdgroup),
                                 SdAction1 = GetCleanString(sd.Sdaction1),
                                 SdAction2 = GetCleanString(sd.Sdaction2)
                             })
                     .ToList();
-                return sdkData[tag];
+                sdkData[tag] = data;
+                return data;
             }
-            
         }
 
         public List<LoopNoTemplatePair> GetLoops()

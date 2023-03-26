@@ -29,35 +29,36 @@ namespace LoopDataAccessLayer
             this.blockFactory = blockFactory;
         }
 
-        public (AcadDrawingDataMappable?, AcadDrawingDataMappable?) BuildDrawings(LoopNoTemplatePair loop)
+        public IEnumerable<AcadDrawingDataMappable> BuildDrawings(LoopNoTemplatePair loop)
         {
             TemplateConfig sdkTemplate = GetTemplate("SDK") ?? throw new NullReferenceException("SDK is missing from configuration.");
             TemplateConfig? template = GetTemplate(loop);
+            List<AcadDrawingDataMappable> drawings = new();
             if (template is null)
             {
-                return (null, null);
+                return drawings;
             }
 
             Dictionary<string, string> tagMap = GetLoopTagMap(loop, template);
             if (tagMap.Count == 0)
             {
-                return (null, null);
+                return drawings;
             }
 
             TemplateConfig? correctTemplate = templatePicker.GetCorrectTemplate(template, tagMap);
             if (correctTemplate is null)
             {
-                return (null, null);
+                return drawings;
             }
 
-            SDKDrawingProvider sdk = new GetSDBlock(dataLoader, template, tagMap, loopConfig);
+            SDKDrawingProvider sdk = new SDKDrawingProvider(dataLoader, correctTemplate, tagMap, loopConfig);
             // still need to figure out how to flag the original drawing to delete the SDK block
             // I know I have an idea to write an attribute to the block attributes and then that can be checked
             // by teh acad portion, but right now I don't have a way to pass that down
             if (sdk.NewDrawingRequired())
             {
                 tagMap["DRAWING_NAME"] = tagMap["DRAWING_NAME"] + "-1";
-                var drawingMain = ConstructDrawing(loop, correctTemplate, tagMap);
+                drawings.Add(ConstructDrawing(loop, correctTemplate, tagMap));
 
 
                 // replace the last two characters of the name
@@ -67,18 +68,14 @@ namespace LoopDataAccessLayer
                 tagMap["SDK_TAG"] = sdk.GetSDTag();
                 if (!string.IsNullOrEmpty(tagMap["SDK_TAG"]))
                 {
-                    var drawingSDK = ConstructDrawing(loop, sdkTemplate, tagMap);
-                    return (drawingMain, drawingSDK);
-                }
-                else
-                {
-                    return (drawingMain, null);
+                    drawings.Add(ConstructDrawing(loop, sdkTemplate, tagMap));
                 }
             }
             else
             {
-                return (ConstructDrawing(loop, correctTemplate, tagMap), null);
+                drawings.Add( ConstructDrawing(loop, correctTemplate, tagMap) );
             }
+            return drawings;
         }
 
         private TemplateConfig? GetTemplate(LoopNoTemplatePair loop)
