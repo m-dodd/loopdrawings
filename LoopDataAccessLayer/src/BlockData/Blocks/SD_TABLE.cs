@@ -9,6 +9,8 @@ namespace LoopDataAccessLayer
 {
     public class SD_TABLE : BlockDataDB
     {
+        protected bool deleteSDTable;
+        protected string sdDrawingName;
         public SD_TABLE(
             IDataLoader dataLoader,
             BlockMapData blockMap,
@@ -17,20 +19,28 @@ namespace LoopDataAccessLayer
             Name = blockMap.Name;
             UID = blockMap.UID;
             Tag = tagMap[blockMap.Tags[0]];
+            deleteSDTable = Boolean.Parse(tagMap["DELETE_SD"]);
+            sdDrawingName = tagMap["DRAWING_NAME_SD"];
+
         }
 
         protected override void FetchDBData()
         {
             List<SDKData> sdBlockData = GetSDData();
 
-            for (int i=0; i < sdBlockData.Count; i++)
+            Attributes["DELETE_SD"] = deleteSDTable.ToString();
+            Attributes["DRAWING_NAME_SD"] = sdDrawingName;
+            if (!deleteSDTable)
             {
-                string sdNumString = (i + 1).ToString("D2");
-                Attributes["INPUT_TAG_" + sdNumString] = sdBlockData[i].InputTag;
-                Attributes["OUTPUT_TAG_" + sdNumString] = sdBlockData[i].OutputTag;
-                Attributes["DESCRIPTION_" + sdNumString] = sdBlockData[i].OutputDescription;
-                Attributes["ACTION_" + sdNumString + "A"] = sdBlockData[i].InputTag;
-                Attributes["ACTION_" + sdNumString + "B"] = sdBlockData[i].InputTag;
+                for (int i = 0; i < sdBlockData.Count; i++)
+                {
+                    string sdNumString = (i + 1).ToString("D2");
+                    Attributes["INPUT_TAG_" + sdNumString] = sdBlockData[i].InputTag;
+                    Attributes["OUTPUT_TAG_" + sdNumString] = sdBlockData[i].OutputTag;
+                    Attributes["DESCRIPTION_" + sdNumString] = sdBlockData[i].OutputDescription;
+                    Attributes["ACTION_" + sdNumString + "A"] = sdBlockData[i].SdAction1;
+                    Attributes["ACTION_" + sdNumString + "B"] = sdBlockData[i].SdAction2;
+                }
             }
         }
 

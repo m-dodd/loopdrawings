@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace LoopDrawingAcadUI
 {
@@ -47,9 +48,9 @@ namespace LoopDrawingAcadUI
         public void ProcessBlock(AcadBlockData block)
         {
             string[] valveBlocks = new string[]
-            {
-                "VALVE_BODY", "VALVE_2-SOL"
-            };
+                                   {
+                                       "VALVE_BODY", "VALVE_2-SOL"
+                                   };
             if (uidBlockMap.TryGetValue(block.UID.ToUpper(), out BlockReference br))
             {
                 if (br != null)
@@ -57,6 +58,18 @@ namespace LoopDrawingAcadUI
                     if (valveBlocks.Contains(block.Name))
                     {
                         SetDynamicPropertyValue(br, "Visibility1", block.Attributes["VALVE_TYPE"]);
+                    }
+                    Regex regex = new Regex(@"SD_TABLE", RegexOptions.IgnoreCase);
+                    if (regex.IsMatch(block.Name))
+                    {
+                        if(block.Attributes.TryGetValue("DELETE_SD", out var delete_sd))
+                        {
+                            if(bool.Parse(delete_sd))
+                            {
+                                br.Erase();
+                                return;
+                            }
+                        }
                     }
                     ProcessBlockRefAttributes(br, block.Attributes);
                 }

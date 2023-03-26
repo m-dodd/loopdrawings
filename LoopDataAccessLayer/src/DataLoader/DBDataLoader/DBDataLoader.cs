@@ -33,7 +33,6 @@ namespace LoopDataAccessLayer
                                 OutputDescription = sd.OutputtagNavigation == null ?
                                                     string.Empty :
                                                     GetCleanString(sd.OutputtagNavigation.Servicedescription),
-                                //OutputDescription = throw new NotImplementedException(), // need a way to get this
                                 SdGroup = GetCleanString(sd.Sdgroup),
                                 SdAction1 = GetCleanString(sd.Sdaction1),
                                 SdAction2 = GetCleanString(sd.Sdaction2)

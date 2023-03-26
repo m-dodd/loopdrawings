@@ -51,21 +51,28 @@ namespace LoopDataAccessLayer
                 return drawings;
             }
 
-            SDKDrawingProvider sdk = new SDKDrawingProvider(dataLoader, correctTemplate, tagMap, loopConfig);
+            SDKDrawingProvider sdk = new(dataLoader, correctTemplate, tagMap, loopConfig);
             // still need to figure out how to flag the original drawing to delete the SDK block
             // I know I have an idea to write an attribute to the block attributes and then that can be checked
             // by teh acad portion, but right now I don't have a way to pass that down
             if (sdk.NewDrawingRequired())
             {
-                tagMap["DRAWING_NAME"] = tagMap["DRAWING_NAME"] + "-1";
+                string drawingName1 = tagMap["DRAWING_NAME"] + "-1";
+                string drawingName2 = tagMap["DRAWING_NAME"] + "-2";
+
+                tagMap["DRAWING_NAME"] = drawingName1;
+                tagMap["DRAWING_NAME_SD"] = drawingName2;
+                tagMap["DELETE_SD"] = "true";
                 drawings.Add(ConstructDrawing(loop, correctTemplate, tagMap));
 
 
                 // replace the last two characters of the name
-                tagMap["DRAWING_NAME"] = tagMap["DRAWING_NAME"][..^2] + "-2";
+                tagMap["DRAWING_NAME"] = drawingName2;
+                tagMap["DRAWING_NAME_SD"] = string.Empty;
 
                 // get the tag to use for the blocks
                 tagMap["SDK_TAG"] = sdk.GetSDTag();
+                tagMap["DELETE_SD"] = "false";
                 if (!string.IsNullOrEmpty(tagMap["SDK_TAG"]))
                 {
                     drawings.Add(ConstructDrawing(loop, sdkTemplate, tagMap));
@@ -73,6 +80,7 @@ namespace LoopDataAccessLayer
             }
             else
             {
+                tagMap["DELETE_SD"] = "false";
                 drawings.Add( ConstructDrawing(loop, correctTemplate, tagMap) );
             }
             return drawings;
