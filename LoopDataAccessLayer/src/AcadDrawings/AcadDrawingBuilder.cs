@@ -81,6 +81,7 @@ namespace LoopDataAccessLayer
             else
             {
                 tagMap["DELETE_SD"] = "false";
+                tagMap["DRAWING_NAME_SD"] = string.Empty;
                 drawings.Add( ConstructDrawing(loop, correctTemplate, tagMap) );
             }
             return drawings;

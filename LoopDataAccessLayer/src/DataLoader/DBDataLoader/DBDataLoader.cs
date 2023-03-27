@@ -47,9 +47,9 @@ namespace LoopDataAccessLayer
         {
             string[] currentTestingLoops =
             {
-                //"F-1521",
+                "F-1521",
                 //"L-1400",
-                "L-7100",
+                //"L-7100",
                 //"X-1300"
             };
             return db.Tblloops
