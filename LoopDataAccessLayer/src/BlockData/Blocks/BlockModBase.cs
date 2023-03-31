@@ -56,39 +56,43 @@ namespace LoopDataAccessLayer
             }
         }
 
-        private static string FixUpperLoopTag(DBLoopData data, string upper)
+        private string FixUpperLoopTag(DBLoopData data, string upper)
         {
             if (string.IsNullOrEmpty(upper))
             {
                 return upper;
             }
 
-            bool isDiscrete = (data.IoType == "DI");
-            bool isAnalog = (data.IoType == "AI");
+            upper = data.IoType.Equals("DI", StringComparison.OrdinalIgnoreCase)
+                ? FixDiscrete(upper)
+                : data.IoType.Equals("AI", StringComparison.OrdinalIgnoreCase)
+                    ? FixAnalog(upper)
+                    : upper;
 
-            if (isDiscrete && Regex.IsMatch(upper, @"\bZS[CO]\b", RegexOptions.IgnoreCase))
+            return upper;
+        }
+
+        private string FixDiscrete(string upper)
+        {
+            if (Regex.IsMatch(upper, @"\bZS[CO]\b", RegexOptions.IgnoreCase))
             {
                 return upper.Replace("s", "I", StringComparison.OrdinalIgnoreCase);
             }
 
-            if (isDiscrete)
-            {
-                upper = upper.Replace("s", "A", StringComparison.OrdinalIgnoreCase);
-            }
-
-            if (isAnalog && upper.EndsWith("T", StringComparison.OrdinalIgnoreCase))
-            {
-                string upperWithoutLastT = upper.Substring(0, upper.Length - 1);
-
-                if (!upperWithoutLastT.EndsWith("I", StringComparison.OrdinalIgnoreCase))
-                {
-                    upperWithoutLastT += "I";
-                }
-
-                return upperWithoutLastT;
-            }
-
-            return upper;
+            return upper.Replace("s", "A", StringComparison.OrdinalIgnoreCase);
         }
+
+        private string FixAnalog(string upper)
+        {
+            if (!upper.EndsWith("T", StringComparison.OrdinalIgnoreCase))
+            {
+                return upper;
+            }
+
+            return upper.EndsWith("IT", StringComparison.OrdinalIgnoreCase)
+                ? upper.Substring(0, upper.Length - 1)
+                : upper + "I";
+        }
+
     }
 }
