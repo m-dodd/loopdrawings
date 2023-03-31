@@ -64,10 +64,10 @@ namespace LoopDataAccessLayer
             }
 
             upper = data.IoType.Equals("DI", StringComparison.OrdinalIgnoreCase)
-                ? FixDiscrete(upper)
-                : data.IoType.Equals("AI", StringComparison.OrdinalIgnoreCase)
-                    ? FixAnalog(upper)
-                    : upper;
+                    ? FixDiscrete(upper)
+                    : data.IoType.Equals("AI", StringComparison.OrdinalIgnoreCase)
+                        ? FixAnalog(upper)
+                        : upper;
 
             return upper;
         }
