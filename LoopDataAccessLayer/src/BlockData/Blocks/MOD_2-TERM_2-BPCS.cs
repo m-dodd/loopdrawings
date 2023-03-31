@@ -25,15 +25,15 @@ namespace LoopDataAccessLayer
         protected override void FetchDBData()
         { 
             DBLoopData ZSCData = dataLoader.GetLoopData(ZSCTag);
-            DBLoopData ZSOData = dataLoader.GetLoopData(ZSCTag);
+            DBLoopData ZSOData = dataLoader.GetLoopData(ZSOTag);
 
             PopulateRackSlotChannel(ZSCData, "1");
             PopulateFourAlarms(ZSCData, "-1");
-            PopulateTag1Tag2(ZSCTag, "FUNCTIONAL_ID1", "LOOP_NO1");
+            PopulateLoopFields(ZSCData, "FUNCTIONAL_ID1", "LOOP_NO1");
 
             PopulateRackSlotChannel(ZSOData, "2");
             PopulateFourAlarms(ZSOData, "-2");
-            PopulateTag1Tag2(ZSOTag, "FUNCTIONAL_ID2", "LOOP_NO2");
+            PopulateLoopFields(ZSOData, "FUNCTIONAL_ID2", "LOOP_NO2");
 
             Attributes["DRAWING_NO"] = ZSCData.PidDrawingNumber;
         }

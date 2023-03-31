@@ -47,9 +47,9 @@ namespace LoopDataAccessLayer
         {
             string[] currentTestingLoops =
             {
-                "F-1521",
-                "L-1400",
-                "L-7100",
+                //"F-1521",
+                //"L-1400",
+                //"L-7100",
                 "X-1300",
 
                 
@@ -103,7 +103,7 @@ namespace LoopDataAccessLayer
 
                         Manufacturer = FetchManufacturerModel(d.Tblbominstr, "Manufacturer"),
                         Model = FetchManufacturerModel(d.Tblbominstr, "Model"),
-                        
+
                         JB1Tag = GetCleanString(d.Jb1tag),
                         JB2Tag = GetCleanString(d.Jb2tag),
 
@@ -126,24 +126,15 @@ namespace LoopDataAccessLayer
 
                         FailPosition = GetCleanString(d.Failposition),
                         InstrumentType = GetCleanString(d.Instrumenttype),
+                        IoType = GetCleanString(d.Iotype),
 
-                        System = FetchSystemType(d.Tblsystem),
+                        System = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
 
                     }).FirstOrDefault();
                 loopData[tag] = data ?? new DBLoopData();
 
                 return loopData[tag];
             }
-        }
-
-        private static string FetchSystemType(Tblsystem? tblsystem)
-        {
-            if (tblsystem is null)
-            {
-                return string.Empty;
-            }
-
-            return GetCleanString(tblsystem.SystemType);
         }
 
         private static string FetchRackSlotChannel(Tblindex index, string rackSlotChannel)

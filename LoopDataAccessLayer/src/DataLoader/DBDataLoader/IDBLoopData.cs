@@ -10,6 +10,7 @@
         string HiControl { get; set; }
         string HiHiAlarm { get; set; }
         string InstrumentType { get; set; }
+        string IoType { get; set; }
         string IoPanel { get; set; }
         string JB1Tag { get; set; }
         string JB2Tag { get; set; }

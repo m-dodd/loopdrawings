@@ -41,6 +41,7 @@ namespace LoopDataAccessLayer
         public string MaxCalRange { get; set; } = CALERROR.ToString();
         public string RangeUnits { get; set; } = string.Empty;
         public string InstrumentType { get; set; } = string.Empty;
+        public string IoType { get; set; } = string.Empty;
 
         public string FailPosition
         {

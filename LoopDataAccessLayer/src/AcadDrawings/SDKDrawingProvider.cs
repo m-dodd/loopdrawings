@@ -32,7 +32,6 @@ namespace LoopDataAccessLayer
             // the following code doesn't work for drawings like the XV drawing as that doesn't have a table on it
             // but let's start with this and get it to work and then handle the XV drawing edge case
             int sdkBlockSize = GetSDKBlockSize();
-            sdkBlockSize--; // for testing purposes
             return sdkBlockSize != 0 && GetNumberOfSDs() > sdkBlockSize;
         }
 
