@@ -98,13 +98,13 @@ namespace LoopDataAccessLayer
         public string LoControl
         {
             get => loControl;
-            set { loControl = BuildAlarmString("LC", value); }
+            set { loControl = BuildAlarmString("CL", value); }
         }
 
         public string HiControl
         {
             get => hiControl;
-            set { hiControl = BuildAlarmString("HC", value); }
+            set { hiControl = BuildAlarmString("CH", value); }
         }
 
         public string IoPanel { get; set; } = string.Empty;

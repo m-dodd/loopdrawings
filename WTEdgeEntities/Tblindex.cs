@@ -89,6 +89,7 @@ namespace WTEdge.Entities
         public virtual Tblsystem? SystemNavigation { get; set; }
         public virtual Tblarss? Tblarss { get; set; }
         public virtual Tblbominstr? Tblbominstr { get; set; }
+        public virtual Tblsystem? Tblsystem { get; set; }
         public virtual ICollection<Tblindex> InverseItpmparentNavigation { get; set; }
         public virtual ICollection<Tblindex> InverseParenttag1Navigation { get; set; }
         public virtual ICollection<Tblindex> InverseParenttag2Navigation { get; set; }

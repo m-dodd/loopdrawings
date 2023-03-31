@@ -980,6 +980,8 @@ namespace LoopDataAccessLayer
                 entity.HasIndex(e => e.System, "system")
                     .IsUnique();
 
+                entity.HasIndex(e => e.SystemType, "fksystemtype");
+
                 entity.Property(e => e.Id)
                     .HasColumnType("int(25)")
                     .HasColumnName("id");
@@ -987,6 +989,16 @@ namespace LoopDataAccessLayer
                 entity.Property(e => e.System)
                     .HasMaxLength(50)
                     .HasColumnName("system");
+
+                entity.Property(e => e.SystemType)
+                    .HasMaxLength(50)
+                    .HasColumnName("systemtype");
+
+                entity.HasOne(d => d.SystemNavigation)
+                    .WithOne(p => p.Tblsystem)
+                    .HasPrincipalKey<Tblindex>(p => p.System)
+                    .HasForeignKey<Tblsystem>(d => d.System)
+                    .HasConstraintName("tblarss_ibfk_1");
             });
 
             OnModelCreatingPartial(modelBuilder);

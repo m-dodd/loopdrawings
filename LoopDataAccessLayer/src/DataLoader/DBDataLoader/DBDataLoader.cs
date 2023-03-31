@@ -48,9 +48,11 @@ namespace LoopDataAccessLayer
             string[] currentTestingLoops =
             {
                 "F-1521",
-                //"L-1400",
-                //"L-7100",
-                //"X-1300"
+                "L-1400",
+                "L-7100",
+                "X-1300",
+
+                
             };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future
@@ -125,13 +127,23 @@ namespace LoopDataAccessLayer
                         FailPosition = GetCleanString(d.Failposition),
                         InstrumentType = GetCleanString(d.Instrumenttype),
 
-                        System = GetCleanString(d.System),
+                        System = FetchSystemType(d.Tblsystem),
 
                     }).FirstOrDefault();
                 loopData[tag] = data ?? new DBLoopData();
 
                 return loopData[tag];
             }
+        }
+
+        private static string FetchSystemType(Tblsystem? tblsystem)
+        {
+            if (tblsystem is null)
+            {
+                return string.Empty;
+            }
+
+            return GetCleanString(tblsystem.SystemType);
         }
 
         private static string FetchRackSlotChannel(Tblindex index, string rackSlotChannel)
@@ -159,8 +171,8 @@ namespace LoopDataAccessLayer
 
             return manufacturerModel.ToLower() switch
             {
-                "manufacturer" => (bom.Manufacturer ?? string.Empty).ToString(),
-                "model" => (bom.Model ?? string.Empty).ToString(),
+                "manufacturer" => GetCleanString(bom.Manufacturer),
+                "model" => GetCleanString(bom.Model),
                 _ => string.Empty
             };
         }
@@ -179,7 +191,7 @@ namespace LoopDataAccessLayer
                 "h" => GetCleanString(tblarss.Hialarm),
                 "hh" => GetCleanString(tblarss.Hhalarm),
                 "lc" => GetCleanString(tblarss.Lowctrl),
-                "hc" => GetCleanString(tblarss.Lowctrl),
+                "hc" => GetCleanString(tblarss.Highctrl),
                 _ => string.Empty,
             };
             
