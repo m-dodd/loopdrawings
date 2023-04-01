@@ -29,6 +29,7 @@
         string RangeUnits { get; set; }
         string Slot { get; set; }
         string System { get; set; }
+        string SystemType { get; set; }
         string Tag { get; set; }
     }
 }

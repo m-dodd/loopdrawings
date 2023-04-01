@@ -23,10 +23,11 @@ namespace LoopDataAccessLayer
             DBLoopData data = dataLoader.GetLoopData(Tag);
 
             PopulateRackSlotChannel(data);
-            PopulateTag1Tag2(ControllerTag, "FUNCTIONAL_ID", "LOOP_NO");
+            PopulateLoopFields(data, "FUNCTIONAL_ID", "LOOP_NO");
             PopulateAlarms(data);
 
             Attributes["DRAWING_NO"] = data.PidDrawingNumber;
+            Attributes["SYMBOL_TYPE"] = GetSymbolType(data.SystemType);
         }
 
         protected override void FetchExcelData()
@@ -38,5 +39,7 @@ namespace LoopDataAccessLayer
                 Attributes["WIRE_TAG_IO"] = IOData.ModuleWireTag01;
             }
         }
+
+
     }
 }

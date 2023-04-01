@@ -128,6 +128,7 @@ namespace LoopDataAccessLayer
         }
 
         public string System { get; set; } = string.Empty;
+        public string SystemType { get; set; } = string.Empty;
 
         public IEnumerable<string> FourLineDescription
         {

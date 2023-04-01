@@ -45,6 +45,14 @@ namespace LoopDataAccessLayer
             Attributes["CHANNEL" + suffix] = data.Channel;
         }
 
+        protected static string GetSymbolType(string systemType)
+        {
+            // having this function provides flexibility if things change in the future
+            // but as of now, April 1, 2023, the systemType from the DB aligns with the
+            // visibility field of the block
+            return systemType.ToUpper();
+        }
+
         protected void PopulateLoopFields(DBLoopData data, string attribute1, string attribute2)
         {
             string[] tagComponents = GetTag1Tag2(data.Tag);

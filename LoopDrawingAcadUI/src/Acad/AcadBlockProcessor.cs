@@ -47,31 +47,49 @@ namespace LoopDrawingAcadUI
 
         public void ProcessBlock(AcadBlockData block)
         {
-            string[] valveBlocks = new string[]
-                                   {
-                                       "VALVE_BODY", "VALVE_2-SOL"
-                                   };
+            
             if (uidBlockMap.TryGetValue(block.UID.ToUpper(), out BlockReference br))
             {
                 if (br != null)
                 {
-                    if (valveBlocks.Contains(block.Name))
-                    {
-                        SetDynamicPropertyValue(br, "Visibility1", block.Attributes["VALVE_TYPE"]);
-                    }
-                    Regex regex = new Regex(@"SD_TABLE", RegexOptions.IgnoreCase);
-                    if (regex.IsMatch(block.Name))
-                    {
-                        if(block.Attributes.TryGetValue("DELETE_SD", out var delete_sd))
-                        {
-                            if(bool.Parse(delete_sd))
-                            {
-                                br.Erase();
-                                return;
-                            }
-                        }
-                    }
+                    ProcessDynamicBlocks(block, br);
+                    ProcessSDBlocks(block, br);
                     ProcessBlockRefAttributes(br, block.Attributes);
+                }
+            }
+        }
+
+        private void ProcessDynamicBlocks(AcadBlockData block, BlockReference br)
+        {
+            //string[] valveBlocks = new string[]
+            //{
+            //    "VALVE_BODY", "VALVE_2-SOL"
+            //};
+
+            if (Regex.IsMatch(block.Name, @"VALVE_BODY|VALVE_2-SOL", RegexOptions.IgnoreCase))
+            //if (valveBlocks.Contains(block.Name))
+            {
+                SetDynamicPropertyValue(br, "Visibility1", block.Attributes["VALVE_TYPE"]);
+            }
+
+            if (block.Name == "MOD_1-TERM_1-PT_DYN")
+            {
+                SetDynamicPropertyValue(br, "Visibility1", block.Attributes["SYMBOL_TYPE"]);
+            }
+        }
+
+        private void ProcessSDBlocks(AcadBlockData block, BlockReference br)
+        {
+            Regex regex = new Regex(@"SD_TABLE", RegexOptions.IgnoreCase);
+            if (regex.IsMatch(block.Name))
+            {
+                if (block.Attributes.TryGetValue("DELETE_SD", out var delete_sd))
+                {
+                    if (bool.Parse(delete_sd))
+                    {
+                        br.Erase();
+                        return;
+                    }
                 }
             }
         }

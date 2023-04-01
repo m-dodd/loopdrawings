@@ -47,10 +47,13 @@ namespace LoopDataAccessLayer
         {
             string[] currentTestingLoops =
             {
-                //"F-1521",
+                // DIN-4W tests
+                "F-1521",
+                "F-1914B",
+
                 //"L-1400",
                 //"L-7100",
-                "X-1300",
+                //"X-1300",
 
                 
             };
@@ -128,7 +131,8 @@ namespace LoopDataAccessLayer
                         InstrumentType = GetCleanString(d.Instrumenttype),
                         IoType = GetCleanString(d.Iotype),
 
-                        System = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
+                        System = GetCleanString(d.System),
+                        SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
 
                     }).FirstOrDefault();
                 loopData[tag] = data ?? new DBLoopData();
