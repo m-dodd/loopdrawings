@@ -3,21 +3,31 @@ using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
 {
+    // idea here is that I could break this class up into smaller classes with interfaces - I like the idea
+    //public class LoopCache : ICachedData
+    //{
+    //    private readonly WTEdgeContext db;
+    //    public LoopCache(WTEdgeContext db)
+    //    {
+    //        this.db = db;
+    //    }
+    //}
+
     public class DBDataLoader : IDBLoader
     {
         private readonly WTEdgeContext db;
-        private readonly Dictionary<string, DBLoopData> loopData;
-        private readonly Dictionary<string, List<SDKData>> sdkData;
+        private readonly Dictionary<string, DBLoopData> loopDataCache;
+        private readonly Dictionary<string, List<SDKData>> sdkDataCache;
         public DBDataLoader()
         {
             this.db = new WTEdgeContext();
-            loopData = new Dictionary<string, DBLoopData>();
-            sdkData = new Dictionary<string, List<SDKData>>();
+            loopDataCache = new Dictionary<string, DBLoopData>();
+            sdkDataCache = new Dictionary<string, List<SDKData>>();
         }
 
         public List<SDKData> GetSDs(string tag)
         {
-            if (sdkData.TryGetValue(tag, out var data))
+            if (sdkDataCache.TryGetValue(tag, out var data))
             {
                 return data;
             }
@@ -38,7 +48,7 @@ namespace LoopDataAccessLayer
                                 SdAction2 = GetCleanString(sd.Sdaction2)
                             })
                     .ToList();
-                sdkData[tag] = data;
+                sdkDataCache[tag] = data;
                 return data;
             }
         }
@@ -48,11 +58,17 @@ namespace LoopDataAccessLayer
             string[] currentTestingLoops =
             {
                 // DIN-4W tests
-                "F-1521",
-                "F-1914B",
+                //"F-1521",
+                //"F-1914B",
 
-                //"L-1400",
-                //"L-7100",
+                // AIN tests
+                "L-7100",
+                "P-1102",
+
+                // PID tests
+                "L-1400",
+
+                // XV tests
                 //"X-1300",
 
                 
@@ -91,7 +107,7 @@ namespace LoopDataAccessLayer
             ///     First check to see if the data is in the dictionar and if it is simply return it
             ///     If it is not in the dict then fetch it and add it to the dict and return it
             ///     Now any future call for this same data will not need to fetch it
-            if (loopData.TryGetValue(tag, out var data))
+            if (loopDataCache.TryGetValue(tag, out var data))
             {
                 return data;
             }
@@ -135,9 +151,9 @@ namespace LoopDataAccessLayer
                         SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
 
                     }).FirstOrDefault();
-                loopData[tag] = data ?? new DBLoopData();
+                loopDataCache[tag] = data ?? new DBLoopData();
 
-                return loopData[tag];
+                return loopDataCache[tag];
             }
         }
 

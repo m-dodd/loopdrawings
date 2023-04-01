@@ -64,6 +64,17 @@ namespace LoopDataAccessLayer
             }
         }
 
+        //protected void PopulateLoopFields(string tag, string attribute1, string attribute2)
+        //{
+        //    string[] tagComponents = GetTag1Tag2(tag);
+        //    string upper = FixUpperLoopTag(data, tagComponents[0]);
+        //    if (tagComponents.Length == 2)
+        //    {
+        //        Attributes[attribute1] = upper;
+        //        Attributes[attribute2] = tagComponents[1];
+        //    }
+        //}
+
         private string FixUpperLoopTag(DBLoopData data, string upper)
         {
             if (string.IsNullOrEmpty(upper))

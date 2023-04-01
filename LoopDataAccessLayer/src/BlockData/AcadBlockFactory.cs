@@ -33,9 +33,13 @@ namespace LoopDataAccessLayer
                 "MOD_1-TERM_1-BPCS"
                 or "MOD_1-TERM_1-PT_DYN"
                 or "MOD_1-TERM_1-SIS" => new MOD_1_TERM_1(dataLoader, blockMap, tagMap),
-                "MOD_2-TERM_1-BPCS" => new MOD_2_TERM_1(dataLoader, blockMap, tagMap),
+                
+                "MOD_2-TERM_1-BPCS"
+                or "MOD_2-TERM_1-PT_DYN" => new MOD_2_TERM_1(dataLoader, blockMap, tagMap),
+                
                 "MOD_2-TERM_1-SIS"
                 or "MOD_2-TERM_1-BPCS_MIR" => new MOD_2_TERM_1_DISCRETE(dataLoader, blockMap, tagMap),
+                
                 "MOD_2-TERM_2-BPCS" => new MOD_2_TERM_2_BPCS(dataLoader, blockMap, tagMap),
                 
                 "RELAY_24VDC-2" => new RELAY_24VDC_2(dataLoader, blockMap, tagMap),
