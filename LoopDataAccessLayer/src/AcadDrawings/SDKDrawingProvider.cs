@@ -32,16 +32,29 @@ namespace LoopDataAccessLayer
             // the following code doesn't work for drawings like the XV drawing as that doesn't have a table on it
             // but let's start with this and get it to work and then handle the XV drawing edge case
             int sdkBlockSize = GetSDKBlockSize();
-            return sdkBlockSize != 0 && GetNumberOfSDs() > sdkBlockSize;
+            return GetNumberOfSDs() > sdkBlockSize;
         }
 
         public string GetSDTag()
         {
-            var sdTableBlock = GetSDBlock();
-            return
-                sdTableBlock is not null
-                ? tagMap[sdTableBlock.Tags[0]]
-                : string.Empty;
+            return string.Join("|", GetSDTagList());
+
+            //return
+            //    sdTableBlock is not null
+            //    ? tagMap[sdTableBlock.Tags[0]]
+            //    : string.Empty;
+        }
+
+        private List<string> GetSDTagList()
+        {
+            BlockMapData? sdTableBlock = GetSDBlock();
+            if (sdTableBlock == null) return new List<string>();
+            return sdTableBlock
+                        .Tags
+                        .Select(tag => tagMap.TryGetValue(tag, out string? value)
+                                       ? value
+                                       : string.Empty)
+                        .ToList();
         }
 
         private int GetSDKBlockSize()
@@ -57,10 +70,9 @@ namespace LoopDataAccessLayer
 
         private int GetNumberOfSDs()
         {
-            string tag = GetSDTag();
-            return string.IsNullOrEmpty(tag)
-                   ? 0
-                   : dataLoader.GetSDs(tag).Count;
+            return GetSDTagList()
+                   .Where(tag => !string.IsNullOrEmpty(tag))
+                   .Sum(tag => dataLoader.GetSDs(tag).Count);
         }
 
         private BlockMapData? GetSDBlock()

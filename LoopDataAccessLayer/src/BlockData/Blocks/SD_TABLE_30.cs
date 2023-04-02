@@ -22,7 +22,7 @@ namespace LoopDataAccessLayer
         protected override List<SDKData> GetSDData()
         {
             //List<SDKData> sdAllData = dataLoader.GetSDs(Tag);
-            List<SDKData> sdAllData = GetSDData();
+            List<SDKData> sdAllData = base.GetSDData(Tag.Split("|"));
             List<SDKData> sdBlockData;
 
             int blockNumber = int.Parse(UID[^1].ToString());

@@ -49,8 +49,13 @@ namespace LoopDataAccessLayer
 
         protected virtual List<SDKData> GetSDData()
         {
+            return GetSDData(blockMap.Tags);
+        }
+
+        protected virtual List<SDKData> GetSDData(IEnumerable<string> tags)
+        {
             List<List<SDKData>> allSDs = new();
-            foreach(string tag in blockMap.Tags)
+            foreach (string tag in tags)
             {
                 List<SDKData> sds = dataLoader.GetSDs(Tag);
                 allSDs.Add(sds);

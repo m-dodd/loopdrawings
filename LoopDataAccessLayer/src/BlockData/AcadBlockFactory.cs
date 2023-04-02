@@ -30,12 +30,7 @@ namespace LoopDataAccessLayer
                 "PNL_3-TERM" => new PNL_3_TERM(dataLoader, blockMap, tagMap),
                 "PNL_4-TERM_24VDC" => new PNL_4_TERM_24VDC(dataLoader, blockMap, tagMap),
                 
-                //"MOD_1-TERM_1-BPCS"
-                //or 
-                //or "MOD_1-TERM_1-SIS" 
                 "MOD_1-TERM_1-PT_DYN" => new MOD_1_TERM_1(dataLoader, blockMap, tagMap),
-                
-                //"MOD_2-TERM_1-BPCS" or
                 "MOD_2-TERM_1-PT_DYN" => new MOD_2_TERM_1(dataLoader, blockMap, tagMap),
                 
                 "MOD_2-TERM_1-SIS"
