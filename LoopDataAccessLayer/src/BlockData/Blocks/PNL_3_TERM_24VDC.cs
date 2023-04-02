@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class PNL_3_TERM_24VDC : BlockDataExcel
+    public class PNL_3_or_4_TERM_24VDC : BlockDataExcel
     {
-        public PNL_3_TERM_24VDC(IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(dataLoader)
+        public PNL_3_or_4_TERM_24VDC(IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
@@ -26,14 +26,17 @@ namespace LoopDataAccessLayer
                 Attributes["PNL_TS"] = IOData.PanelTerminalStrip;
                 Attributes["TB1"] = IOData.IO.Terminal1;
                 Attributes["TB2"] = IOData.IO.Terminal2;
-                Attributes["TB3"] = IOData.IO.TerminalShld;
+                Attributes["TB3"] = IOData.IO.Terminal3;
+                Attributes["TB4"] = IOData.IO.Terminal4;
                 Attributes["CLR1"] = IOData.IO.WireColor1;
                 Attributes["CLR2"] = IOData.IO.WireColor2;
+                Attributes["CLR3"] = IOData.IO.WireColor3;
                 Attributes["PAIR_NO"] = IOData.IO.CorePair1;
+                Attributes["TRI_NO"] = IOData.IO.CorePair1;
                 Attributes["WIRE_TAG_PANEL"] = IOData.IO.WireTag1;
-                Attributes["BREAKER_NO"] = IOData.BreakerNumber;
                 Attributes["CABLE_TAG_PANEL"] = IOData.IO.CableTag;
                 Attributes["CABLE_SIZE"] = cableData?.CableSizeType ?? string.Empty;
+                Attributes["BREAKER_NO"] = IOData.BreakerNumber;
             }
         }
     }

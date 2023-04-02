@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class PNL_2_TERM_24VDC : PNL_3_TERM_24VDC
+    public class PNL_2_TERM_24VDC : PNL_3_or_4_TERM_24VDC
     {
         public PNL_2_TERM_24VDC(
             IDataLoader dataLoader, 

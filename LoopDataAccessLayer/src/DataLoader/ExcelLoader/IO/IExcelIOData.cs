@@ -41,13 +41,13 @@ namespace LoopDataAccessLayer
         T Terminal2 { get; set; }
         T Terminal3 { get; set; }
         T Terminal4 { get; set; }
-        T TerminalShld { get; set; }
         T WireTag1 { get; set; }
         T WireTag2 { get; set; }
         T WireTag3 { get; set; }
         T WireTag4 { get; set; }
         T WireColor1 { get; set; }
         T WireColor2 { get; set; }
+        T WireColor3 { get; set; }
         T CorePair1 { get; set; }
         T CorePair2 { get; set; }
         T CorePair3 { get; set; }

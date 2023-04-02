@@ -15,7 +15,8 @@ namespace LoopDataAccessLayer
         {
             return blockMap.Name switch
             {
-                "JB_3-TERM_SINGLE" => new JB_ANALOG_TERM_SINGLE(dataLoader, blockMap, tagMap),
+                "JB_3-TERM_SINGLE"
+                or "JB_4-TERM_SINGLE_SHLD" => new JB_ANALOG_TERM_SINGLE(dataLoader, blockMap, tagMap),
                 "JB_2-TERM_SINGLE" 
                 or "JB_2-TERM_SINGLE_JOG"
                 or "JB_4-TERM_SINGLE" => new JB_TERM_SINGLE(dataLoader, blockMap, tagMap),
@@ -26,7 +27,9 @@ namespace LoopDataAccessLayer
                 "PNL_2-TERM_EXT_PWR" => new PNL_2_TERM_EXT_PWR(dataLoader, blockMap, tagMap),
                 
                 "PNL_3-TERM_24VDC-1" => new PNL_2_TERM_24VDC(dataLoader, blockMap, tagMap),
-                "PNL_3-TERM_24VDC-2" => new PNL_3_TERM_24VDC(dataLoader, blockMap, tagMap),
+                
+                "PNL_3-TERM_24VDC-2"
+                or "PNL_4-TERM_24VDC_SHLD" => new PNL_3_or_4_TERM_24VDC(dataLoader, blockMap, tagMap),
                 "PNL_3-TERM" => new PNL_3_TERM(dataLoader, blockMap, tagMap),
                 "PNL_4-TERM_24VDC" => new PNL_4_TERM_24VDC(dataLoader, blockMap, tagMap),
                 
@@ -41,6 +44,7 @@ namespace LoopDataAccessLayer
                 "RELAY_24VDC-2" => new RELAY_24VDC_2(dataLoader, blockMap, tagMap),
                 
                 "INST_AI_2W" => new INST_AI_2W(dataLoader, blockMap, tagMap),
+                "INST_AI_3W" => new INST_AI_3W(dataLoader, blockMap, tagMap),
                 "INST_AO_2W" => new INST_AO_2W(dataLoader, blockMap, tagMap),
                 "INST_DI_4W" => new INST_DI_4W(dataLoader, blockMap, tagMap),
                 "INST_DI_4W_ZS" => new INST_DI_4W_ZS(dataLoader, blockMap, tagMap),

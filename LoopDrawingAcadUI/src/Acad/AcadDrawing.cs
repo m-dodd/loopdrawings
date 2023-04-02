@@ -1,5 +1,7 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 using LoopDataAdapterLayer;
+using System;
+using System.IO;
 
 namespace LoopDrawingAcadUI
 {
@@ -17,14 +19,35 @@ namespace LoopDrawingAcadUI
 
         public void Save()
         {
-            Transaction.Commit();
-            Database.SaveAs(AcadDrawingData.OutputDrawingFileName, true, DwgVersion.Current, Database.SecurityParameters);
+            try
+            {
+                Transaction.Commit();
+                Database.SaveAs(AcadDrawingData.OutputDrawingFileName, true, DwgVersion.Current, Database.SecurityParameters);
+            }
+            catch (Autodesk.AutoCAD.Runtime.Exception ex)
+            {
+                string fileName = Path.GetFileName(AcadDrawingData.OutputDrawingFileName);
+                string msg = string.Format("Failed to save drawing '{0}' - please close it", fileName);
+                throw new AcadDrawingException(msg, ex);
+            }
+            catch (System.Exception ex)
+            {
+                throw new AcadDrawingException("Failed to save drawing.", ex);
+            }
+
         }
 
         public void Dispose()
         {
             Transaction.Dispose();
             Database.Dispose();
+        }
+    }
+
+    public class AcadDrawingException : Exception
+    {
+        public AcadDrawingException(string message, Exception innerException) : base(message, innerException)
+        {
         }
     }
 }

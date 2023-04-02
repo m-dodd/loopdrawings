@@ -1,0 +1,668 @@
+{
+  "XMTR": {
+    "TemplateName": "XMTR",
+    "TemplateFileName": "",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "Tags": [ "DRAWING_NAME" ]
+      },
+      {
+        "Name": "EMPTY_BLOCK",
+        "Tags": [ "AI" ]
+      }
+    ]
+  },
+  "AIN_3W": {
+    "TemplateName": "AIN_3W",
+    "TemplateFileName": "",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "Tags": [ "DRAWING_NAME" ]
+      },
+      {
+        "Name": "EMPTY_BLOCK",
+        "Tags": [ "AI" ]
+      }
+    ]
+  },
+  "PID_AI_AO": {
+    "TemplateName": "PID_AI_AO",
+    "TemplateFileName": "",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "Tags": [ "DRAWING_NAME" ]
+      },
+      {
+        "Name": "EMPTY_BLOCK",
+        "Tags": [ "AI", "AO", "CONTROLLER", "VALVE" ]
+      }
+    ]
+  },
+
+  "XV_2XY": {
+    "TemplateName": "XV_2XY",
+    "TemplateFileName": "",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "Tags": [ "DRAWING_NAME" ]
+      },
+      {
+        "Name": "EMPTY_BLOCK",
+        "Tags": [ "ZSC", "ZSO", "SOL-BPCS", "SOL-SIS", "VALVE" ]
+      }
+    ]
+  },
+  "DIN_4W": {
+    "TemplateName": "DIN_4W",
+    "TemplateFileName": "",
+    "BlockMap": [
+      {
+        "Name": "EMPTY_BLOCK",
+        "Tags": [ "DRAWING_NAME", "DI" ]
+      }
+    ]
+  },
+  "SDK": {
+    "TemplateName": "SDK",
+    "TemplateFileName": "SHUTDOWN TABLE.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "SDK_TAG" ]
+      },
+      {
+        "Name": "SD_TABLE_30-ROW",
+        "UID": "SD_TABLE_30-ROW-1",
+        "Tags": [ "SDK_TAG" ]
+      },
+      {
+        "Name": "SD_TABLE_30-ROW",
+        "UID": "SD_TABLE_30-ROW-2",
+        "Tags": [ "SDK_TAG" ]
+      }
+    ]
+  },
+
+  "XMTR_0JB": {
+    "TemplateName": "XMTR_0JB",
+    "TemplateFileName": "XMTR_0JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "AI" ]
+      },
+      {
+        "Name": "SD_TABLE_20-ROW",
+        "UID": "SD_TABLE_20-ROW-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AI_2W",
+        "UID": "INST_AI_2W-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-2",
+        "UID": "PNL_3-TERM_24VDC-2-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "AI", "AI" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "AI" ]
+      }
+    ]
+  },
+  "XMTR_1JB": {
+    "TemplateName": "XMTR_1JB",
+    "TemplateFileName": "XMTR_1JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "AI" ]
+      },
+      {
+        "Name": "SD_TABLE_20-ROW",
+        "UID": "SD_TABLE_20-ROW-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AI_2W",
+        "UID": "INST_AI_2W-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "JB_3-TERM_SINGLE",
+        "UID": "JB_3-TERM_SINGLE-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-2",
+        "UID": "PNL_3-TERM_24VDC-2-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "AI", "AI" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "AI" ]
+      }
+    ]
+  },
+  "XMTR_2JB": {
+    "TemplateName": "XMTR_2JB",
+    "TemplateFileName": "XMTR_2JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "AI" ]
+      },
+      {
+        "Name": "SD_TABLE_20-ROW",
+        "UID": "SD_TABLE_20-ROW-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AI_2W",
+        "UID": "INST_AI_2W-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "JB_3-TERM_DUAL",
+        "UID": "JB_3-TERM_DUAL-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-2",
+        "UID": "PNL_3-TERM_24VDC-2-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "AI", "AI" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "AI" ]
+      }
+    ]
+  },
+
+  "AIN_3W_1JB": {
+    "TemplateName": "AIN_3W_1JB",
+    "TemplateFileName": "AIN_3W_1JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "AI" ]
+      },
+      {
+        "Name": "SD_TABLE_20-ROW",
+        "UID": "SD_TABLE_20-ROW-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AI_3W",
+        "UID": "INST_AI_3W-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "JB_4-TERM_SINGLE_SHLD",
+        "UID": "JB_4-TERM_SINGLE_SHLD-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "PNL_4-TERM_24VDC_SHLD",
+        "UID": "PNL_4-TERM_24VDC_SHLD-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "MOD_2-TERM_1-PT_DYN",
+        "UID": "MOD_2-TERM_1-PT_DYN-1",
+        "Tags": [ "AI", "AI", "AI"]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "AI" ]
+      }
+    ]
+  },
+
+  "PID_AI_0JB_AO_0JB": {
+    "TemplateName": "PID_AI_0JB_AO_0JB",
+    "TemplateFileName": "PID_AI_0JB_AO_0JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "CONTROLLER" ]
+      },
+      {
+        "Name": "SD_TABLE_10-ROW",
+        "UID": "SD_TABLE_10-ROW-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AI_2W",
+        "UID": "INST_AI_2W-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AO_2W",
+        "UID": "INST_AO_2W-1",
+        "Tags": [ "AO", "VALVE" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "AI", "AI" ]
+      },
+      {
+        "Name": "MOD_2-TERM_1-PT_DYN",
+        "UID": "MOD_2-TERM_1-PT_DYN-1",
+        "Tags": [ "AO", "CONTROLLER", "AI" ]
+      },
+      {
+        "Name": "PNL_3-TERM",
+        "UID": "PNL_3-TERM-1",
+        "Tags": [ "AO" ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-2",
+        "UID": "PNL_3-TERM_24VDC-2-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "VALVE_BODY",
+        "UID": "VALVE_BODY-1",
+        "Tags": [ "VALVE" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "AI", "AO", "VALVE" ]
+      }
+    ]
+  },
+  "PID_AI_0JB_AO_1JB": {
+    "TemplateName": "PID_AI_0JB_AO_1JB",
+    "TemplateFileName": "PID_AI_0JB_AO_1JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "CONTROLLER" ]
+      },
+      {
+        "Name": "SD_TABLE_10-ROW",
+        "UID": "SD_TABLE_10-ROW-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AI_2W",
+        "UID": "INST_AI_2W-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AO_2W",
+        "UID": "INST_AO_2W-1",
+        "Tags": [ "AO", "VALVE" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "AI", "AI" ]
+      },
+      {
+        "Name": "MOD_2-TERM_1-PT_DYN",
+        "UID": "MOD_2-TERM_1-PT_DYN-1",
+        "Tags": [ "AO", "CONTROLLER", "AI" ]
+      },
+      {
+        "Name": "JB_3-TERM_SINGLE",
+        "UID": "JB_3-TERM_SINGLE-1",
+        "Tags": [ "Ao" ]
+      },
+      {
+        "Name": "PNL_3-TERM",
+        "UID": "PNL_3-TERM-1",
+        "Tags": [ "AO" ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-2",
+        "UID": "PNL_3-TERM_24VDC-2-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "VALVE_BODY",
+        "UID": "VALVE_BODY-1",
+        "Tags": [ "VALVE" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "AI", "AO", "VALVE" ]
+      }
+    ]
+  },
+  "PID_AI_1JB_AO_0JB": {
+    "TemplateName": "PID_AI_1JB_AO_0JB",
+    "TemplateFileName": "PID_AI_1JB_AO_0JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "CONTROLLER" ]
+      },
+      {
+        "Name": "SD_TABLE_10-ROW",
+        "UID": "SD_TABLE_10-ROW-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AI_2W",
+        "UID": "INST_AI_2W-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AO_2W",
+        "UID": "INST_AO_2W-1",
+        "Tags": [ "AO", "VALVE" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "AI", "AI" ]
+      },
+      {
+        "Name": "MOD_2-TERM_1-PT_DYN",
+        "UID": "MOD_2-TERM_1-PT_DYN-1",
+        "Tags": [ "AO", "CONTROLLER", "AI" ]
+      },
+      {
+        "Name": "JB_3-TERM_SINGLE",
+        "UID": "JB_3-TERM_SINGLE-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "PNL_3-TERM",
+        "UID": "PNL_3-TERM-1",
+        "Tags": [ "AO" ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-2",
+        "UID": "PNL_3-TERM_24VDC-2-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "VALVE_BODY",
+        "UID": "VALVE_BODY-1",
+        "Tags": [ "VALVE" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "AI", "AO", "VALVE" ]
+      }
+    ]
+  },
+  "PID_AI_1JB_AO_1JB": {
+    "TemplateName": "PID_AI_1JB_AO_1JB",
+    "TemplateFileName": "PID_AI_1JB_AO_1JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "CONTROLLER" ]
+      },
+      {
+        "Name": "SD_TABLE_10-ROW",
+        "UID": "SD_TABLE_10-ROW-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AI_2W",
+        "UID": "INST_AI_2W-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "INST_AO_2W",
+        "UID": "INST_AO_2W-1",
+        "Tags": [ "AO", "VALVE" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "AI", "AI" ]
+      },
+      {
+        "Name": "MOD_2-TERM_1-PT_DYN",
+        "UID": "MOD_2-TERM_1-PT_DYN-1",
+        "Tags": [ "AO", "CONTROLLER", "AI" ]
+      },
+      {
+        "Name": "JB_3-TERM_SINGLE",
+        "UID": "JB_3-TERM_SINGLE-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "JB_3-TERM_SINGLE",
+        "UID": "JB_3-TERM_SINGLE-2",
+        "Tags": [ "AO" ]
+      },
+      {
+        "Name": "PNL_3-TERM",
+        "UID": "PNL_3-TERM-1",
+        "Tags": [ "AO" ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-2",
+        "UID": "PNL_3-TERM_24VDC-2-1",
+        "Tags": [ "AI" ]
+      },
+      {
+        "Name": "VALVE_BODY",
+        "UID": "VALVE_BODY-1",
+        "Tags": [ "VALVE" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "AI", "AO", "VALVE" ]
+      }
+    ]
+  },
+
+  "XV_2XY_BPCS_0JB_SIS_1JB": {
+    "TemplateName": "XV_2XY_BPCS_0JB_SIS_1JB",
+    "TemplateFileName": "XV_2XY_BPCS_0JB_SIS_1JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "ZSC" ]
+      },
+
+      {
+        "Name": "INST_DI_4W_ZS",
+        "UID": "INST_DI_4W_ZS-1",
+        "Tags": [ "ZSC", "ZSO" ]
+      },
+      {
+        "Name": "SD_TABLE_0-ROW",
+        "UID": "SD_TABLE_0-ROW-1",
+        "Tags": [ "ZSC", "ZSO" ]
+      },
+      {
+        "Name": "VALVE_2-SOL",
+        "UID": "VALVE_2-SOL-1",
+        "Tags": [ "SOL-BPCS", "SOL-SIS", "VALVE" ]
+      },
+      {
+        "Name": "PNL_4-TERM_24VDC",
+        "UID": "PNL_4-TERM_24VDC-1",
+        "Tags": [ "ZSC", "ZSO" ]
+      },
+      {
+        "Name": "MOD_2-TERM_2-BPCS",
+        "UID": "MOD_2-TERM_2-BPCS-1",
+        "Tags": [ "ZSC", "ZSO" ]
+      },
+      {
+        "Name": "INST_DO_2W",
+        "UID": "INST_DO_2W-1",
+        "Tags": [ "SOL-BPCS" ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-1",
+        "UID": "PNL_3-TERM_24VDC-1-1",
+        "Tags": [ "SOL-BPCS" ]
+      },
+      {
+        "Name": "RELAY_24VDC-2",
+        "UID": "RELAY_24VDC-2-1",
+        "Tags": [ "SOL-BPCS" ]
+      },
+      {
+        "Name": "MOD_2-TERM_1-BPCS_MIR",
+        "UID": "MOD_2-TERM_1-BPCS_MIR-1",
+        "Tags": [ "SOL-BPCS" ]
+      },
+      {
+        "Name": "INST_DO_2W",
+        "UID": "INST_DO_2W-2",
+        "Tags": [ "SOL-SIS" ]
+      },
+      {
+        "Name": "JB_2-TERM_SINGLE_JOG",
+        "UID": "JB_2-TERM_SINGLE_JOG-1",
+        "Tags": [ "SOL-SIS" ]
+      },
+      {
+        "Name": "PNL_2-TERM",
+        "UID": "PNL_2-TERM-1",
+        "Tags": [ "SOL-SIS" ]
+      },
+      {
+        "Name": "MOD_2-TERM_1-SIS",
+        "UID": "MOD_2-TERM_1-SIS-1",
+        "Tags": [ "SOL-SIS" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "ZSC", "ZSO", "SOL-BPCS", "SOL-SIS", "VALVE" ]
+      }
+    ]
+  },
+
+  "DIN_4W_0JB": {
+    "TemplateName": "DIN_4W_0JB",
+    "TemplateFileName": "DIN_4W_0JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "DI" ]
+      },
+      {
+        "Name": "SD_TABLE_10-ROW",
+        "UID": "SD_TABLE_10-ROW-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "INST_DI_4W",
+        "UID": "INST_DI_4W-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "PNL_2-TERM_24VDC",
+        "UID": "PNL_2-TERM_24VDC-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "PNL_2-TERM_EXT_PWR",
+        "UID": "PNL_2-TERM_EXT_PWR-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "DI", "DI" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "DI" ]
+      }
+    ]
+  },
+  "DIN_4W_1JB": {
+    "TemplateName": "DIN_4W_1JB",
+    "TemplateFileName": "DIN_4W_1JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "DI" ]
+      },
+      {
+        "Name": "SD_TABLE_10-ROW",
+        "UID": "SD_TABLE_10-ROW-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "INST_DI_4W",
+        "UID": "INST_DI_4W-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "JB_4-TERM_SINGLE",
+        "UID": "JB_4-TERM_SINGLE-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "PNL_2-TERM_24VDC",
+        "UID": "PNL_2-TERM_24VDC-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "PNL_2-TERM_EXT_PWR",
+        "UID": "PNL_2-TERM_EXT_PWR-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "DI", "DI" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "DI" ]
+      }
+    ]
+  }
+
+}

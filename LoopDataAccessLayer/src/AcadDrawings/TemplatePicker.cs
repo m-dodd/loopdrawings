@@ -23,6 +23,7 @@ namespace LoopDataAccessLayer
             return template.TemplateName.ToUpper() switch
             {
                 "XMTR" => GetSimpleTemplate(template, tagMap, "AI"),
+                "AIN_3W" => GetSimpleTemplate(template, tagMap, "AI"),
                 "DIN_4W" => GetSimpleTemplate(template, tagMap, "DI"),
 
                 "PID_AI_AO" => GetPidTemplate(tagMap),

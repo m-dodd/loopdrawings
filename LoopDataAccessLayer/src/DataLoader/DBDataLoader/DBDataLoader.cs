@@ -58,18 +58,19 @@ namespace LoopDataAccessLayer
             string[] currentTestingLoops =
             {
                 // DIN-4W tests
-                "F-1521",
-                "F-1914B",
+                //"F-1521",
+                //"F-1914B",
 
                 // AIN tests
-                "L-7100",
-                "P-1102",
+                //"L-7100",
+                //"P-1102",
+                "A-1100C",
 
                 // PID tests
                 "L-1400",
 
                 // XV tests
-                "X-1300",
+                //"X-1300",
 
 
             };

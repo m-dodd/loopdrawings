@@ -23,7 +23,9 @@ namespace LoopDataAccessLayer
         protected override void FetchDBData()
         {
             base.FetchDBData();
-            PopulateTag1Tag2(ControllerTag, "FUNCTIONAL_ID", "LOOP_NO");
+
+            DBLoopData data = dataLoader.GetLoopData(ControllerTag);
+            PopulateLoopFields(data, "FUNCTIONAL_ID", "LOOP_NO");
         }
 
         protected override void FetchExcelData()

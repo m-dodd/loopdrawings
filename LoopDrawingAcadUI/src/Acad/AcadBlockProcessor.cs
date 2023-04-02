@@ -61,13 +61,8 @@ namespace LoopDrawingAcadUI
 
         private void ProcessDynamicBlocks(AcadBlockData block, BlockReference br)
         {
-            //string[] valveBlocks = new string[]
-            //{
-            //    "VALVE_BODY", "VALVE_2-SOL"
-            //};
 
             if (Regex.IsMatch(block.Name, @"VALVE_BODY|VALVE_2-SOL", RegexOptions.IgnoreCase))
-            //if (valveBlocks.Contains(block.Name))
             {
                 SetDynamicPropertyValue(br, "Visibility1", block.Attributes["VALVE_TYPE"]);
             }

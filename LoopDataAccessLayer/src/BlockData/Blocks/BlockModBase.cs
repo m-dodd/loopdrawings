@@ -71,13 +71,12 @@ namespace LoopDataAccessLayer
                 return upper;
             }
 
-            upper = data.IoType.Equals("DI", StringComparison.OrdinalIgnoreCase)
-                    ? FixDiscrete(upper)
-                    : data.IoType.Equals("AI", StringComparison.OrdinalIgnoreCase)
-                        ? FixAnalog(upper)
-                        : upper;
-
-            return upper;
+            return data.IoType.ToUpper() switch
+            {
+                "DI" => FixDiscrete(upper),
+                "AI" => FixAnalog(upper),
+                _ => upper
+            };
         }
 
         private static string FixDiscrete(string upper)
