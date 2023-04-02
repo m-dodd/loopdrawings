@@ -41,6 +41,7 @@ namespace LoopDataAccessLayer
         public string MaxCalRange { get; set; } = CALERROR.ToString();
         public string RangeUnits { get; set; } = string.Empty;
         public string InstrumentType { get; set; } = string.Empty;
+        public string IoType { get; set; } = string.Empty;
 
         public string FailPosition
         {
@@ -98,13 +99,13 @@ namespace LoopDataAccessLayer
         public string LoControl
         {
             get => loControl;
-            set { loControl = BuildAlarmString("LC", value); }
+            set { loControl = BuildAlarmString("CL", value); }
         }
 
         public string HiControl
         {
             get => hiControl;
-            set { hiControl = BuildAlarmString("HC", value); }
+            set { hiControl = BuildAlarmString("CH", value); }
         }
 
         public string IoPanel { get; set; } = string.Empty;
@@ -127,6 +128,7 @@ namespace LoopDataAccessLayer
         }
 
         public string System { get; set; } = string.Empty;
+        public string SystemType { get; set; } = string.Empty;
 
         public IEnumerable<string> FourLineDescription
         {

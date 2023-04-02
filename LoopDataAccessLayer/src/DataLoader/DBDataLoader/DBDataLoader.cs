@@ -3,25 +3,75 @@ using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
 {
+    // idea here is that I could break this class up into smaller classes with interfaces - I like the idea
+    //public class LoopCache : ICachedData
+    //{
+    //    private readonly WTEdgeContext db;
+    //    public LoopCache(WTEdgeContext db)
+    //    {
+    //        this.db = db;
+    //    }
+    //}
+
     public class DBDataLoader : IDBLoader
     {
         private readonly WTEdgeContext db;
-        private readonly Dictionary<string, DBLoopData> loopData;
-
+        private readonly Dictionary<string, DBLoopData> loopDataCache;
+        private readonly Dictionary<string, List<SDKData>> sdkDataCache;
         public DBDataLoader()
         {
             this.db = new WTEdgeContext();
-            loopData = new Dictionary<string, DBLoopData>();
+            loopDataCache = new Dictionary<string, DBLoopData>();
+            sdkDataCache = new Dictionary<string, List<SDKData>>();
+        }
+
+        public List<SDKData> GetSDs(string tag)
+        {
+            if (sdkDataCache.TryGetValue(tag, out var data))
+            {
+                return data;
+            }
+            else
+            {
+                data = db.Tblsdkrelations
+                    .Where(x => x.Parenttags == tag)
+                    .Select(sd => new SDKData
+                            {
+                                ParentTag = GetCleanString(sd.Parenttags),
+                                InputTag = GetCleanString(sd.Inputtags),
+                                OutputTag = GetCleanString(sd.Outputtag),
+                                OutputDescription = sd.OutputtagNavigation == null ?
+                                                    string.Empty :
+                                                    GetCleanString(sd.OutputtagNavigation.Servicedescription),
+                                SdGroup = GetCleanString(sd.Sdgroup),
+                                SdAction1 = GetCleanString(sd.Sdaction1),
+                                SdAction2 = GetCleanString(sd.Sdaction2)
+                            })
+                    .ToList();
+                sdkDataCache[tag] = data;
+                return data;
+            }
         }
 
         public List<LoopNoTemplatePair> GetLoops()
         {
             string[] currentTestingLoops =
             {
+                // DIN-4W tests
                 "F-1521",
-                "L-1400",
+                "F-1914B",
+
+                // AIN tests
                 "L-7100",
-                "X-1300"
+                "P-1102",
+
+                // PID tests
+                "L-1400",
+
+                // XV tests
+                "X-1300",
+
+
             };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future
@@ -57,7 +107,7 @@ namespace LoopDataAccessLayer
             ///     First check to see if the data is in the dictionar and if it is simply return it
             ///     If it is not in the dict then fetch it and add it to the dict and return it
             ///     Now any future call for this same data will not need to fetch it
-            if (loopData.TryGetValue(tag, out var data))
+            if (loopDataCache.TryGetValue(tag, out var data))
             {
                 return data;
             }
@@ -72,7 +122,7 @@ namespace LoopDataAccessLayer
 
                         Manufacturer = FetchManufacturerModel(d.Tblbominstr, "Manufacturer"),
                         Model = FetchManufacturerModel(d.Tblbominstr, "Model"),
-                        
+
                         JB1Tag = GetCleanString(d.Jb1tag),
                         JB2Tag = GetCleanString(d.Jb2tag),
 
@@ -95,13 +145,15 @@ namespace LoopDataAccessLayer
 
                         FailPosition = GetCleanString(d.Failposition),
                         InstrumentType = GetCleanString(d.Instrumenttype),
+                        IoType = GetCleanString(d.Iotype),
 
                         System = GetCleanString(d.System),
+                        SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
 
                     }).FirstOrDefault();
-                loopData[tag] = data ?? new DBLoopData();
+                loopDataCache[tag] = data ?? new DBLoopData();
 
-                return loopData[tag];
+                return loopDataCache[tag];
             }
         }
 
@@ -130,8 +182,8 @@ namespace LoopDataAccessLayer
 
             return manufacturerModel.ToLower() switch
             {
-                "manufacturer" => (bom.Manufacturer ?? string.Empty).ToString(),
-                "model" => (bom.Model ?? string.Empty).ToString(),
+                "manufacturer" => GetCleanString(bom.Manufacturer),
+                "model" => GetCleanString(bom.Model),
                 _ => string.Empty
             };
         }
@@ -150,7 +202,7 @@ namespace LoopDataAccessLayer
                 "h" => GetCleanString(tblarss.Hialarm),
                 "hh" => GetCleanString(tblarss.Hhalarm),
                 "lc" => GetCleanString(tblarss.Lowctrl),
-                "hc" => GetCleanString(tblarss.Lowctrl),
+                "hc" => GetCleanString(tblarss.Highctrl),
                 _ => string.Empty,
             };
             

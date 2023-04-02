@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
+using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
 {
@@ -16,6 +17,7 @@ namespace LoopDataAccessLayer
 
         private readonly Dictionary<string, DBLoopData> loopData;
         private readonly Dictionary<string, IEnumerable<LoopTagData>> loopTagData;
+        private readonly Dictionary<string, List<SDKData>> sdkData;
 
         private readonly Dictionary<string, IXLRow?> ioRowData;
         private readonly Dictionary<string, IXLRows?> jbRowsData;
@@ -37,6 +39,7 @@ namespace LoopDataAccessLayer
             
             loopData = new Dictionary<string, DBLoopData>();
             loopTagData = new Dictionary<string, IEnumerable<LoopTagData>>();
+            sdkData = new Dictionary<string, List<SDKData>>();
 
             ioRowData = new Dictionary<string, IXLRow?>();
             jbRowsData = new Dictionary<string, IXLRows?>();
@@ -70,6 +73,12 @@ namespace LoopDataAccessLayer
                 return data;
             }
         }
+
+        public List<SDKData> GetSDs(string tag)
+        {
+            return GetDataOrMemoizeGetData<List<SDKData>>(tag, sdkData!, dbLoader.GetSDs)!;
+        }
+
 
         public DBLoopData GetLoopData(string tag)
         {

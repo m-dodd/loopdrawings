@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LoopDataAccessLayer.src.DataLoader.ExcelLoader
+namespace LoopDataAccessLayer
 {
     public class ExcelTitleBlockRevData<T> : IExcelTitleBlockRevData<T>
     {

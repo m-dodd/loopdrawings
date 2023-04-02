@@ -29,18 +29,33 @@ namespace LoopDataAccessLayer
             PopulateTag1Tag2(tag, "TAG1", "TAG2");
         }
 
-        protected void PopulateTag1Tag2(string tag, string attribute1, string attribute2)
+        protected void PopulateTag1Tag2(string tag1, string tag2, string attribute1, string attribute2)
+        {
+            Attributes[attribute1] = tag1;
+            Attributes[attribute2] = tag2;
+        }
+
+        protected void PopulateTag1Tag2(string tag1, string tag2)
+        {
+            PopulateTag1Tag2(tag1, tag2, "TAG1", "TAG2");
+        }
+
+        protected string[] GetTag1Tag2(string tag)
         {
             if (string.IsNullOrEmpty(tag))
             {
                 throw new ArgumentException("Tag cannot be null or empty", nameof(tag));
             }
 
-            string[] tagComponents = tag.Split('-');
+             return tag.Split('-');
+        }
+
+        protected void PopulateTag1Tag2(string tag, string attribute1, string attribute2)
+        {
+            string[] tagComponents = GetTag1Tag2(tag);
             if (tagComponents.Length == 2)
             {
-                Attributes[attribute1] = tagComponents[0];
-                Attributes[attribute2] = tagComponents[1];
+                PopulateTag1Tag2(tagComponents[0], tagComponents[1], attribute1, attribute2);
             }
         }
 

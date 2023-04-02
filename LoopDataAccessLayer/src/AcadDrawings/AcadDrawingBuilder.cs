@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
 {
@@ -28,43 +29,84 @@ namespace LoopDataAccessLayer
             this.blockFactory = blockFactory;
         }
 
-        public AcadDrawingDataMappable? BuildDrawing(LoopNoTemplatePair loop)
+        public IEnumerable<AcadDrawingDataMappable> BuildDrawings(LoopNoTemplatePair loop)
         {
-            var template = GetTemplate(loop);
+            TemplateConfig sdkTemplate = GetTemplate("SDK") ?? throw new NullReferenceException("SDK is missing from configuration.");
+            TemplateConfig? template = GetTemplate(loop);
+            List<AcadDrawingDataMappable> drawings = new();
             if (template is null)
             {
-                return null;
+                return drawings;
             }
 
-            var tagMap = GetLoopTagMap(loop, template);
+            Dictionary<string, string> tagMap = GetLoopTagMap(loop, template);
             if (tagMap.Count == 0)
             {
-                return null;
+                return drawings;
             }
 
             TemplateConfig? correctTemplate = templatePicker.GetCorrectTemplate(template, tagMap);
             if (correctTemplate is null)
             {
-                return null;
+                return drawings;
             }
 
-            return ConstructDrawing(loop, correctTemplate, tagMap);
+            SDKDrawingProvider sdk = new(dataLoader, correctTemplate, tagMap, loopConfig);
+            // still need to figure out how to flag the original drawing to delete the SDK block
+            // I know I have an idea to write an attribute to the block attributes and then that can be checked
+            // by teh acad portion, but right now I don't have a way to pass that down
+            if (sdk.NewDrawingRequired())
+            {
+                string drawingName1 = tagMap["DRAWING_NAME"] + "-1";
+                string drawingName2 = tagMap["DRAWING_NAME"] + "-2";
 
+                tagMap["DRAWING_NAME"] = drawingName1;
+                tagMap["DRAWING_NAME_SD"] = drawingName2;
+                tagMap["DELETE_SD"] = "true";
+                drawings.Add(ConstructDrawing(loop, correctTemplate, tagMap));
+
+
+                // replace the last two characters of the name
+                tagMap["DRAWING_NAME"] = drawingName2;
+                tagMap["DRAWING_NAME_SD"] = string.Empty;
+
+                // get the tag to use for the blocks
+                tagMap["SDK_TAG"] = sdk.GetSDTag();
+                tagMap["DELETE_SD"] = "false";
+                if (!string.IsNullOrEmpty(tagMap["SDK_TAG"]))
+                {
+                    drawings.Add(ConstructDrawing(loop, sdkTemplate, tagMap));
+                }
+            }
+            else
+            {
+                tagMap["DELETE_SD"] = "false";
+                tagMap["DRAWING_NAME_SD"] = string.Empty;
+                drawings.Add( ConstructDrawing(loop, correctTemplate, tagMap) );
+            }
+            return drawings;
         }
 
         private TemplateConfig? GetTemplate(LoopNoTemplatePair loop)
         {
-            return loopConfig.TemplateDefs.TryGetValue(loop.Template, out TemplateConfig? template)
+            return GetTemplate(loop.Template);
+        }
+
+        private TemplateConfig? GetTemplate(string templateName)
+        {
+            return loopConfig.TemplateDefs.TryGetValue(templateName, out TemplateConfig? template)
                 ? template
                 : null;
         }
 
-        private AcadDrawingDataMappable ConstructDrawing(LoopNoTemplatePair loop, TemplateConfig template, Dictionary<string, string> tagMap)
+        private AcadDrawingDataMappable ConstructDrawing(
+            LoopNoTemplatePair loop,
+            TemplateConfig template,
+            Dictionary<string, string> tagMap
+            )
         {
-            var drawingName = BuildDrawingIdentifier(loop);
-            tagMap["DRAWING_NAME"] = drawingName;
+            string drawingName = tagMap.TryGetValue("DRAWING_NAME", out string? d) ? d : string.Empty;
             var blocks = BuildBlocks(template, tagMap);
-
             var drawing = new AcadDrawingDataMappable
             {
                 Blocks = blocks,
@@ -77,7 +119,6 @@ namespace LoopDataAccessLayer
 
             return drawing;
         }
-
 
         private string BuildOutputDrawingName(string drawingName)
         {
@@ -100,7 +141,9 @@ namespace LoopDataAccessLayer
             List<LoopTagData> tags = (List<LoopTagData>)dataLoader.GetLoopTags(loop);
             if (tags.Count > 0) 
             {
-                return LoopTagMapper.BuildTagMap(tags, template);
+                Dictionary<string, string> tagMap = LoopTagMapper.BuildTagMap(tags, template);
+                tagMap["DRAWING_NAME"] = BuildDrawingIdentifier(loop);
+                return tagMap;
             }
             else
             {

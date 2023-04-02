@@ -32,8 +32,8 @@ namespace LoopDataAccessLayer
             IEnumerable<LoopNoTemplatePair> loops = dataLoader.GetLoops();
             foreach (LoopNoTemplatePair loop in loops)
             {
-                AcadDrawingDataMappable? drawing = drawingBuilder.BuildDrawing(loop);
-                if (drawing != null)
+                IEnumerable<AcadDrawingDataMappable> drawings = drawingBuilder.BuildDrawings(loop);
+                foreach(AcadDrawingDataMappable drawing in drawings)
                 {
                     Drawings.Add(drawing);
                 }

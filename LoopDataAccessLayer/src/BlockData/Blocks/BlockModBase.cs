@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
@@ -43,5 +44,63 @@ namespace LoopDataAccessLayer
             Attributes["SLOT" + suffix] = data.Slot;
             Attributes["CHANNEL" + suffix] = data.Channel;
         }
+
+        protected static string GetSymbolType(string systemType)
+        {
+            // having this function provides flexibility if things change in the future
+            // but as of now, April 1, 2023, the systemType from the DB aligns with the
+            // visibility field of the block
+            return systemType.ToUpper();
+        }
+
+        protected void PopulateLoopFields(DBLoopData data, string attribute1, string attribute2)
+        {
+            string[] tagComponents = GetTag1Tag2(data.Tag);
+            string upper = FixUpperLoopTag(data, tagComponents[0]);
+            if (tagComponents.Length == 2)
+            {
+                Attributes[attribute1] = upper;
+                Attributes[attribute2] = tagComponents[1];
+            }
+        }
+
+        private static string FixUpperLoopTag(DBLoopData data, string upper)
+        {
+            if (string.IsNullOrEmpty(upper))
+            {
+                return upper;
+            }
+
+            upper = data.IoType.Equals("DI", StringComparison.OrdinalIgnoreCase)
+                    ? FixDiscrete(upper)
+                    : data.IoType.Equals("AI", StringComparison.OrdinalIgnoreCase)
+                        ? FixAnalog(upper)
+                        : upper;
+
+            return upper;
+        }
+
+        private static string FixDiscrete(string upper)
+        {
+            if (Regex.IsMatch(upper, @"\bZS[CO]\b", RegexOptions.IgnoreCase))
+            {
+                return upper.Replace("s", "I", StringComparison.OrdinalIgnoreCase);
+            }
+
+            return upper.Replace("s", "A", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string FixAnalog(string upper)
+        {
+            if (!upper.EndsWith("T", StringComparison.OrdinalIgnoreCase))
+            {
+                return upper;
+            }
+
+            return upper.EndsWith("IT", StringComparison.OrdinalIgnoreCase)
+                ? upper.Substring(0, upper.Length - 1)
+                : upper + "I";
+        }
+
     }
 }
