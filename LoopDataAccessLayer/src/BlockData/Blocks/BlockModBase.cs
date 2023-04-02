@@ -64,18 +64,7 @@ namespace LoopDataAccessLayer
             }
         }
 
-        //protected void PopulateLoopFields(string tag, string attribute1, string attribute2)
-        //{
-        //    string[] tagComponents = GetTag1Tag2(tag);
-        //    string upper = FixUpperLoopTag(data, tagComponents[0]);
-        //    if (tagComponents.Length == 2)
-        //    {
-        //        Attributes[attribute1] = upper;
-        //        Attributes[attribute2] = tagComponents[1];
-        //    }
-        //}
-
-        private string FixUpperLoopTag(DBLoopData data, string upper)
+        private static string FixUpperLoopTag(DBLoopData data, string upper)
         {
             if (string.IsNullOrEmpty(upper))
             {
@@ -91,7 +80,7 @@ namespace LoopDataAccessLayer
             return upper;
         }
 
-        private string FixDiscrete(string upper)
+        private static string FixDiscrete(string upper)
         {
             if (Regex.IsMatch(upper, @"\bZS[CO]\b", RegexOptions.IgnoreCase))
             {
@@ -101,7 +90,7 @@ namespace LoopDataAccessLayer
             return upper.Replace("s", "A", StringComparison.OrdinalIgnoreCase);
         }
 
-        private string FixAnalog(string upper)
+        private static string FixAnalog(string upper)
         {
             if (!upper.EndsWith("T", StringComparison.OrdinalIgnoreCase))
             {

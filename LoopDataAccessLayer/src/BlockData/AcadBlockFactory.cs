@@ -30,12 +30,13 @@ namespace LoopDataAccessLayer
                 "PNL_3-TERM" => new PNL_3_TERM(dataLoader, blockMap, tagMap),
                 "PNL_4-TERM_24VDC" => new PNL_4_TERM_24VDC(dataLoader, blockMap, tagMap),
                 
-                "MOD_1-TERM_1-BPCS"
-                or "MOD_1-TERM_1-PT_DYN"
-                or "MOD_1-TERM_1-SIS" => new MOD_1_TERM_1(dataLoader, blockMap, tagMap),
+                //"MOD_1-TERM_1-BPCS"
+                //or 
+                //or "MOD_1-TERM_1-SIS" 
+                "MOD_1-TERM_1-PT_DYN" => new MOD_1_TERM_1(dataLoader, blockMap, tagMap),
                 
-                "MOD_2-TERM_1-BPCS"
-                or "MOD_2-TERM_1-PT_DYN" => new MOD_2_TERM_1(dataLoader, blockMap, tagMap),
+                //"MOD_2-TERM_1-BPCS" or
+                "MOD_2-TERM_1-PT_DYN" => new MOD_2_TERM_1(dataLoader, blockMap, tagMap),
                 
                 "MOD_2-TERM_1-SIS"
                 or "MOD_2-TERM_1-BPCS_MIR" => new MOD_2_TERM_1_DISCRETE(dataLoader, blockMap, tagMap),
@@ -53,7 +54,8 @@ namespace LoopDataAccessLayer
                 "VALVE_BODY" => new VALVE_BODY(dataLoader, blockMap, tagMap),
                 "VALVE_2-SOL" => new VALVE_TWO_SOL(dataLoader, blockMap, tagMap),
 
-                "SD_TABLE_10-ROW"
+                "SD_TABLE_0-ROW"
+                or "SD_TABLE_10-ROW"
                 or "SD_TABLE_20-ROW" => new SD_TABLE(dataLoader, blockMap, tagMap),
                 "SD_TABLE_30-ROW" => new SD_TABLE_30(dataLoader, blockMap, tagMap),
                 

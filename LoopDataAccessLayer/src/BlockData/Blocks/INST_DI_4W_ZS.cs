@@ -29,7 +29,13 @@ namespace LoopDataAccessLayer
             DBLoopData dataZSC = dataLoader.GetLoopData(ZSOTag);
             DBLoopData dataZSO = dataLoader.GetLoopData(ZSOTag);
             PopulateFourLineDescription(dataZSC);
-            PopulateTag1Tag2(ZSCTag);
+            
+            // we need to strip the C or O from teh ZSC upper tag
+            string[] tagComponents = GetTag1Tag2(ZSCTag);
+            if (tagComponents.Length == 2)
+            {
+                PopulateTag1Tag2(tagComponents[0][..^1], tagComponents[1]);
+            }
         }
 
         protected override void FetchExcelData()

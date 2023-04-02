@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,11 +12,13 @@ namespace LoopDataAccessLayer
     {
         protected bool deleteSDTable;
         protected string sdDrawingName;
+        protected BlockMapData blockMap;
         public SD_TABLE(
             IDataLoader dataLoader,
             BlockMapData blockMap,
             Dictionary<string, string> tagMap) : base(dataLoader) 
         {
+            this.blockMap = blockMap;
             Name = blockMap.Name;
             UID = blockMap.UID;
             Tag = tagMap[blockMap.Tags[0]];
@@ -46,7 +49,14 @@ namespace LoopDataAccessLayer
 
         protected virtual List<SDKData> GetSDData()
         {
-            return dataLoader.GetSDs(Tag);
+            List<List<SDKData>> allSDs = new();
+            foreach(string tag in blockMap.Tags)
+            {
+                List<SDKData> sds = dataLoader.GetSDs(Tag);
+                allSDs.Add(sds);
+            }
+            //return dataLoader.GetSDs(Tag);
+            return allSDs.SelectMany(list => list).ToList();
         }
     }
 }

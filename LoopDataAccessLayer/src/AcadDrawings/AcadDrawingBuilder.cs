@@ -120,34 +120,6 @@ namespace LoopDataAccessLayer
             return drawing;
         }
 
-        //private AcadDrawingDataMappable ConstructSDKDrawing(
-        //    LoopNoTemplatePair loop,
-        //    TemplateConfig template,
-        //    Dictionary<string, string> tagMap,
-        //    IEnumerable<Tblsdkrelation> sds)
-        //{
-
-        //     ok, not done
-        //     need to figure out how to populate the shutdown blocks
-        //     aslo need to get that shutdown key data, but it is already needed as part of the shutdown key provider
-        //     so maybe that class can have an internal member with a property or something
-        //    string drawingName = tagMap.TryGetValue("DRAWING_NAME", out string? d) ? d : string.Empty;
-        //    var blocks = BuildBlocks(template, tagMap);
-        //    var block1 = 
-        //    var drawing = new AcadDrawingDataMappable
-        //    {
-        //        Blocks = blocks,
-        //        LoopID = loop.LoopNo,
-        //        TemplateName = template.TemplateName,
-        //        TemplateDrawingFileName = BuildTemplateDrawingName(template),
-        //        OutputDrawingFileName = BuildOutputDrawingName(drawingName)
-        //    };
-        //    drawing.MapData();
-
-        //    return drawing;
-        //}
-
-
         private string BuildOutputDrawingName(string drawingName)
         {
             string name = drawingName + ".dwg";

@@ -23,21 +23,7 @@ namespace LoopDataAccessLayer
         protected override void FetchDBData()
         {
             base.FetchDBData();
-
-            // **********************************
-            // how DO I POPULATE THE LIC controller???
-            // **********************************
-
-            //DBLoopData data = dataLoader.GetLoopData(AOTag); 
-            //DBLoopData dataAI = dataLoader.GetLoopData(AITag);
-
-            //PopulateRackSlotChannel(data);
-            PopulateLoopFields(ControllerTag, "FUNCTIONAL_ID", "LOOP_NO");
-            //PopulateAlarms(data);
-
-            //Attributes["DRAWING_NO"] = data.PidDrawingNumber;
-            //Attributes["SYMBOL_TYPE"] = GetSymbolType(data.SystemType);
-
+            PopulateTag1Tag2(ControllerTag, "FUNCTIONAL_ID", "LOOP_NO");
         }
 
         protected override void FetchExcelData()

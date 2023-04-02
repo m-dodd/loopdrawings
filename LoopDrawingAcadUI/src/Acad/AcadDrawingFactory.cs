@@ -31,12 +31,13 @@ namespace LoopDrawingAcadUI
             catch (Autodesk.AutoCAD.Runtime.Exception ex)
             {
                 string msg = string.Format("An error occurred while creating the drawing for loop '{0}'", drawingData.LoopID);
-                throw new AcadDrawingFactoryException(msg, ex);
+
+                throw new AcadDrawingFactoryException(msg + " (" + ex.Message + ")", ex);
             }
             catch (System.Exception ex)
             {
                 string msg = string.Format("An unexpected error occurred while creating the drawing for loop '{0}'", drawingData.LoopID);
-                throw new AcadDrawingFactoryException(msg, ex);
+                throw new AcadDrawingFactoryException(msg + " (" + ex.Message + ")", ex);
             }
         }
     }

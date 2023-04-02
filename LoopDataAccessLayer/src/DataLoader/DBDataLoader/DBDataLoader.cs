@@ -62,16 +62,16 @@ namespace LoopDataAccessLayer
                 //"F-1914B",
 
                 // AIN tests
-                "L-7100",
-                "P-1102",
+                //"L-7100",
+                //"P-1102",
 
                 // PID tests
-                "L-1400",
+                //"L-1400",
 
                 // XV tests
-                //"X-1300",
+                "X-1300",
 
-                
+
             };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future
