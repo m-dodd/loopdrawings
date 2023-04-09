@@ -28,6 +28,7 @@ namespace LoopDataAccessLayer
         T PowerCore1 { get; set; }
         T PowerCore2 { get; set; }
         T PowerCable { get; set; }
+        IExcelOverload<T> Overload { get; set; }
         IExcelIODeviceCommon<T> Device { get; set; }
         IExcelIODeviceCommon<T> IO { get; set; }
         IExcelIORelay<T> Relay { get; set; }
@@ -52,6 +53,8 @@ namespace LoopDataAccessLayer
         T CorePair2 { get; set; }
         T CorePair3 { get; set; }
         T CorePair4 { get; set; }
+        T PanelTag { get; set; }
+        T PanelTerminalStrip { get; set; }
     }
 
     public interface IExcelIORelay<T>
@@ -63,6 +66,15 @@ namespace LoopDataAccessLayer
         T ContactTag { get; set; }
         T ContactTerm1 { get; set; }
         T ContactTerm2 { get; set; }
+    }
+
+    public interface IExcelOverload<T>
+    {
+        T Description1 { get; set; }
+        T Description2 { get; set; }
+        T Tag1 { get; set; }
+        T Tag2 { get; set; }
+        T PortNum { get; set; }
     }
     
 }

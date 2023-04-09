@@ -8,13 +8,11 @@ namespace LoopDataAccessLayer
         public const int RACKERROR = -99;
 
         private string failPosition;
-        private string lolo, lo, hi, hihi, hiControl, loControl;
         private string manufacturer;
 
         public DBLoopData()
         {
             failPosition = string.Empty;
-            lolo = lo = hi = hihi = hiControl = loControl = string.Empty;
             manufacturer = string.Empty;
         }
 
@@ -25,7 +23,7 @@ namespace LoopDataAccessLayer
             get => manufacturer;
             set
             {
-                manufacturer = IsValidDatabaseString(value) ? value : string.Empty;
+                manufacturer = IDBLoopData.IsValidDatabaseString(value) ? value : string.Empty;
             }
         }
         public string Model { get; set; } = string.Empty;
@@ -72,42 +70,12 @@ namespace LoopDataAccessLayer
                 }
             }
         }
-        public string LoLoAlarm
-        {
-            get => lolo;
-            set { lolo = BuildAlarmString("LL", value); }
-        }
-
-        public string LoAlarm
-        {
-            get => lo;
-            set { lo = BuildAlarmString("L", value); }
-        }
-
-        public string HiAlarm
-        {
-            get => hi;
-            set { hi = BuildAlarmString("H", value); }
-        }
-
-        public string HiHiAlarm
-        {
-            get => hihi;
-            set { hihi = BuildAlarmString("HH", value); }
-        }
-
-        public string LoControl
-        {
-            get => loControl;
-            set { loControl = BuildAlarmString("CL", value); }
-        }
-
-        public string HiControl
-        {
-            get => hiControl;
-            set { hiControl = BuildAlarmString("CH", value); }
-        }
-
+        public string LoLoAlarm { get; set; } = string.Empty;
+        public string LoAlarm { get; set; } = string.Empty;
+        public string HiAlarm { get; set; } = string.Empty;
+        public string HiHiAlarm { get; set; } = string.Empty;
+        public string LoControl { get; set; } = string.Empty;
+        public string HiControl { get; set; } = string.Empty;
         public string IoPanel { get; set; } = string.Empty;
         public string LoopNo { get; set; } = string.Empty;
 
@@ -143,21 +111,19 @@ namespace LoopDataAccessLayer
             }
         }
 
-
-        private static string BuildAlarmString(string prefix, string value)
+        public bool IsMotorSD
         {
-            return IsValidDatabaseString(value) ? prefix + "=" + value : string.Empty;
-        }
-
-        private static bool IsValidDatabaseString(string value)
-        {
-            return !(string.IsNullOrEmpty(value) || value == "---");
+            get
+            {
+                return Regex.IsMatch(InstrumentType, @"motor[-_]sd", RegexOptions.IgnoreCase);
+            }
         }
 
         private bool IsCalRangeOK()
         {
             return MinCalRange != DBLoopData.CALERROR.ToString() && MaxCalRange != DBLoopData.CALERROR.ToString();
         }
+
 
         private List<string> SplitDescriptionToFourLines()
         {

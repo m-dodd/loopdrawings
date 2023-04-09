@@ -21,7 +21,11 @@ namespace LoopDataAccessLayer
             "ZSC",
             "ZSO",
             "SOL-BPCS",
-            "SOL-SIS"
+            "SOL-SIS",
+            "MOTOR-SD-BPCS",
+            "MOTOR-SD-SIS",
+            "MOTOR-SD-SIS-A",
+            "MOTOR-SD-SIS-B",
         };
 
         public static Dictionary<string, string> BuildTagMap(
@@ -61,58 +65,42 @@ namespace LoopDataAccessLayer
 
         private static string GetTag(IEnumerable<LoopTagData> tags, string tagtype)
         {
-            switch (tagtype)
-            {
-                case "AI":
-                    return tags.Where(t => t.IOType == "AI")
-                               .First().Tag;
+            LoopTagData? tag = tags.FirstOrDefault(t =>
+                tagtype switch
+                {
+                    "AI" => t.IOType == "AI",
+                    "AO" => t.IOType == "AO",
+                    "DI" => t.IOType == "DI",
+                    "CONTROLLER" => t.IOType == "SOFT" && t.Tag.Contains("IC", StringComparison.OrdinalIgnoreCase),
+                    "VALVE" => (string.IsNullOrEmpty(t.IOType) || t.IOType == "---")
+                                && Regex.IsMatch(t.InstrumentType, @"ball|gate|globe|butterfly", RegexOptions.IgnoreCase),
+                    "ZSC" => t.IOType == "DI" && t.Tag.Contains("ZSC", StringComparison.OrdinalIgnoreCase),
+                    "ZSO" => t.IOType == "DI" && t.Tag.Contains("ZSO", StringComparison.OrdinalIgnoreCase),
+                    "SOL-BPCS" => t.IOType == "DO"
+                                    && t.InstrumentType.Contains("SOLENOID", StringComparison.OrdinalIgnoreCase)
+                                    && t.SystemType.ToUpper() == "BPCS",
+                    "SOL-SIS" => t.IOType == "DO"
+                                    && t.InstrumentType.Contains("SOLENOID", StringComparison.OrdinalIgnoreCase)
+                                    && t.SystemType.ToUpper() == "SIS",
+                    "MOTOR-SD-BPCS" => t.IOType == "DO"
+                                        && t.InstrumentType.ToUpper() == "MOTOR_SD"
+                                        && t.SystemType.ToUpper() == "BPCS",
+                    "MOTOR-SD-SIS" => t.IOType == "DO"
+                                        && t.InstrumentType.ToUpper() == "MOTOR_SD"
+                                        && t.SystemType.ToUpper() == "SIS",
+                    "MOTOR-SD-SIS-A" => t.IOType == "DO"
+                                        && t.InstrumentType.ToUpper() == "MOTOR_SD"
+                                        && t.SystemType.ToUpper() == "SIS"
+                                        && t.Tag.ToUpper().EndsWith("A"),
+                    "MOTOR-SD-SIS-B" => t.IOType == "DO"
+                                        && t.InstrumentType.ToUpper() == "MOTOR_SD"
+                                        && t.SystemType.ToUpper() == "SIS"
+                                        && t.Tag.ToUpper().EndsWith("B"),
+                    _ => false
+                });
 
-                case "AO":
-                    return tags.Where(t => t.IOType == "AO")
-                               .First().Tag;
+            return tag?.Tag ?? string.Empty;
 
-                case "DI":
-                    return tags.Where(t => t.IOType == "DI")
-                               .First().Tag;
-
-                case "CONTROLLER":
-                    return tags.Where(t => t.IOType == "SOFT" &&
-                                           t.Tag.ToUpper().Contains("IC"))
-                               .First().Tag;
-
-                case "VALVE":
-                    Regex rg = new(@"ball|gate|globe|butterfly", RegexOptions.IgnoreCase);
-                    return tags
-                        .Where(t => (t.IOType == "---"
-                                     || string.IsNullOrEmpty(t.IOType))
-                                    && rg.IsMatch(t.InstrumentType))
-                        .First().Tag;
-
-                case "ZSC":
-                    return tags.Where(t => t.IOType == "DI" 
-                                        && t.Tag.ToUpper().Contains("ZSC"))
-                               .First().Tag;
-
-                case "ZSO":
-                    return tags.Where(t => t.IOType == "DI" 
-                                        && t.Tag.ToUpper().Contains("ZSO"))
-                               .First().Tag;
-
-                case "SOL-BPCS":
-                    return tags.Where(t => t.IOType == "DO" 
-                                        && t.InstrumentType.ToUpper().Contains("SOLENOID")
-                                        && t.System.ToUpper().Contains("BPCS"))
-                               .First().Tag;
-
-                case "SOL-SIS":
-                    return tags.Where(t => t.IOType == "DO"
-                                        && t.InstrumentType.ToUpper().Contains("SOLENOID")
-                                        && t.System.ToUpper().Contains("SIS"))
-                               .First().Tag;
-
-                default:
-                    return string.Empty;
-            }
         }
     }
 }

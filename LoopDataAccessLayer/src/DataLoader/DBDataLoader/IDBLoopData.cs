@@ -31,5 +31,11 @@
         string System { get; set; }
         string SystemType { get; set; }
         string Tag { get; set; }
+        bool IsMotorSD { get; }
+
+        static bool IsValidDatabaseString(string value)
+        {
+            return !(string.IsNullOrEmpty(value) || value == "---");
+        }
     }
 }

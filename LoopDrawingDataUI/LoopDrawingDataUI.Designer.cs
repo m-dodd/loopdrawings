@@ -35,8 +35,6 @@
             this.btnTemplatePath = new System.Windows.Forms.Button();
             this.lblDrawingOutputPath = new System.Windows.Forms.Label();
             this.btnOutputPath = new System.Windows.Forms.Button();
-            this.lblSiteID = new System.Windows.Forms.Label();
-            this.lblSiteIDHardCoded = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblExcelFile = new System.Windows.Forms.Label();
             this.btnExcelFile = new System.Windows.Forms.Button();
@@ -119,35 +117,12 @@
             this.btnOutputPath.UseVisualStyleBackColor = true;
             this.btnOutputPath.Click += new System.EventHandler(this.btnOutputPath_Click);
             // 
-            // lblSiteID
-            // 
-            this.lblSiteID.AutoSize = true;
-            this.lblSiteID.Location = new System.Drawing.Point(157, 222);
-            this.lblSiteID.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblSiteID.Name = "lblSiteID";
-            this.lblSiteID.Size = new System.Drawing.Size(19, 15);
-            this.lblSiteID.TabIndex = 17;
-            this.lblSiteID.Text = "94";
-            // 
-            // lblSiteIDHardCoded
-            // 
-            this.lblSiteIDHardCoded.AutoSize = true;
-            this.lblSiteIDHardCoded.Location = new System.Drawing.Point(82, 222);
-            this.lblSiteIDHardCoded.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblSiteIDHardCoded.Name = "lblSiteIDHardCoded";
-            this.lblSiteIDHardCoded.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lblSiteIDHardCoded.Size = new System.Drawing.Size(40, 15);
-            this.lblSiteIDHardCoded.TabIndex = 18;
-            this.lblSiteIDHardCoded.Text = "Site ID";
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.lblExcelFile);
             this.panel2.Controls.Add(this.btnExcelFile);
             this.panel2.Controls.Add(this.lblResultOutputPath);
             this.panel2.Controls.Add(this.btnResultOutputPath);
-            this.panel2.Controls.Add(this.lblSiteIDHardCoded);
-            this.panel2.Controls.Add(this.lblSiteID);
             this.panel2.Controls.Add(this.lblDrawingOutputPath);
             this.panel2.Controls.Add(this.btnOutputPath);
             this.panel2.Controls.Add(this.lblTemplatePath);
@@ -245,8 +220,6 @@
         private Button btnTemplatePath;
         private Label lblDrawingOutputPath;
         private Button btnOutputPath;
-        private Label lblSiteID;
-        private Label lblSiteIDHardCoded;
         private Panel panel2;
         private Label lblResultOutputPath;
         private Button btnResultOutputPath;

@@ -239,7 +239,7 @@
       {
         "Name": "MOD_2-TERM_1-PT_DYN",
         "UID": "MOD_2-TERM_1-PT_DYN-1",
-        "Tags": [ "AI", "AI", "AI"]
+        "Tags": [ "AI", "AI", "AI" ]
       },
       {
         "Name": "MATERIAL_LIST_5-ROW",
@@ -663,6 +663,72 @@
         "Tags": [ "DI" ]
       }
     ]
-  }
+  },
 
+  "MOTOR_FVNR_SIS": {
+    "TemplateName": "MOTOR_FVNR_SIS",
+    "TemplateFileName": "MOTOR_FVNR_SIS.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "MOTOR-SD-BPCS" ]
+      },
+      {
+        "Name": "SD_TABLE_0-ROW",
+        "UID": "SD_TABLE_0-ROW-1",
+        "Tags": [ "MOTOR-SD-BPCS" ]
+      },
+      {
+        "Name": "ETHERNET_PORT",
+        "UID": "ETHERNET_PORT-1",
+        "Tags": [ "MOTOR-SD-BPCS" ]
+      },
+      {
+        "Name": "TERM_DO_2W",
+        "UID": "TERM_DO_2W-1",
+        "Tags": [ "MOTOR-SD-BPCS" ]
+      },
+      {
+        "Name": "TERM_DO_1W",
+        "UID": "TERM_DO_1W-1",
+        "Tags": [ "MOTOR-SD-SIS-A" ]
+      },
+      {
+        "Name": "TERM_DO_1W",
+        "UID": "TERM_DO_1W-2",
+        "Tags": [ "MOTOR-SD-SIS-B" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-BPCS",
+        "UID": "MOD_1-TERM_1-BPCS-1",
+        "Tags": [ "MOTOR-SD-BPCS", "MOTOR-SD-BPCS" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-SIS",
+        "UID": "MOD_1-TERM_1-SIS-1",
+        "Tags": [ "MOTOR-SD-SIS-A", "MOTOR-SD-SIS-A" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-SIS",
+        "UID": "MOD_1-TERM_1-SIS-2",
+        "Tags": [ "MOTOR-SD-SIS-B", "MOTOR-SD-SIS-B" ]
+      },
+      {
+        "Name": "RELAY_120VAC",
+        "UID": "RELAY_120VAC-1",
+        "Tags": [ "MOTOR-SD-BPCS" ]
+      },
+      {
+        "Name": "RELAY_120VAC_SERIES",
+        "UID": "RELAY_120VAC_SERIES-1",
+        "Tags": [ "MOTOR-SD-SIS-A", "MOTOR-SD-SIS-B" ]
+      },
+      {
+        "Name": "MOD_2-BPCS_ETH",
+        "UID": "MOD_2-BPCS_ETH-1",
+        "Tags": [ "MOTOR-SD-BPCS" ]
+      }
+    ]
+  }
 }

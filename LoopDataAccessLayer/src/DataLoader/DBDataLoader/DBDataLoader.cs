@@ -1,4 +1,5 @@
 ﻿
+using System.Text.RegularExpressions;
 using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
@@ -58,21 +59,22 @@ namespace LoopDataAccessLayer
             string[] currentTestingLoops =
             {
                 // DIN-4W tests
-                //"F-1521",
-                //"F-1914B",
+                "F-1521",
+                "F-1914B",
 
                 // AIN tests
-                //"L-7100",
-                //"P-1102",
+                "L-7100",
+                "P-1102",
                 "A-1100C",
 
                 // PID tests
                 "L-1400",
 
                 // XV tests
-                //"X-1300",
+                "X-1300",
 
-
+                // Motor Test
+                "CM-301"
             };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future
@@ -97,7 +99,8 @@ namespace LoopDataAccessLayer
                          Tag = GetCleanString(tag.Tag),
                          IOType = GetCleanString(tag.Iotype),
                          InstrumentType = GetCleanString(tag.Instrumenttype),
-                         System = GetCleanString(tag.System)
+                         System = GetCleanString(tag.System),
+                         SystemType = (tag.Tblsystem == null) ? string.Empty : GetCleanString(tag.Tblsystem.SystemType),
                      })
                      .ToList();
         }
@@ -108,7 +111,7 @@ namespace LoopDataAccessLayer
             ///     First check to see if the data is in the dictionar and if it is simply return it
             ///     If it is not in the dict then fetch it and add it to the dict and return it
             ///     Now any future call for this same data will not need to fetch it
-            if (loopDataCache.TryGetValue(tag, out var data))
+            if (loopDataCache.TryGetValue(tag, out DBLoopData? data))
             {
                 return data;
             }
@@ -152,7 +155,18 @@ namespace LoopDataAccessLayer
                         SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
 
                     }).FirstOrDefault();
-                loopDataCache[tag] = data ?? new DBLoopData();
+                if (data is not null)
+                {
+                    if (data.IsMotorSD)
+                    {
+                        UpdateMotorSDAlarms(data);
+                    }
+                    loopDataCache[tag] = data;
+                }
+                else
+                {
+                    loopDataCache[tag] = new DBLoopData();
+                }
 
                 return loopDataCache[tag];
             }
@@ -198,15 +212,28 @@ namespace LoopDataAccessLayer
 
             return alarm.ToLower() switch
             {
-                "ll" => GetCleanString(tblarss.Llalarm),
-                "l" => GetCleanString(tblarss.Loalarm),
-                "h" => GetCleanString(tblarss.Hialarm),
-                "hh" => GetCleanString(tblarss.Hhalarm),
-                "lc" => GetCleanString(tblarss.Lowctrl),
-                "hc" => GetCleanString(tblarss.Highctrl),
+                "ll" => BuildAlarmString("LL", GetCleanString(tblarss.Llalarm)),
+                "l" => BuildAlarmString("L", GetCleanString(tblarss.Loalarm)),
+                "h" => BuildAlarmString("H", GetCleanString(tblarss.Hialarm)),
+                "hh" => BuildAlarmString("HH", GetCleanString(tblarss.Hhalarm)),
+                "lc" => BuildAlarmString("LL", GetCleanString(tblarss.Lowctrl)),
+                "hc" => BuildAlarmString("LL", GetCleanString(tblarss.Highctrl)),
                 _ => string.Empty,
             };
-            
+        }
+
+        private static string BuildAlarmString(string prefix, string value)
+        {
+            return IDBLoopData.IsValidDatabaseString(value) ? prefix + "=" + value : string.Empty;
+        }
+
+        private static void UpdateMotorSDAlarms(DBLoopData data)
+        {
+            Match match = Regex.Match(data.Tag, @"(SD|SZD).*$");
+            if (match.Success)
+            {
+                data.LoAlarm = match.Value.ToUpper();
+            }
         }
 
         private static string FetchCalRange(Tblarss? tblarss, string alarm)

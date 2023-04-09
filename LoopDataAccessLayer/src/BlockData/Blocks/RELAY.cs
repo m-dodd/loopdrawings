@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
-    public class RELAY_24VDC_2 : BlockDataExcel
+    public class RELAY : BlockDataExcel
     {
-        public RELAY_24VDC_2(
+        public RELAY(
             IDataLoader dataLoader,
             BlockMapData blockMap,
             Dictionary<string, string> tagMap) : base(dataLoader)
@@ -24,6 +24,9 @@ namespace LoopDataAccessLayer
 
             if (data is not null)
             {
+                Attributes["PNL_TAG"] = data.PanelTag;
+                Attributes["BREAKER_NO"] = data.BreakerNumber;
+
                 Attributes["PNL_TS-1"] = string.Empty;
                 Attributes["CONT_TAG"] = data.Relay.ContactTag;
                 Attributes["CTERM1"] = data.Relay.ContactTerm1;

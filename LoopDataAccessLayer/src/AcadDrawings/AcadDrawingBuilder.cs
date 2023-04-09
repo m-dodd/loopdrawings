@@ -133,6 +133,10 @@ namespace LoopDataAccessLayer
 
         private string BuildDrawingIdentifier(LoopNoTemplatePair loop) 
         {
+            if (string.IsNullOrEmpty(loopConfig.SiteID))
+            {
+                return loop.LoopNo;
+            }
             return loopConfig.SiteID + "-" + loop.LoopNo;
         }
 

@@ -29,6 +29,7 @@ namespace LoopDataAccessLayer
         public T PowerCore1 { get; set; }
         public T PowerCore2 { get; set; }
         public T PowerCable { get; set; }
+        public IExcelOverload<T> Overload { get; set; }
         public IExcelIODeviceCommon<T> Device { get; set; }
         public IExcelIODeviceCommon<T> IO { get; set; }
         public IExcelIORelay<T> Relay { get; set; }

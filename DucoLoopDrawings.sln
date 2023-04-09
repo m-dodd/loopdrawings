@@ -13,6 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoopDataAdapterLayer", "Loo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoopDrawingAcadUI", "LoopDrawingAcadUI\LoopDrawingAcadUI.csproj", "{688F9C1E-C196-48D6-8D34-FBF313C6C677}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{33AA8D24-3706-45D6-8A53-83A48BE268C8}"
+	ProjectSection(SolutionItems) = preProject
+		ConfigFiles\loop_drawing_config.json = ConfigFiles\loop_drawing_config.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

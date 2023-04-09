@@ -39,7 +39,5 @@ namespace LoopDataAccessLayer
                 Attributes["WIRE_TAG_IO"] = IOData.ModuleWireTag01;
             }
         }
-
-
     }
 }

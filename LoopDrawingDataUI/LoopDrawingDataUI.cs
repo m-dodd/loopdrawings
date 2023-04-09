@@ -3,7 +3,6 @@ using System.Text;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
 using LoopDataAccessLayer;
-using Microsoft.VisualBasic;
 
 namespace LoopDrawingDataUI
 {
@@ -19,7 +18,6 @@ namespace LoopDrawingDataUI
         public frmLoopUI()
         {
             InitializeComponent();
-            siteId = lblSiteID.Text;
         }
 
 
@@ -32,30 +30,25 @@ namespace LoopDrawingDataUI
                 MessageBox.Show(invalidFilesMessage, invalidCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            // figure out the rigth exception when the excel is open
-            ExcelDataLoader excelLoader;
+
             try
             {
-                excelLoader = new(excelFileName);
+                AcadDrawingController controller = new(excelFileName, configFileName, templatePath, outputDrawingPath);
+                controller.BuildDrawings();
+                controller.SaveDrawingsToFile(TestOutputFileName(outputResultPath));
+                MessageBox.Show("Drawings completed!", "Duco Loop Drawing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show(ex.Message, "Loop configuration file missing", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
             catch (IOException ex)
             {
-                MessageBox.Show("Excel must be open - please close it.", "Close Excel File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Close Excel File", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            DBDataLoader dbLoader = new();
-            DataLoader dataLoader = new(excelLoader, dbLoader);
-
-            LoopDataConfig loopConfig = new(configFileName);
-            loopConfig.LoadConfig();
-            loopConfig.TemplateDrawingPath = templatePath;
-            loopConfig.OutputDrawingPath = outputDrawingPath;
-            loopConfig.SiteID = siteId;
-
-            AcadDrawingController controller = new(dataLoader, loopConfig);
-            controller.BuildDrawings();
-            controller.SaveDrawingsToFile(TestOutputFileName(outputResultPath));
-            MessageBox.Show("Drawings completed!", "Duco Loop Drawing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
         }
 
         private string TestOutputFileName(string outputResultPath)
@@ -66,7 +59,7 @@ namespace LoopDrawingDataUI
             // so what's the real value?
             //string date = DateTime.Now.ToString("YYYY.MM.DD");
             //return Path.Combine(outputResultPath, "output_test_data.json");
-            return outputResultPath;
+            return AppendDateToFileName(outputResultPath);
         }
 
         public string AppendDateToFileName(string filePath)
@@ -127,10 +120,10 @@ namespace LoopDrawingDataUI
 
         private void btnLoadTestConfig_Click(object sender, EventArgs e)
         {
-            configFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\loop_drawing_config_v5.json";
+            configFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\code\DucoLoopDrawings\ConfigFiles\loop_drawing_config.json";
             excelFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\2023.03.28 - Automation Wiring Data.xlsm";
             templatePath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\templates";
-            outputResultPath = AppendDateToFileName(@"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\output_test_data.json");
+            outputResultPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\output_test_data.json";
             outputDrawingPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output";
 
             lblConfigFile.Text = GetShortPath(configFileName);

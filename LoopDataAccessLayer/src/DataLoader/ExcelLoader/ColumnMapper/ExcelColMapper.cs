@@ -78,6 +78,8 @@ namespace LoopDataAccessLayer
                     CorePair2 = excelColumnProvider.GetColumnNumber("DEV_CORE_2"),
                     CorePair3 = excelColumnProvider.GetColumnNumber("DEV_CORE_3"),
                     CorePair4 = excelColumnProvider.GetColumnNumber("DEV_CORE_4"),
+                    PanelTag = excelColumnProvider.GetColumnNumber("DEV_PANEL"),
+                    PanelTerminalStrip = excelColumnProvider.GetColumnNumber("DEV_PANEL_TS"),
                 },
 
                 IO = new ExcelIODeviceCommon<int>
@@ -105,6 +107,15 @@ namespace LoopDataAccessLayer
                     ContactTag = excelColumnProvider.GetColumnNumber("RELAY_CONTACT_TAG"),
                     ContactTerm1 = excelColumnProvider.GetColumnNumber("RELAY_CONTACT_TERM1"),
                     ContactTerm2 = excelColumnProvider.GetColumnNumber("RELAY_CONTACT_TERM2")
+                },
+
+                Overload = new ExcelOverload<int>
+                {
+                    Description1 = excelColumnProvider.GetColumnNumber("OVERLOAD_DESC1"),
+                    Description2 = excelColumnProvider.GetColumnNumber("OVERLOAD_DESC2"),
+                    Tag1 = excelColumnProvider.GetColumnNumber("OVERLOAD_TAG1"),
+                    Tag2 = excelColumnProvider.GetColumnNumber("OVERLOAD_TAG2"),
+                    PortNum = excelColumnProvider.GetColumnNumber("OVERLOAD_PORT"),
                 }
             };
         }

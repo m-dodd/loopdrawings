@@ -55,12 +55,21 @@ namespace LoopDataAccessLayer
 
         protected void PopulateLoopFields(DBLoopData data, string attribute1, string attribute2)
         {
-            string[] tagComponents = GetTag1Tag2(data.Tag);
+            string tag = data.Tag;
+            if (data.IsMotorSD)
+            {
+                // maybe I could have just used data.LoopNo?????
+                tag = Regex.Match(data.Tag, @"^.*?(?=SD|SZD)").Value;
+            }
+            
+            string[] tagComponents = GetTag1Tag2(tag);
             string upper = FixUpperLoopTag(data, tagComponents[0]);
+            string lower = tagComponents[1];
+            
             if (tagComponents.Length == 2)
             {
                 Attributes[attribute1] = upper;
-                Attributes[attribute2] = tagComponents[1];
+                Attributes[attribute2] = lower;
             }
         }
 

@@ -115,6 +115,8 @@ namespace LoopDataAccessLayer
                             CorePair2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.CorePair2),
                             CorePair3 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.CorePair3),
                             CorePair4 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.CorePair4),
+                            PanelTag = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.PanelTag),
+                            PanelTerminalStrip = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Device.PanelTerminalStrip),
                         },
                         IO = new ExcelIODeviceCommon<string>()
                         {
@@ -129,7 +131,7 @@ namespace LoopDataAccessLayer
                             WireColor2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.IO.WireColor2),
                             WireColor3 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.IO.WireColor3),
                             CorePair1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.IO.CorePair1),
-                            CorePair2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.IO.CorePair2)
+                            CorePair2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.IO.CorePair2),
                         },
                         Relay = new ExcelIORelay<string>()
                         {
@@ -140,6 +142,14 @@ namespace LoopDataAccessLayer
                             ContactTag = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Relay.ContactTag),
                             ContactTerm1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Relay.ContactTerm1),
                             ContactTerm2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Relay.ContactTerm2)
+                        },
+                        Overload = new ExcelOverload<string>
+                        {
+                            Description1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Overload.Description1),
+                            Description2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Overload.Description2),
+                            Tag1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Overload.Tag1),
+                            Tag2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Overload.Tag2),
+                            PortNum = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Overload.PortNum),
                         }
                     };
                 }
