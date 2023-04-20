@@ -36,7 +36,8 @@ namespace LoopDataAccessLayer
                 "MOD_1-TERM_1-BPCS" or
                 "MOD_1-TERM_1-SIS" or
                 "MOD_1-TERM_1-PT_DYN" => new MOD_1_TERM_1(dataLoader, blockMap, tagMap),
-                "MOD_2-TERM_1-PT_DYN" => new MOD_2_TERM_1(dataLoader, blockMap, tagMap),
+                "MOD_2-TERM_1-PT_DYN" or
+                "MOD_2-TERM_1-PT_DYN_MIR" => new MOD_2_TERM_1(dataLoader, blockMap, tagMap),
                 
                 "MOD_2-TERM_1-SIS" or
                 "MOD_2-TERM_1-BPCS_MIR" => new MOD_2_TERM_1_DISCRETE(dataLoader, blockMap, tagMap),
@@ -56,6 +57,7 @@ namespace LoopDataAccessLayer
                 "INST_DO_2W" => new INST_DO_2W(dataLoader, blockMap, tagMap),
                 "TERM_DO_1W" or
                 "TERM_DO_2W" => new TERM_DO_2W(dataLoader, blockMap, tagMap),
+                "TERM_DI_2W" => new TERM_DI_2W(dataLoader, blockMap, tagMap),
 
                 "VALVE_BODY" => new VALVE_BODY(dataLoader, blockMap, tagMap),
                 "VALVE_2-SOL" => new VALVE_TWO_SOL(dataLoader, blockMap, tagMap),

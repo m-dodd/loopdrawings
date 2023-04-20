@@ -1,8 +1,12 @@
 using System.Drawing.Text;
+using System.IO;
 using System.Text;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
 using LoopDataAccessLayer;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Json;
 
 namespace LoopDrawingDataUI
 {
@@ -13,13 +17,12 @@ namespace LoopDrawingDataUI
         private string templatePath = string.Empty;
         private string outputResultPath = string.Empty;
         private string outputDrawingPath = string.Empty;
-        private string siteId;
+        private string logFilePath = string.Empty;
 
         public frmLoopUI()
         {
             InitializeComponent();
         }
-
 
         private void btnBuildObjects_Click(object sender, EventArgs e)
         {
@@ -31,20 +34,58 @@ namespace LoopDrawingDataUI
                 return;
             }
 
+            if(IsFileLocked(outputResultPath))
+            {
+                string invalidFilesMessage = "Output file appears to be open. Not going to run, as it would be pointless as we can't save if it is open. Close the file and try again.";
+                string invalidCaption = "Output File Open";
+                MessageBox.Show(invalidFilesMessage, invalidCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!Directory.Exists(logFilePath))
+            {
+                Directory.CreateDirectory(logFilePath);
+            }
+
             try
             {
-                AcadDrawingController controller = new(excelFileName, configFileName, templatePath, outputDrawingPath);
+                // build the logger
+                string timestamp = DateTime.Now.ToString("yyyy.MM.dd-HHmmss");
+                string logFileName = $"log_{timestamp}.log";
+                Log.Logger = new LoggerConfiguration()
+                            .MinimumLevel.Debug()
+                            .WriteTo.File(new JsonFormatter(),
+                                          Path.Combine(logFilePath, "important.json"), restrictedToMinimumLevel: LogEventLevel.Warning)
+                            //.WriteTo.File(Path.Combine(logFilePath, "log.log"), rollingInterval: RollingInterval.Day)
+                            .WriteTo.File(Path.Combine(logFilePath, logFileName))
+                            .CreateLogger();
+                
+                // run the application
+                Log.Debug($"Creating drawings - run started at {timestamp}...");
+                AcadDrawingController controller = new(excelFileName, configFileName, templatePath, outputDrawingPath, Log.Logger);
                 controller.BuildDrawings();
                 controller.SaveDrawingsToFile(TestOutputFileName(outputResultPath));
-                MessageBox.Show("Drawings completed!", "Duco Loop Drawing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                string resultMessage;
+                if (controller.ErrorsDetected)
+                {
+                    resultMessage = "Drawings completed - WITH errors! Please check log file";
+                }
+                else
+                {
+                    resultMessage = "Drawings completed - without errors!";
+                }
+                Log.Information(resultMessage);
+                MessageBox.Show(resultMessage, "Duco Loop Drawing", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (FileNotFoundException ex)
             {
+                Log.Error(ex.Message);
                 MessageBox.Show(ex.Message, "Loop configuration file missing", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             catch (IOException ex)
             {
+                Log.Error(ex.Message);
                 MessageBox.Show(ex.Message, "Close Excel File", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -53,12 +94,6 @@ namespace LoopDrawingDataUI
 
         private string TestOutputFileName(string outputResultPath)
         {
-            // wanted to create a better file name, but complexity not worht it right now
-            // want to basically add a date to the end, and then look at directory to see if it exists
-            // and if it does then add a number behind it - but hte number would have to increment
-            // so what's the real value?
-            //string date = DateTime.Now.ToString("YYYY.MM.DD");
-            //return Path.Combine(outputResultPath, "output_test_data.json");
             return AppendDateToFileName(outputResultPath);
         }
 
@@ -85,6 +120,7 @@ namespace LoopDrawingDataUI
             lblTemplatePath.Text = string.Empty;
             lblResultOutputPath.Text = string.Empty;
             lblExcelFile.Text = string.Empty;
+            lblLogFilePath.Text = string.Empty;
         }
 
         private void btnConfigFile_Click(object sender, EventArgs e)
@@ -109,6 +145,8 @@ namespace LoopDrawingDataUI
         {
             //GetFolderSetLabel(lblResultOutputPath);
             outputResultPath = SetFileName();
+            logFilePath = Path.Combine(Path.GetDirectoryName(outputResultPath), "logs");
+
             lblResultOutputPath.Text = GetShortPath(outputResultPath);
         }
 
@@ -125,12 +163,20 @@ namespace LoopDrawingDataUI
             templatePath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\templates";
             outputResultPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\output_test_data.json";
             outputDrawingPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output";
+            logFilePath = Path.Combine(Path.GetDirectoryName(outputResultPath), "logs");
 
             lblConfigFile.Text = GetShortPath(configFileName);
             lblExcelFile.Text = GetShortPath(excelFileName);
             lblTemplatePath.Text = GetShortPath(templatePath);
             lblDrawingOutputPath.Text = GetShortPath(outputDrawingPath);
             lblResultOutputPath.Text = GetShortPath(outputResultPath);
+            lblLogFilePath.Text = GetShortPath(logFilePath);
+        }
+
+        private void btnLogPath_Click(object sender, EventArgs e)
+        {
+            logFilePath = GetFolderName();
+            lblLogFilePath.Text = GetShortPath(logFilePath);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace LoopDataAccessLayer
 {
     public class MOD_2_TERM_1 : MOD_1_TERM_1
     {
-        public string AITag { get; set; } = string.Empty;
+        //public string AITag { get; set; } = string.Empty;
         //public string AOTag { get; set; } = string.Empty;
         public MOD_2_TERM_1(IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(dataLoader, blockMap, tagMap)
         {
@@ -17,7 +17,7 @@ namespace LoopDataAccessLayer
             //AOTag = tagMap[blockMap.Tags[0]];
             Tag = tagMap[blockMap.Tags[0]];
             ControllerTag = tagMap[blockMap.Tags[1]]; 
-            AITag = tagMap[blockMap.Tags[2]];
+            //AITag = tagMap[blockMap.Tags[2]];
         }
 
         protected override void FetchDBData()

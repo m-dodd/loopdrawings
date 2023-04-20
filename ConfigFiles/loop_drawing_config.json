@@ -66,6 +66,26 @@
       }
     ]
   },
+  "DOUT_2W_RLY": {
+    "TemplateName": "DOUT_2W_RLY",
+    "TemplateFileName": "",
+    "BlockMap": [
+      {
+        "Name": "EMPTY_BLOCK",
+        "Tags": [ "DRAWING_NAME", "DO" ]
+      }
+    ]
+  },
+  "DIN_2W": {
+    "TemplateName": "DIN_2W",
+    "TemplateFileName": "",
+    "BlockMap": [
+      {
+        "Name": "EMPTY_BLOCK",
+        "Tags": [ "DRAWING_NAME", "DI" ]
+      }
+    ]
+  },
   "SDK": {
     "TemplateName": "SDK",
     "TemplateFileName": "SHUTDOWN TABLE.dwg",
@@ -577,6 +597,172 @@
     ]
   },
 
+  "DIN_2W_0JB": {
+    "TemplateName": "DIN_2W_0JB",
+    "TemplateFileName": "DIN_2W_0JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "DI" ]
+      },
+      {
+        "Name": "SD_TABLE_20-ROW",
+        "UID": "SD_TABLE_20-ROW-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "TERM_DI_2W",
+        "UID": "TERM_DI_2W-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "PNL_2-TERM_24VDC",
+        "UID": "PNL_2-TERM_24VDC-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "DI", "DI" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "DI" ]
+      }
+    ]
+  },
+  "DIN_2W_1JB": {
+    "TemplateName": "DIN_2W_1JB",
+    "TemplateFileName": "DIN_2W_1JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "DI" ]
+      },
+      {
+        "Name": "SD_TABLE_20-ROW",
+        "UID": "SD_TABLE_20-ROW-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "TERM_DI_2W",
+        "UID": "TERM_DI_2W-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "PNL_2-TERM_24VDC",
+        "UID": "PNL_2-TERM_24VDC-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [ "DI", "DI" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "DI" ]
+      },
+      {
+        "Name": "JB_2-TERM_SINGLE",
+        "UID": "JB_2-TERM_SINGLE-1",
+        "Tags": [ "DI" ]
+      }
+    ]
+  },
+
+  "DOUT_2W_RLY_0JB": {
+    "TemplateName": "DOUT_2W_RLY_0JB",
+    "TemplateFileName": "DOUT_2W_RLY_0JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "DO" ]
+      },
+      {
+        "Name": "SD_TABLE_10-ROW",
+        "UID": "SD_TABLE_10-ROW-1",
+        "Tags": [ "DO" ]
+      },
+      {
+        "Name": "TERM_DI_2W",
+        "UID": "TERM_DI_2W-1",
+        "Tags": [ "DO" ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-1",
+        "UID": "PNL_3-TERM_24VDC-1-1",
+        "Tags": [ "DO" ]
+      },
+      {
+        "Name": "MOD_2-TERM_1-PT_DYN_MIR",
+        "UID": "MOD_2-TERM_1-PT_DYN_MIR-1",
+        "Tags": [ "DO", "DO" ]
+      },
+      {
+        "Name": "RELAY_24VDC-2",
+        "UID": "RELAY_24VDC-2-1",
+        "Tags": [ "DO" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "DO" ]
+      }
+    ]
+  },
+  "DOUT_2W_RLY_1JB": {
+    "TemplateName": "DOUT_2W_RLY_1JB",
+    "TemplateFileName": "DOUT_2W_RLY_1JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [ "DRAWING_NAME", "DO" ]
+      },
+      {
+        "Name": "SD_TABLE_10-ROW",
+        "UID": "SD_TABLE_10-ROW-1",
+        "Tags": [ "DO" ]
+      },
+      {
+        "Name": "TERM_DI_2W",
+        "UID": "TERM_DI_2W-1",
+        "Tags": [ "DO" ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-1",
+        "UID": "PNL_3-TERM_24VDC-1-1",
+        "Tags": [ "DO" ]
+      },
+      {
+        "Name": "MOD_2-TERM_1-PT_DYN_MIR",
+        "UID": "MOD_2-TERM_1-PT_DYN_MIR-1",
+        "Tags": [ "DO", "DO" ]
+      },
+      {
+        "Name": "RELAY_24VDC-2",
+        "UID": "RELAY_24VDC-2-1",
+        "Tags": [ "DO" ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [ "DO" ]
+      },
+      {
+        "Name": "JB_2-TERM_SINGLE",
+        "UID": "JB_2-TERM_SINGLE-1",
+        "Tags": [ "DO" ]
+      }
+    ]
+  },
+
   "DIN_4W_0JB": {
     "TemplateName": "DIN_4W_0JB",
     "TemplateFileName": "DIN_4W_0JB.dwg",
@@ -700,18 +886,18 @@
         "Tags": [ "MOTOR-SD-SIS-B" ]
       },
       {
-        "Name": "MOD_1-TERM_1-BPCS",
-        "UID": "MOD_1-TERM_1-BPCS-1",
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
         "Tags": [ "MOTOR-SD-BPCS", "MOTOR-SD-BPCS" ]
       },
       {
-        "Name": "MOD_1-TERM_1-SIS",
-        "UID": "MOD_1-TERM_1-SIS-1",
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-2",
         "Tags": [ "MOTOR-SD-SIS-A", "MOTOR-SD-SIS-A" ]
       },
       {
-        "Name": "MOD_1-TERM_1-SIS",
-        "UID": "MOD_1-TERM_1-SIS-2",
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-3",
         "Tags": [ "MOTOR-SD-SIS-B", "MOTOR-SD-SIS-B" ]
       },
       {

@@ -21,7 +21,7 @@ namespace LoopDataAccessLayer
             {
                 if (Conductors is not null && ConductorSize is not null)
                 {
-                    return Conductors.ToString() + " " + ConductorSize.ToString();
+                    return Conductors.ToString() + ConductorSize.ToString();
                 }
                 else
                 {

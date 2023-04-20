@@ -30,7 +30,7 @@ namespace LoopDrawingDataUI
                         + Path.GetFileName(path);
                 }
             }
-            
+
             return path;
         }
 
@@ -54,13 +54,13 @@ namespace LoopDrawingDataUI
 
         private string GetFileName()
         {
-            string fileName = string.Empty; 
+            string fileName = string.Empty;
             using (OpenFileDialog openFileDialog1 = new())
             {
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     fileName = openFileDialog1.FileName;
-                    
+
                 }
             }
             return fileName;
@@ -91,6 +91,32 @@ namespace LoopDrawingDataUI
                 && !string.IsNullOrEmpty(outputResultPath)
                 && !string.IsNullOrEmpty(outputDrawingPath)
                 && ExcelHelper.IsExcelFile(excelFileName);
+        }
+
+        protected virtual bool IsFileLocked(string fileName)
+        {
+            return IsFileLocked(new FileInfo(fileName));
+        }
+        protected virtual bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+
+            //file is not locked
+            return false;
         }
     }
 }

@@ -296,6 +296,7 @@ namespace LoopDataAccessLayer
                 throw new NullReferenceException("Cannot find titleblock row data.");
             }
 
+            string date = DateTime.Today.ToString("ddMMMyy").ToUpper();
             titleBlockData = new ExcelTitleBlockData<string>()
             {
                 SiteNumber = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.SiteNumber),
@@ -310,7 +311,7 @@ namespace LoopDataAccessLayer
                 {
                     Rev = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.GeneralRevData.Rev),
                     Description = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.GeneralRevData.Description),
-                    Date = DateTime.Today.ToString("ddMMyy"),
+                    Date = date,
                     DrawnBy = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.GeneralRevData.DrawnBy),
                     CheckedBy = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.GeneralRevData.CheckedBy),
                     ApprovedBy = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.GeneralRevData.ApprovedBy),
@@ -320,7 +321,7 @@ namespace LoopDataAccessLayer
                 {
                     Rev = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.RevBlockRevData.Rev),
                     Description = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.RevBlockRevData.Description),
-                    Date = DateTime.Today.ToString("ddMMyy"),
+                    Date = date,
                     DrawnBy = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.RevBlockRevData.DrawnBy),
                     CheckedBy = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.RevBlockRevData.CheckedBy),
                     ApprovedBy = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.RevBlockRevData.ApprovedBy),

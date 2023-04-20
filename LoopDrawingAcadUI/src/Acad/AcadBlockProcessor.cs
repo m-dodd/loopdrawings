@@ -67,7 +67,9 @@ namespace LoopDrawingAcadUI
                 SetDynamicPropertyValue(br, "Visibility1", block.Attributes["VALVE_TYPE"]);
             }
 
-            if (block.Name == "MOD_1-TERM_1-PT_DYN")
+            // match dynamic mod blocks
+            if (Regex.IsMatch(block.Name, @"^MOD(?=.*DYN).*$", RegexOptions.IgnoreCase))
+            //if (block.Name == "MOD_1-TERM_1-PT_DYN")
             {
                 SetDynamicPropertyValue(br, "Visibility1", block.Attributes["SYMBOL_TYPE"]);
             }

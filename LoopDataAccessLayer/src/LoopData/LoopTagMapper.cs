@@ -16,6 +16,7 @@ namespace LoopDataAccessLayer
             "AI",
             "AO",
             "DI",
+            "DO",
             "CONTROLLER",
             "VALVE",
             "ZSC",
@@ -68,39 +69,64 @@ namespace LoopDataAccessLayer
             LoopTagData? tag = tags.FirstOrDefault(t =>
                 tagtype switch
                 {
-                    "AI" => t.IOType == "AI",
-                    "AO" => t.IOType == "AO",
-                    "DI" => t.IOType == "DI",
-                    "CONTROLLER" => t.IOType == "SOFT" && t.Tag.Contains("IC", StringComparison.OrdinalIgnoreCase),
+                    "AI" => IsIOType(t, "AI"),
+                    "AO" => IsIOType(t, "AO"),
+                    "DI" => IsIOType(t, "DI"),
+                    "DO" => IsIOType(t, "DO"),
+                    "CONTROLLER" => IsIOType(t, "SOFT")
+                                    && t.Tag.Contains("IC", StringComparison.OrdinalIgnoreCase),
                     "VALVE" => (string.IsNullOrEmpty(t.IOType) || t.IOType == "---")
                                 && Regex.IsMatch(t.InstrumentType, @"ball|gate|globe|butterfly", RegexOptions.IgnoreCase),
-                    "ZSC" => t.IOType == "DI" && t.Tag.Contains("ZSC", StringComparison.OrdinalIgnoreCase),
-                    "ZSO" => t.IOType == "DI" && t.Tag.Contains("ZSO", StringComparison.OrdinalIgnoreCase),
-                    "SOL-BPCS" => t.IOType == "DO"
-                                    && t.InstrumentType.Contains("SOLENOID", StringComparison.OrdinalIgnoreCase)
-                                    && t.SystemType.ToUpper() == "BPCS",
-                    "SOL-SIS" => t.IOType == "DO"
-                                    && t.InstrumentType.Contains("SOLENOID", StringComparison.OrdinalIgnoreCase)
-                                    && t.SystemType.ToUpper() == "SIS",
-                    "MOTOR-SD-BPCS" => t.IOType == "DO"
-                                        && t.InstrumentType.ToUpper() == "MOTOR_SD"
-                                        && t.SystemType.ToUpper() == "BPCS",
-                    "MOTOR-SD-SIS" => t.IOType == "DO"
-                                        && t.InstrumentType.ToUpper() == "MOTOR_SD"
-                                        && t.SystemType.ToUpper() == "SIS",
-                    "MOTOR-SD-SIS-A" => t.IOType == "DO"
-                                        && t.InstrumentType.ToUpper() == "MOTOR_SD"
-                                        && t.SystemType.ToUpper() == "SIS"
-                                        && t.Tag.ToUpper().EndsWith("A"),
-                    "MOTOR-SD-SIS-B" => t.IOType == "DO"
-                                        && t.InstrumentType.ToUpper() == "MOTOR_SD"
-                                        && t.SystemType.ToUpper() == "SIS"
-                                        && t.Tag.ToUpper().EndsWith("B"),
+                    "ZSC" => IsIOType(t, "DI") 
+                             && t.Tag.Contains("ZSC", StringComparison.OrdinalIgnoreCase),
+                    "ZSO" => IsIOType(t, "DI")
+                             && t.Tag.Contains("ZSO", StringComparison.OrdinalIgnoreCase),
+                    "SOL-BPCS" => IsIOInstrumentSystem(t, "DO", "SOLENOID", "BPCS"),
+                    "SOL-SIS" => IsIOInstrumentSystem(t, "DO", "SOLENOID", "SIS"),
+                    "MOTOR-SD-BPCS" => IsIOInstrumentSystem(t, "DO", "MOTOR_SD", "BPCS"),
+                    "MOTOR-SD-SIS" => IsIOInstrumentSystem(t, "DO", "MOTOR_SD", "SIS"),
+                    "MOTOR-SD-SIS-A" => IsIOInstrumentSystem(t, "DO", "MOTOR_SD", "SIS")
+                                        && EndsWithIgnoreCase(t, "A"),
+                    "MOTOR-SD-SIS-B" => IsIOInstrumentSystem(t, "DO", "MOTOR_SD", "SIS")
+                                        && EndsWithIgnoreCase(t, "B"),
                     _ => false
                 });
 
             return tag?.Tag ?? string.Empty;
+        }
+        
+        private static bool IsIOType(LoopTagData tag, string ioType)
+        {
+            return tag.IOType.EqualsCaseInsensitive(ioType);
+        }
 
+        private static bool IsSystemType(LoopTagData tag, string systemType)
+        {
+            return tag.SystemType.EqualsCaseInsensitive(systemType);
+        }
+
+        private static bool IsInstrumentType(LoopTagData tag, string instrumentType)
+        {
+            return tag.InstrumentType.Contains(instrumentType, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool EndsWithIgnoreCase(LoopTagData tag, string suffix)
+        {
+            return tag.Tag.EndsWith(suffix, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsIOInstrumentSystem(LoopTagData tag, string ioType, string instrumentType, string systemType)
+        {
+            return IsIOType(tag, ioType) && IsInstrumentType(tag, instrumentType) && IsSystemType(tag, systemType);
+        }
+
+    }
+
+    public static class StringExtensions
+    {
+        public static bool EqualsCaseInsensitive(this string str1, string str2)
+        {
+            return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

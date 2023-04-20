@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using WTEdge.Entities;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
@@ -11,11 +12,13 @@ namespace LoopDataAccessLayer
     {
         private readonly IDataLoader dataLoader;
         private readonly LoopDataConfig loopConfig;
+        private readonly ILogger logger;
 
-        public TemplatePicker(IDataLoader dataLoader, LoopDataConfig loopConfig)
+        public TemplatePicker(IDataLoader dataLoader, LoopDataConfig loopConfig, ILogger logger)
         {
             this.dataLoader = dataLoader;
             this.loopConfig = loopConfig;
+            this.logger = logger;
         }
 
         public TemplateConfig? GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
@@ -24,7 +27,10 @@ namespace LoopDataAccessLayer
             {
                 "XMTR" => GetSimpleTemplate(template, tagMap, "AI"),
                 "AIN_3W" => GetSimpleTemplate(template, tagMap, "AI"),
+                "DIN_2W" => GetSimpleTemplate(template, tagMap, "DI"),
                 "DIN_4W" => GetSimpleTemplate(template, tagMap, "DI"),
+
+                "DOUT_2W_RLY" => GetSimpleTemplate(template, tagMap, "DO"),
 
                 "PID_AI_AO" => GetPidTemplate(tagMap),
                 "PID_AI_NOAO" => GetPidNoAOTemplate(tagMap),
@@ -64,16 +70,28 @@ namespace LoopDataAccessLayer
 
         private string BuildSimpleName(TemplateConfig template, Dictionary<string, string> tagMap, string tagType)
         {
-            int numberOfJbs = CountNumberJbs(tagMap[tagType]);
+            int numberOfJbs = -1;
+            try
+            {
+                numberOfJbs = CountNumberJbs(tagMap[tagType]);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                string msg = $"For template {template.TemplateName} - Tagtype {tagType} not created as part of tag map. " +
+                             $"If the template is configured correctly please contact system designer and create a tag map for {tagType}.";
+                logger.Error(msg, ex);
+                throw new TemplateTagTypeNotFoundException(msg, tagType, ex);
+            }
             string templateName;
-            if (0 <= numberOfJbs && numberOfJbs <= 2)
+            const int MAX_JBS = 1;
+            if (0 <= numberOfJbs && numberOfJbs <= MAX_JBS)
             {
                 templateName = template.TemplateName + "_" + numberOfJbs.ToString() + "JB";
             }
             else
             {
-                string msg = "Number of JBs must be between 0 and 2, not (" + numberOfJbs.ToString() + ").";
-                throw new ArgumentOutOfRangeException(msg);
+                string msg = $"Number of JBs must be between 0 and {MAX_JBS}, not (" + numberOfJbs.ToString() + ").";
+                throw new TemplateNumberOfJbsException(msg, MAX_JBS);
             }
 
             return templateName;
@@ -83,19 +101,20 @@ namespace LoopDataAccessLayer
         {
             int numberOfAIJbs = CountNumberJbs(tagMap["AI"]);
             int numberOfAOJbs = CountNumberJbs(tagMap["AO"]);
+            const int MAX_JBS = 1;
             string templateName;
-            if ((0 <= numberOfAIJbs && numberOfAIJbs <= 1) & (0 <= numberOfAOJbs && numberOfAOJbs <= 1))
+            if ((0 <= numberOfAIJbs && numberOfAIJbs <= MAX_JBS) & (0 <= numberOfAOJbs && numberOfAOJbs <= MAX_JBS))
             {
                 templateName = "PID_AI_" + numberOfAIJbs.ToString() + "JB_AO_" + numberOfAOJbs.ToString() + "JB";
             }
             else
             {
-                string msg = "Number of JBs must be between 0 and 2, not ("
+                string msg = $"Number of JBs must be between 0 and {MAX_JBS}, not ("
                     + numberOfAIJbs.ToString()
                     + ","
                     + numberOfAOJbs.ToString()
                     + ").";
-                throw new ArgumentOutOfRangeException(msg);
+                throw new TemplateNumberOfJbsException(msg, MAX_JBS);
             }
 
             return templateName;
@@ -106,7 +125,8 @@ namespace LoopDataAccessLayer
             int numberOfBPCSJbs = CountNumberJbs(tagMap["SOL-BPCS"]);
             int numberOfSISJbs = CountNumberJbs(tagMap["SOL-SIS"]);
             string templateName;
-            if ((0 <= numberOfBPCSJbs && numberOfBPCSJbs <= 1) & (0 <= numberOfSISJbs && numberOfSISJbs <= 1))
+            const int MAX_JBS = 1;
+            if ((0 <= numberOfBPCSJbs && numberOfBPCSJbs <= MAX_JBS) & (0 <= numberOfSISJbs && numberOfSISJbs <= MAX_JBS))
             {
                 templateName = "XV_2XY_BPCS_"
                     + numberOfBPCSJbs.ToString()
@@ -121,7 +141,7 @@ namespace LoopDataAccessLayer
                     + ","
                     + numberOfSISJbs.ToString()
                     + ").";
-                throw new ArgumentOutOfRangeException(msg);
+                throw new TemplateNumberOfJbsException(msg, MAX_JBS);
             }
 
             return templateName;
@@ -139,7 +159,45 @@ namespace LoopDataAccessLayer
 
             return 0;
         }
+    }
 
 
+    public class TemplateTagTypeNotFoundException : Exception
+    {
+        private const string defaultMessage = "Tagtype {0} not created as part of tag map.";
+        public TemplateTagTypeNotFoundException(string key) : base(string.Format(defaultMessage, key))
+        {
+            Key = key;
+        }
+
+        public TemplateTagTypeNotFoundException(string msg, string key) : base(msg)
+        {
+            Key = key;
+        }
+
+        public TemplateTagTypeNotFoundException(string msg, string key, Exception innerException) : base(msg, innerException)
+        {
+            Key = key;
+        }
+
+        public string Key { get; }
+    }
+
+    public class TemplateNumberOfJbsException : Exception
+    {
+        private const string defaultMessage = "Number of JBs found is not supported.";
+        public TemplateNumberOfJbsException() : base(defaultMessage) { }
+        public TemplateNumberOfJbsException(int maxJBs) : base(defaultMessage)
+        {
+            MaxJBs = maxJBs;
+        }
+        public TemplateNumberOfJbsException(string msg) : base(msg) { }
+        public TemplateNumberOfJbsException(string msg, int maxJBs) : base(msg)
+        {
+            MaxJBs = maxJBs;
+        }
+        
+
+        public int MaxJBs { get; }
     }
 }

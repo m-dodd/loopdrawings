@@ -74,7 +74,13 @@ namespace LoopDataAccessLayer
                 "X-1300",
 
                 // Motor Test
-                "CM-301"
+                "CM-301",
+
+                // DI
+                "X-0018",
+
+                // DO-RELAY
+                "X-9001",
             };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future

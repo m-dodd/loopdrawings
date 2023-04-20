@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
+using System.Runtime.Serialization;
 
 namespace LoopDataAccessLayer
 {
@@ -14,50 +16,36 @@ namespace LoopDataAccessLayer
         
         private readonly LoopDataConfig loopConfig;
         private readonly IDataLoader dataLoader;
+        private readonly ILogger logger;
+        public bool ErrorsDetected { get; private set; } = false;
+
 
         public List<AcadDrawingDataMappable> Drawings { get; set; }
 
-        public AcadDrawingController(IDataLoader dataLoader, LoopDataConfig loopConfig)
+        public AcadDrawingController(IDataLoader dataLoader, LoopDataConfig loopConfig, ILogger logger)
         {
             this.dataLoader = dataLoader;
             this.loopConfig = loopConfig;
-            var titleBlock = dataLoader.GetTitleBlockData();
+            IExcelTitleBlockData<string> titleBlock = dataLoader.GetTitleBlockData();
             loopConfig.SiteID = titleBlock.SiteNumber;
             Drawings = new List<AcadDrawingDataMappable>();
+            this.logger = logger;
         }
 
         public AcadDrawingController(
             string excelFileName,
             string configFileName,
             string templatePath,
-            string outputDrawingPath)
+            string outputDrawingPath,
+            ILogger logger)
+            : this(CreateDataLoader(excelFileName), new LoopDataConfig(), logger)
         {
-            // figure out the rigth exception when the excel is open
-            ExcelDataLoader excelLoader;
+            loopConfig.TemplateDrawingPath = templatePath;
+            loopConfig.OutputDrawingPath = outputDrawingPath;
+
             try
             {
-                excelLoader = new(excelFileName);
-            }
-            catch (IOException)
-            {
-                throw new IOException("Excel must be open - please close it.");
-            }
-
-            // test the exception for this if can't connect to internet
-            DBDataLoader dbLoader = new();
-
-            // shouldn't be any exceptions here
-            dataLoader = new DataLoader(excelLoader, dbLoader);
-            
-            // setup the loop config
-            try
-            {
-                loopConfig = new(configFileName);
-                loopConfig.LoadConfig();
-                loopConfig.TemplateDrawingPath = templatePath;
-                loopConfig.OutputDrawingPath = outputDrawingPath;
-                var titleBlock = dataLoader.GetTitleBlockData();
-                loopConfig.SiteID = titleBlock.SiteNumber;
+                loopConfig.LoadConfig(configFileName);
             }
             catch (FileNotFoundException)
             {
@@ -68,34 +56,111 @@ namespace LoopDataAccessLayer
                     + "Please relocate the file and try again.";
                 throw new FileNotFoundException(msg);
             }
-
-            
-
-            Drawings = new List<AcadDrawingDataMappable>();
         }
 
+        private static IDataLoader CreateDataLoader(string excelFileName)
+        {
+            ExcelDataLoader excelDL;
+            try
+            {
+                excelDL = new ExcelDataLoader(excelFileName);
+            }
+            catch (FileNotFoundException)
+            {
+                string msg = "Unable to find"
+                    + Environment.NewLine
+                    + excelFileName
+                    + Environment.NewLine
+                    + "Please relocate the file and try again.";
+                throw new FileNotFoundException(msg);
+            }
+            catch (IOException)
+            {
+                throw new IOException("Excel must be open - please close it.");
+            }
+
+            // any error handlign here?
+            DBDataLoader dbDL = new();
+
+            return new DataLoader(excelDL, dbDL);
+        }
 
         public void BuildDrawings()
         {
+            ErrorsDetected = false;
             AcadBlockFactory blockFactory = new(dataLoader);
-            TemplatePicker templatePicker = new(dataLoader, loopConfig);
+            TemplatePicker templatePicker = new(dataLoader, loopConfig, logger);
             AcadDrawingBuilder drawingBuilder = new(dataLoader, loopConfig, templatePicker, blockFactory);
+            
             IEnumerable<LoopNoTemplatePair> loops = dataLoader.GetLoops();
+            logger.Debug($"{loops.Count()} loops found");
+
+            List<string> loopsWithProblems = new();
             foreach (LoopNoTemplatePair loop in loops)
             {
-                IEnumerable<AcadDrawingDataMappable> drawings = drawingBuilder.BuildDrawings(loop);
-                foreach(AcadDrawingDataMappable drawing in drawings)
+                try
                 {
-                    Drawings.Add(drawing);
+                    logger.Debug("Creating drawing(s) for " + loop.LoopNo);
+                    IEnumerable<AcadDrawingDataMappable> drawings = drawingBuilder.BuildDrawings(loop);
+                    foreach (AcadDrawingDataMappable drawing in drawings)
+                    {
+                        Drawings.Add(drawing);
+                    }
                 }
+                catch (TemplateNumberOfJbsException ex)
+                {
+                    logger.Error(ex.Message); 
+                    loopsWithProblems.Add(loop.LoopNo);
+                }
+                catch (TemplateTagTypeNotFoundException ex)
+                {
+                    logger.Error(ex.Message);
+                    loopsWithProblems.Add(loop.LoopNo);
+                }
+            }
+            if(loopsWithProblems.Count > 0)
+            {
+                ErrorsDetected = true;
+                logger.Warning("Loops with problems:");
+                logger.Warning(string.Join(",", loopsWithProblems));
             }
         }
 
         public void SaveDrawingsToFile(string fileName)
         {
-            var json = JsonConvert.SerializeObject(Drawings, Formatting.Indented);
-            File.WriteAllText(fileName, json);
+            try
+            {
+                logger.Information("Writing output to JSON file " + fileName);
+                var json = JsonConvert.SerializeObject(Drawings, Formatting.Indented);
+                File.WriteAllText(fileName, json);
+            }
+            catch (JsonSerializationException ex)
+            {
+                logger.Error(ex, "Failed to serialize drawings to JSON");
+                throw new SerializationException("Failed to serialize drawings to JSON", ex);
+            }
+            catch (PathTooLongException ex)
+            {
+                logger.Error(ex, "File path is too long");
+                throw new IOException("File path is too long", ex);
+            }
+            catch (IOException ex)
+            {
+                logger.Error(ex, "Failed to write drawings to file");
+                throw new IOException("Failed to write drawings to file", ex);
+            }
+            catch (NotSupportedException ex)
+            {
+                logger.Error(ex, "File path is not in a valid format");
+                throw new IOException("File path is not in a valid format", ex);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to save drawings to file");
+                throw;
+            }
         }
+
     }
 
     public class AcadDrawingControllerException : Exception
