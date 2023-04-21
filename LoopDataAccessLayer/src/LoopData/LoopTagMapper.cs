@@ -25,16 +25,16 @@ namespace LoopDataAccessLayer
                     { "AO", tagData => tagData.IsAO() },
                     { "DI", tagData => tagData.IsDI() },
                     { "DO", tagData => tagData.IsDO() },
-                    { "CONTROLLER", tagData => tagData.IsIOType("SOFT") && tagData.TagContains("IC")},
+                    { "CONTROLLER", tagData => tagData.IsSoft() && tagData.TagContains("IC")},
                     { "VALVE", tagData => tagData.IsValve() },
                     { "ZSC", tagData => tagData.IsDI() && tagData.TagContains("ZSC") },
                     { "ZSO", tagData => tagData.IsDI() && tagData.TagContains("ZSO") },
-                    { "SOL-BPCS", tagData => tagData.IsSolenoid() && tagData.IsSystemType("BPCS") },
-                    { "SOL-SIS", tagData => tagData.IsSolenoid() && tagData.IsSystemType("SIS") },
-                    { "MOTOR-SD-BPCS", tagData => tagData.IsMotor() && tagData.IsSystemType("BPCS") },
-                    { "MOTOR-SD-SIS", tagData => tagData.IsMotor() && tagData.IsSystemType("SIS") },
-                    { "MOTOR-SD-SIS-A", tagData => tagData.IsMotor() && tagData.IsSystemType("SIS") && tagData.EndsWith("A") },
-                    { "MOTOR-SD-SIS-B", tagData => tagData.IsMotor() && tagData.IsSystemType("SIS") && tagData.EndsWith("B") }
+                    { "SOL-BPCS", tagData => tagData.IsSolenoid() && tagData.IsBPCS()) },
+                    { "SOL-SIS", tagData => tagData.IsSolenoid() && tagData.IsSIS() },
+                    { "MOTOR-SD-BPCS", tagData => tagData.IsMotor() && tagData.IsBPCS() },
+                    { "MOTOR-SD-SIS", tagData => tagData.IsMotor() && tagData.IsSIS() },
+                    { "MOTOR-SD-SIS-A", tagData => tagData.IsMotor() && tagData.IsSIS() && tagData.EndsWith("A") },
+                    { "MOTOR-SD-SIS-B", tagData => tagData.IsMotor() && tagData.IsSIS() && tagData.EndsWith("B") }
                 };
         }
 
@@ -92,6 +92,11 @@ namespace LoopDataAccessLayer
             return tag.IsIOType("DO");
         }
 
+        public static bool IsSoft(this LoopTagData tag)
+        {
+            return tag.IsIOType("SOFT");
+        }
+
         public static bool IsEmptyIOType(this LoopTagData tag)
         {
             return string.IsNullOrEmpty(tag.IOType) || tag.IOType == "---";
@@ -100,6 +105,16 @@ namespace LoopDataAccessLayer
         public static bool IsSystemType(this LoopTagData tag, string systemType)
         {
             return tag.SystemType.EqualsCaseInsensitive(systemType);
+        }
+
+        public static bool IsBPCS(this LoopTagData tag)
+        {
+            return tag.IsSystemType("BPCS")
+        }
+
+        public static bool IsSIS(this LoopTagData tag)
+        {
+            return tag.IsSystemType("SIS")
         }
 
         public static bool IsInstrumentType(this LoopTagData tag, string instrumentType)
@@ -116,12 +131,12 @@ namespace LoopDataAccessLayer
 
         public static bool IsSolenoid(this LoopTagData tag)
         {
-            return tag.IsIOType("DO") && tag.IsInstrumentType("SOLENOID");
+            return tag.IsDO() && tag.IsInstrumentType("SOLENOID");
         }
 
         public static bool IsMotor(this LoopTagData tag)
         {
-            return tag.IsIOType("DO") && tag.IsInstrumentType("MOTOR-SD");
+            return tag.IsDO() && tag.IsInstrumentType("MOTOR-SD");
         }
 
         public static bool EndsWith(this LoopTagData tag, string suffix)
