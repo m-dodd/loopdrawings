@@ -801,7 +801,7 @@ namespace LoopDataAccessLayer
 
                 entity.HasOne(d => d.LoopnoNavigation)
                     .WithMany(p => p.Tblindices)
-                    .HasPrincipalKey(p => p.Loop)
+                    .HasPrincipalKey(p => p.Loopno)
                     .HasForeignKey(d => d.Loopno)
                     .HasConstraintName("fkloopno");
 
@@ -868,21 +868,26 @@ namespace LoopDataAccessLayer
                 entity.ToTable("tblloop");
 
                 entity.HasIndex(e => e.Looptemplate, "fklooptemplate");
+                entity.HasIndex(e => e.Loopdescription, "fkloopdescription");
 
-                entity.HasIndex(e => e.Loop, "loopno")
+                entity.HasIndex(e => e.Loopno, "loopno")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
                     .HasColumnType("int(25)")
                     .HasColumnName("id");
 
-                entity.Property(e => e.Loop)
+                entity.Property(e => e.Loopno)
                     .HasMaxLength(100)
-                    .HasColumnName("loop");
+                    .HasColumnName("loopno");
 
                 entity.Property(e => e.Looptemplate)
                     .HasMaxLength(100)
                     .HasColumnName("looptemplate");
+                
+                entity.Property(e => e.Loopdescription)
+                    .HasMaxLength(100)
+                    .HasColumnName("loopdescription");
             });
 
             modelBuilder.Entity<Tbllooptemplate>(entity =>

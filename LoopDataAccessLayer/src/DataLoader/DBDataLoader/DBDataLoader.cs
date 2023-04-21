@@ -4,16 +4,6 @@ using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
 {
-    // idea here is that I could break this class up into smaller classes with interfaces - I like the idea
-    //public class LoopCache : ICachedData
-    //{
-    //    private readonly WTEdgeContext db;
-    //    public LoopCache(WTEdgeContext db)
-    //    {
-    //        this.db = db;
-    //    }
-    //}
-
     public class DBDataLoader : IDBLoader
     {
         private readonly WTEdgeContext db;
@@ -81,16 +71,20 @@ namespace LoopDataAccessLayer
 
                 // DO-RELAY
                 "X-9001",
+
+                // AI x2
+                "P-1533",
             };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future
                       // I'm thinking of a log file message or something, but for now, I don't want it
-                      .Where(x => (x.Loop != "---") && (x.Loop != null) && (x.Looptemplate != null))
-                      .Where(x => currentTestingLoops.Contains(x.Loop)) // just to limit the results for testing purposes
+                      .Where(x => (x.Loopno != "---") && (x.Loopno != null) && (x.Looptemplate != null))
+                      .Where(x => currentTestingLoops.Contains(x.Loopno)) // just to limit the results for testing purposes
                       .Select(loop => new LoopNoTemplatePair
                                       {
-                                          LoopNo = loop.Loop ?? string.Empty,
+                                          LoopNo = loop.Loopno ?? string.Empty,
                                           Template = loop.Looptemplate ?? string.Empty,
+                                          Description = loop.Loopdescription ?? string.Empty,
                                       })
                       .ToList();
         }

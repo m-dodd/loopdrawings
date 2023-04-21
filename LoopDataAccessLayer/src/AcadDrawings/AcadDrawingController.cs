@@ -88,19 +88,19 @@ namespace LoopDataAccessLayer
         public void BuildDrawings()
         {
             ErrorsDetected = false;
-            AcadBlockFactory blockFactory = new(dataLoader);
-            TemplatePicker templatePicker = new(dataLoader, loopConfig, logger);
-            AcadDrawingBuilder drawingBuilder = new(dataLoader, loopConfig, templatePicker, blockFactory);
+            var blockFactory = new AcadBlockFactory(dataLoader, logger);
+            var templatePicker = new TemplatePicker(dataLoader, loopConfig, logger);
+            var drawingBuilder = new AcadDrawingBuilder(dataLoader, loopConfig, templatePicker, blockFactory, new LoopTagMapper(), logger);
             
             IEnumerable<LoopNoTemplatePair> loops = dataLoader.GetLoops();
-            logger.Debug($"{loops.Count()} loops found");
+            logger.Information($"{loops.Count()} loops found");
 
             List<string> loopsWithProblems = new();
             foreach (LoopNoTemplatePair loop in loops)
             {
                 try
                 {
-                    logger.Debug("Creating drawing(s) for " + loop.LoopNo);
+                    logger.Information("Creating drawing(s) for " + loop.LoopNo);
                     IEnumerable<AcadDrawingDataMappable> drawings = drawingBuilder.BuildDrawings(loop);
                     foreach (AcadDrawingDataMappable drawing in drawings)
                     {

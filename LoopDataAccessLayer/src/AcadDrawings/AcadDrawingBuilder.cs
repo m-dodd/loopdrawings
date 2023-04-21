@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WTEdge.Entities;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
@@ -15,18 +16,25 @@ namespace LoopDataAccessLayer
         private readonly ITemplatePicker templatePicker;
         private readonly IAcadBlockFactory blockFactory;
         private readonly LoopDataConfig loopConfig;
+        private readonly LoopTagMapper loopTagMapper;
+        private readonly ILogger logger;
 
         public AcadDrawingBuilder(
             IDataLoader dataLoader,
             LoopDataConfig loopConfig,
             ITemplatePicker templatePicker,
-            IAcadBlockFactory blockFactory
+            IAcadBlockFactory blockFactory,
+            LoopTagMapper loopTagMapper,
+            ILogger logger
             )
         {
             this.dataLoader = dataLoader;
             this.loopConfig = loopConfig;
             this.templatePicker = templatePicker;
             this.blockFactory = blockFactory;
+            this.loopTagMapper = loopTagMapper;
+            this.logger = logger;
+
         }
 
         public IEnumerable<AcadDrawingDataMappable> BuildDrawings(LoopNoTemplatePair loop)
@@ -34,31 +42,40 @@ namespace LoopDataAccessLayer
             TemplateConfig sdkTemplate = GetTemplate("SDK") ?? throw new NullReferenceException("SDK is missing from configuration.");
             TemplateConfig? template = GetTemplate(loop);
             List<AcadDrawingDataMappable> drawings = new();
+
+            // **************************************************************************
+            // SHOULD I BE THROWING EXCEPTIONS INSTEAD OF RETURNING??
+            // **************************************************************************
             if (template is null)
             {
+                logger.Warning("No template found.", loop.LoopNo);
                 return drawings;
             }
-
+            // **************************************************************************
+            // SHOULD I BE THROWING EXCEPTIONS INSTEAD OF RETURNING??
+            // **************************************************************************
             Dictionary<string, string> tagMap = GetLoopTagMap(loop, template);
             if (tagMap.Count == 0)
             {
+                logger.Warning("No tags found.", loop.LoopNo);
                 return drawings;
             }
-
+            // **************************************************************************
+            // SHOULD I BE THROWING EXCEPTIONS INSTEAD OF RETURNING??
+            // **************************************************************************
             TemplateConfig? correctTemplate = templatePicker.GetCorrectTemplate(template, tagMap);
             if (correctTemplate is null)
             {
+                logger.Warning("Correct template could not be determined - contact system administrator.", loop.LoopNo);
                 return drawings;
             }
 
             SDKDrawingProvider sdk = new(dataLoader, correctTemplate, tagMap, loopConfig);
-            // still need to figure out how to flag the original drawing to delete the SDK block
-            // I know I have an idea to write an attribute to the block attributes and then that can be checked
-            // by teh acad portion, but right now I don't have a way to pass that down
             if (sdk.NewDrawingRequired())
             {
                 string drawingName1 = tagMap["DRAWING_NAME"] + "-1";
                 string drawingName2 = tagMap["DRAWING_NAME"] + "-2";
+                logger.Information($"SDK drawing required... Drawings {drawingName1} and {drawingName2}.");
 
                 tagMap["DRAWING_NAME"] = drawingName1;
                 tagMap["DRAWING_NAME_SD"] = drawingName2;
@@ -145,7 +162,7 @@ namespace LoopDataAccessLayer
             List<LoopTagData> tags = (List<LoopTagData>)dataLoader.GetLoopTags(loop);
             if (tags.Count > 0) 
             {
-                Dictionary<string, string> tagMap = LoopTagMapper.BuildTagMap(tags, template);
+                Dictionary<string, string> tagMap = loopTagMapper.BuildTagMap(tags, template);
                 tagMap["DRAWING_NAME"] = BuildDrawingIdentifier(loop);
                 return tagMap;
             }

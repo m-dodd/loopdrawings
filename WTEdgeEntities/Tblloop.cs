@@ -11,8 +11,9 @@ namespace WTEdge.Entities
         }
 
         public int Id { get; set; }
-        public string Loop { get; set; } = null!;
+        public string Loopno { get; set; } = null!;
         public string? Looptemplate { get; set; }
+        public string? Loopdescription { get; set; }
 
         public virtual ICollection<Tblindex> Tblindices { get; set; }
     }

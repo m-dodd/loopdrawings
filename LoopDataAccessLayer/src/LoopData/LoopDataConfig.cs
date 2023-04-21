@@ -17,35 +17,34 @@ namespace LoopDataAccessLayer
         public string OutputDrawingPath { get; set; } = string.Empty;
         public string SiteID { get; set; } = string.Empty;
 
-        public Dictionary<string, TemplateConfig> TemplateDefs { get; set; } = 
-            new Dictionary<string, TemplateConfig>();
+        public Dictionary<string, TemplateConfig> TemplateDefs { get; set; }
+            
 
 
         public LoopDataConfig()
         {
             this.configFile= string.Empty;
+            TemplateDefs = new Dictionary<string, TemplateConfig>(StringComparer.OrdinalIgnoreCase);
         }
 
         public LoopDataConfig(string configFile)
         {
             this.configFile = configFile;
+            TemplateDefs = new Dictionary<string, TemplateConfig>(StringComparer.OrdinalIgnoreCase);
         }
-
 
         public void LoadConfig()
         {
-            var json = File.ReadAllText(this.configFile);
-            TemplateDefs = 
-                JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json) ??
-                new Dictionary<string, TemplateConfig>();
+            LoadConfig(this.configFile);
         }
 
         public void LoadConfig(string configFile)
         {
             var json = File.ReadAllText(configFile);
-            TemplateDefs =
-                JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json) ??
-                new Dictionary<string, TemplateConfig>();
+            var tempDefinitions =
+                JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json)
+                ?? new Dictionary<string, TemplateConfig>(StringComparer.OrdinalIgnoreCase);
+            TemplateDefs = new Dictionary<string, TemplateConfig>(tempDefinitions, StringComparer.OrdinalIgnoreCase);
         }
     }
 

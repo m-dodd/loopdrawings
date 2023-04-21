@@ -26,7 +26,10 @@ namespace LoopDataAccessLayer
             return template.TemplateName.ToUpper() switch
             {
                 "XMTR" => GetSimpleTemplate(template, tagMap, "AI"),
+                // this makes the assumption AI-1 and AI-2 have the same number of jbs
+                "XMTRX2" => GetSimpleTemplate(template, tagMap, "AI-1"),
                 "AIN_3W" => GetSimpleTemplate(template, tagMap, "AI"),
+
                 "DIN_2W" => GetSimpleTemplate(template, tagMap, "DI"),
                 "DIN_4W" => GetSimpleTemplate(template, tagMap, "DI"),
 

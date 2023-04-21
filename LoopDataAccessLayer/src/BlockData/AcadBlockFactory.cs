@@ -1,14 +1,17 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
+﻿using System;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
     public class AcadBlockFactory : IAcadBlockFactory
     {
         private readonly IDataLoader dataLoader;
+        private readonly ILogger logger;
 
-        public AcadBlockFactory(IDataLoader dataLoader)
+        public AcadBlockFactory(IDataLoader dataLoader, ILogger logger)
         {
             this.dataLoader = dataLoader;
+            this.logger = logger;
         }
 
         public IMappableBlock GetBlock(BlockMapData blockMap, Dictionary<string, string> tagMap)

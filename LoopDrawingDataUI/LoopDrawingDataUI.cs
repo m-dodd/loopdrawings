@@ -34,7 +34,8 @@ namespace LoopDrawingDataUI
                 return;
             }
 
-            if(IsFileLocked(outputResultPath))
+            string resultFile = TestOutputFileName(outputResultPath);
+            if (IsFileLocked(resultFile))
             {
                 string invalidFilesMessage = "Output file appears to be open. Not going to run, as it would be pointless as we can't save if it is open. Close the file and try again.";
                 string invalidCaption = "Output File Open";
@@ -64,7 +65,7 @@ namespace LoopDrawingDataUI
                 Log.Debug($"Creating drawings - run started at {timestamp}...");
                 AcadDrawingController controller = new(excelFileName, configFileName, templatePath, outputDrawingPath, Log.Logger);
                 controller.BuildDrawings();
-                controller.SaveDrawingsToFile(TestOutputFileName(outputResultPath));
+                controller.SaveDrawingsToFile(resultFile);
                 string resultMessage;
                 if (controller.ErrorsDetected)
                 {
@@ -120,7 +121,7 @@ namespace LoopDrawingDataUI
             lblTemplatePath.Text = string.Empty;
             lblResultOutputPath.Text = string.Empty;
             lblExcelFile.Text = string.Empty;
-            lblLogFilePath.Text = string.Empty;
+            //lblLogFilePath.Text = string.Empty;
         }
 
         private void btnConfigFile_Click(object sender, EventArgs e)
@@ -170,13 +171,8 @@ namespace LoopDrawingDataUI
             lblTemplatePath.Text = GetShortPath(templatePath);
             lblDrawingOutputPath.Text = GetShortPath(outputDrawingPath);
             lblResultOutputPath.Text = GetShortPath(outputResultPath);
-            lblLogFilePath.Text = GetShortPath(logFilePath);
+            //lblLogFilePath.Text = GetShortPath(logFilePath);
         }
 
-        private void btnLogPath_Click(object sender, EventArgs e)
-        {
-            logFilePath = GetFolderName();
-            lblLogFilePath.Text = GetShortPath(logFilePath);
-        }
     }
 }

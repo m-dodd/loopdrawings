@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using LoopDataAdapterLayer;
+using Org.BouncyCastle.Asn1.Pkcs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
@@ -12,121 +13,130 @@ namespace LoopDataAccessLayer
 {
     public class LoopTagMapper
     {
-        private static string[] definedTagTypes = {
-            "AI",
-            "AO",
-            "DI",
-            "DO",
-            "CONTROLLER",
-            "VALVE",
-            "ZSC",
-            "ZSO",
-            "SOL-BPCS",
-            "SOL-SIS",
-            "MOTOR-SD-BPCS",
-            "MOTOR-SD-SIS",
-            "MOTOR-SD-SIS-A",
-            "MOTOR-SD-SIS-B",
-        };
+        private readonly Dictionary<string, Func<LoopTagData, bool>> tagTypePredicateMap;
 
-        public static Dictionary<string, string> BuildTagMap(
-            IEnumerable<LoopTagData> tags, TemplateConfig templateConfig
-        )
+        public LoopTagMapper()
         {
-            Dictionary<string, string> tagMap = new();
-
-            foreach(string tagtype in GetTagTypes(templateConfig.BlockMap))
-            {
-                if (definedTagTypes.Contains( tagtype ))
+            tagTypePredicateMap = new Dictionary<string, Func<LoopTagData, bool>>
                 {
-                    string tagName = GetTag(tags, tagtype);
-                    if (!string.IsNullOrEmpty(tagName))
+                    { "AI", tagData => tagData.IsAI() },
+                    { "AI-1", tagData => tagData.IsAI() && tagData.EndsWith("A") },
+                    { "AI-2", tagData => tagData.IsAI() && tagData.EndsWith("B") },
+                    { "AO", tagData => tagData.IsAO() },
+                    { "DI", tagData => tagData.IsDI() },
+                    { "DO", tagData => tagData.IsDO() },
+                    { "CONTROLLER", tagData => tagData.IsIOType("SOFT") && tagData.TagContains("IC")},
+                    { "VALVE", tagData => tagData.IsValve() },
+                    { "ZSC", tagData => tagData.IsDI() && tagData.TagContains("ZSC") },
+                    { "ZSO", tagData => tagData.IsDI() && tagData.TagContains("ZSO") },
+                    { "SOL-BPCS", tagData => tagData.IsSolenoid() && tagData.IsSystemType("BPCS") },
+                    { "SOL-SIS", tagData => tagData.IsSolenoid() && tagData.IsSystemType("SIS") },
+                    { "MOTOR-SD-BPCS", tagData => tagData.IsMotor() && tagData.IsSystemType("BPCS") },
+                    { "MOTOR-SD-SIS", tagData => tagData.IsMotor() && tagData.IsSystemType("SIS") },
+                    { "MOTOR-SD-SIS-A", tagData => tagData.IsMotor() && tagData.IsSystemType("SIS") && tagData.EndsWith("A") },
+                    { "MOTOR-SD-SIS-B", tagData => tagData.IsMotor() && tagData.IsSystemType("SIS") && tagData.EndsWith("B") }
+                };
+        }
+
+       public Dictionary<string, string> BuildTagMap(IEnumerable<LoopTagData> tags, TemplateConfig templateConfig)
+        {
+            var tagMap = new Dictionary<string, string>();
+            var tagTypes = templateConfig.BlockMap.SelectMany(block => block.Tags).Intersect(tagTypePredicateMap.Keys);
+
+            foreach (var tagType in tagTypes)
+            {
+                if (tagTypePredicateMap.TryGetValue(tagType, out var predicate))
+                {
+                    var tag = tags.FirstOrDefault(predicate);
+                    if (tag != null && !string.IsNullOrEmpty(tag.Tag))
                     {
-                        tagMap[tagtype] = tagName;
+                        tagMap[tagType] = tag.Tag;
                     }
                 }
             }
             
             return tagMap;
         }
-
-        private static HashSet<string> GetTagTypes(List<BlockMapData> BlockMap)
-        {
-            HashSet<string> uniqueTags = new HashSet<string>();
-            foreach (BlockMapData block in BlockMap)
-            {
-                foreach(string tag in block.Tags)
-                {
-                    uniqueTags.Add(tag);
-                }
-            }
-
-            return uniqueTags;
-        }
-
-        private static string GetTag(IEnumerable<LoopTagData> tags, string tagtype)
-        {
-            LoopTagData? tag = tags.FirstOrDefault(t =>
-                tagtype switch
-                {
-                    "AI" => IsIOType(t, "AI"),
-                    "AO" => IsIOType(t, "AO"),
-                    "DI" => IsIOType(t, "DI"),
-                    "DO" => IsIOType(t, "DO"),
-                    "CONTROLLER" => IsIOType(t, "SOFT")
-                                    && t.Tag.Contains("IC", StringComparison.OrdinalIgnoreCase),
-                    "VALVE" => (string.IsNullOrEmpty(t.IOType) || t.IOType == "---")
-                                && Regex.IsMatch(t.InstrumentType, @"ball|gate|globe|butterfly", RegexOptions.IgnoreCase),
-                    "ZSC" => IsIOType(t, "DI") 
-                             && t.Tag.Contains("ZSC", StringComparison.OrdinalIgnoreCase),
-                    "ZSO" => IsIOType(t, "DI")
-                             && t.Tag.Contains("ZSO", StringComparison.OrdinalIgnoreCase),
-                    "SOL-BPCS" => IsIOInstrumentSystem(t, "DO", "SOLENOID", "BPCS"),
-                    "SOL-SIS" => IsIOInstrumentSystem(t, "DO", "SOLENOID", "SIS"),
-                    "MOTOR-SD-BPCS" => IsIOInstrumentSystem(t, "DO", "MOTOR_SD", "BPCS"),
-                    "MOTOR-SD-SIS" => IsIOInstrumentSystem(t, "DO", "MOTOR_SD", "SIS"),
-                    "MOTOR-SD-SIS-A" => IsIOInstrumentSystem(t, "DO", "MOTOR_SD", "SIS")
-                                        && EndsWithIgnoreCase(t, "A"),
-                    "MOTOR-SD-SIS-B" => IsIOInstrumentSystem(t, "DO", "MOTOR_SD", "SIS")
-                                        && EndsWithIgnoreCase(t, "B"),
-                    _ => false
-                });
-
-            return tag?.Tag ?? string.Empty;
-        }
-        
-        private static bool IsIOType(LoopTagData tag, string ioType)
-        {
-            return tag.IOType.EqualsCaseInsensitive(ioType);
-        }
-
-        private static bool IsSystemType(LoopTagData tag, string systemType)
-        {
-            return tag.SystemType.EqualsCaseInsensitive(systemType);
-        }
-
-        private static bool IsInstrumentType(LoopTagData tag, string instrumentType)
-        {
-            return tag.InstrumentType.Contains(instrumentType, StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static bool EndsWithIgnoreCase(LoopTagData tag, string suffix)
-        {
-            return tag.Tag.EndsWith(suffix, StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static bool IsIOInstrumentSystem(LoopTagData tag, string ioType, string instrumentType, string systemType)
-        {
-            return IsIOType(tag, ioType) && IsInstrumentType(tag, instrumentType) && IsSystemType(tag, systemType);
-        }
-
     }
 
-    public static class StringExtensions
+
+    public static class LoopTagDataExtensions
     {
         public static bool EqualsCaseInsensitive(this string str1, string str2)
         {
             return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
+        }
+        
+        public static bool IsIOType(this LoopTagData tag, string ioType)
+        {
+            return tag.IOType.EqualsCaseInsensitive(ioType);
+        }
+
+        public static bool IsAI(this LoopTagData tag)
+        {
+            return tag.IsIOType("AI");
+        }
+
+        public static bool IsAO(this LoopTagData tag)
+        {
+            return tag.IsIOType("AO");
+        }
+
+        public static bool IsDI(this LoopTagData tag)
+        {
+            return tag.IsIOType("DI");
+        }
+
+        public static bool IsDO(this LoopTagData tag)
+        {
+            return tag.IsIOType("DO");
+        }
+
+        public static bool IsEmptyIOType(this LoopTagData tag)
+        {
+            return string.IsNullOrEmpty(tag.IOType) || tag.IOType == "---";
+        }
+
+        public static bool IsSystemType(this LoopTagData tag, string systemType)
+        {
+            return tag.SystemType.EqualsCaseInsensitive(systemType);
+        }
+
+        public static bool IsInstrumentType(this LoopTagData tag, string instrumentType)
+        {
+            string pattern = @"^\w+[-_]?.*$";
+
+            return Regex.IsMatch(tag.InstrumentType, pattern, RegexOptions.IgnoreCase);
+        }
+
+        public static bool IsValve(this LoopTagData tag)
+        {
+            return tag.IsEmptyIOType() && Regex.IsMatch(tag.InstrumentType, @"ball|gate|globe|butterfly", RegexOptions.IgnoreCase);
+        }
+
+        public static bool IsSolenoid(this LoopTagData tag)
+        {
+            return tag.IsIOType("DO") && tag.IsInstrumentType("SOLENOID");
+        }
+
+        public static bool IsMotor(this LoopTagData tag)
+        {
+            return tag.IsIOType("DO") && tag.IsInstrumentType("MOTOR-SD");
+        }
+
+        public static bool EndsWith(this LoopTagData tag, string suffix)
+        {
+            return tag.Tag.EndsWith(suffix, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool TagContains(this LoopTagData tag, string value, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+        {
+            return tag.Tag.Contains(value, comparisonType);
+        }
+
+        public static bool IsIOInstrumentSystem(this LoopTagData tag, string ioType, string instrumentType, string systemType)
+        {
+            return tag.IsIOType(ioType) && tag.IsInstrumentType(instrumentType) && tag.IsSystemType(systemType);
         }
     }
 }

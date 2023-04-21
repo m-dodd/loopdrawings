@@ -10,5 +10,6 @@ namespace LoopDataAccessLayer
     {
         public string LoopNo { get; set; } = string.Empty;
         public string Template { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
     }
 }
