@@ -29,7 +29,7 @@ namespace LoopDataAccessLayer
                     { "VALVE", tagData => tagData.IsValve() },
                     { "ZSC", tagData => tagData.IsDI() && tagData.TagContains("ZSC") },
                     { "ZSO", tagData => tagData.IsDI() && tagData.TagContains("ZSO") },
-                    { "SOL-BPCS", tagData => tagData.IsSolenoid() && tagData.IsBPCS()) },
+                    { "SOL-BPCS", tagData => tagData.IsSolenoid() && tagData.IsBPCS() },
                     { "SOL-SIS", tagData => tagData.IsSolenoid() && tagData.IsSIS() },
                     { "MOTOR-SD-BPCS", tagData => tagData.IsMotor() && tagData.IsBPCS() },
                     { "MOTOR-SD-SIS", tagData => tagData.IsMotor() && tagData.IsSIS() },
@@ -109,12 +109,12 @@ namespace LoopDataAccessLayer
 
         public static bool IsBPCS(this LoopTagData tag)
         {
-            return tag.IsSystemType("BPCS")
+            return tag.IsSystemType("BPCS");
         }
 
         public static bool IsSIS(this LoopTagData tag)
         {
-            return tag.IsSystemType("SIS")
+            return tag.IsSystemType("SIS");
         }
 
         public static bool IsInstrumentType(this LoopTagData tag, string instrumentType)
