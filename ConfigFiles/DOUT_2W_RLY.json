@@ -1,0 +1,103 @@
+{
+    "DOUT_2W_RLY": {
+        "TemplateName": "DOUT_2W_RLY",
+        "TemplateFileName": "",
+        "BlockMap": [
+            {
+                "Name": "EMPTY_BLOCK",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "DO"
+                ]
+            }
+        ]
+    },
+    "DOUT_2W_RLY_0JB": {
+        "TemplateName": "DOUT_2W_RLY_0JB",
+        "TemplateFileName": "DOUT_2W_RLY_0JB.dwg",
+        "BlockMap": [ ]
+    },
+    "DOUT_2W_RLY_1JB": {
+        "TemplateName": "DOUT_2W_RLY_1JB",
+        "TemplateFileName": "DOUT_2W_RLY_1JB.dwg",
+        "BlockMap": [
+            {
+                "Name": "JB_2-TERM_SINGLE",
+                "UID": "JB_2-TERM_SINGLE-1",
+                "Tags": [
+                    "DO"
+                ]
+            }
+        ]
+    },
+    "DOUT_2W_RLY_2JB": {
+        "TemplateName": "DOUT_2W_RLY_2JB",
+        "TemplateFileName": "DOUT_2W_RLY_2JB.dwg",
+        "BlockMap": [
+            {
+                "Name": "JB_2-TERM_DUAL",
+                "UID": "JB_2-TERM_DUAL-1",
+                "Tags": [
+                    "DO"
+                ]
+            }
+        ]
+    },
+
+    "COMMON_BLOCKS": {
+        "TemplateName": "COMMON_BLOCKS",
+        "BlockMap":[
+            {
+                "Name": "STD B SIZE SHEET",
+                "UID": "STD B SIZE SHEET-1",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "DO"
+                ]
+            },
+            {
+                "Name": "SD_TABLE_10-ROW",
+                "UID": "SD_TABLE_10-ROW-1",
+                "Tags": [
+                    "DO"
+                ]
+            },
+            {
+                "Name": "TERM_DI_2W",
+                "UID": "TERM_DI_2W-1",
+                "Tags": [
+                    "DO"
+                ]
+            },
+            {
+                "Name": "PNL_3-TERM_24VDC-1",
+                "UID": "PNL_3-TERM_24VDC-1-1",
+                "Tags": [
+                    "DO"
+                ]
+            },
+            {
+                "Name": "MOD_2-TERM_1-PT_DYN_MIR",
+                "UID": "MOD_2-TERM_1-PT_DYN_MIR-1",
+                "Tags": [
+                    "DO",
+                    "DO"
+                ]
+            },
+            {
+                "Name": "RELAY_24VDC-2",
+                "UID": "RELAY_24VDC-2-1",
+                "Tags": [
+                    "DO"
+                ]
+            },
+            {
+                "Name": "MATERIAL_LIST_5-ROW",
+                "UID": "MATERIAL_LIST_5-ROW-1",
+                "Tags": [
+                    "DO"
+                ]
+            }
+        ]
+    }
+}

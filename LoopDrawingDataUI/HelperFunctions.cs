@@ -86,7 +86,7 @@ namespace LoopDrawingDataUI
         private bool FilesAndFoldersValid()
         {
             return
-                !string.IsNullOrEmpty(configFileName)
+                !string.IsNullOrEmpty(configDirectoryName)
                 && !string.IsNullOrEmpty(templatePath)
                 && !string.IsNullOrEmpty(outputResultPath)
                 && !string.IsNullOrEmpty(outputDrawingPath)

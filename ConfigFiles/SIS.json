@@ -1,0 +1,30 @@
+{
+    "SDK": {
+        "TemplateName": "SDK",
+        "TemplateFileName": "SHUTDOWN TABLE.dwg",
+        "BlockMap": [
+            {
+                "Name": "STD B SIZE SHEET",
+                "UID": "STD B SIZE SHEET-1",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "SDK_TAG"
+                ]
+            },
+            {
+                "Name": "SD_TABLE_30-ROW",
+                "UID": "SD_TABLE_30-ROW-1",
+                "Tags": [
+                    "SDK_TAG"
+                ]
+            },
+            {
+                "Name": "SD_TABLE_30-ROW",
+                "UID": "SD_TABLE_30-ROW-2",
+                "Tags": [
+                    "SDK_TAG"
+                ]
+            }
+        ]
+    }
+}

@@ -12,7 +12,7 @@ namespace LoopDrawingDataUI
 {
     public partial class frmLoopUI : Form
     {
-        private string configFileName = string.Empty;
+        private string configDirectoryName = string.Empty;
         private string excelFileName = string.Empty;
         private string templatePath = string.Empty;
         private string outputResultPath = string.Empty;
@@ -63,7 +63,7 @@ namespace LoopDrawingDataUI
                 
                 // run the application
                 Log.Debug($"Creating drawings - run started at {timestamp}...");
-                AcadDrawingController controller = new(excelFileName, configFileName, templatePath, outputDrawingPath, Log.Logger);
+                AcadDrawingController controller = new(excelFileName, configDirectoryName, templatePath, outputDrawingPath, Log.Logger);
                 controller.BuildDrawings();
                 controller.SaveDrawingsToFile(resultFile);
                 string resultMessage;
@@ -78,10 +78,10 @@ namespace LoopDrawingDataUI
                 Log.Information(resultMessage);
                 MessageBox.Show(resultMessage, "Duco Loop Drawing", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (FileNotFoundException ex)
+            catch (LoopDataException ex)
             {
                 Log.Error(ex.Message);
-                MessageBox.Show(ex.Message, "Loop configuration file missing", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error reading loop configuration files.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             catch (IOException ex)
@@ -126,8 +126,8 @@ namespace LoopDrawingDataUI
 
         private void btnConfigFile_Click(object sender, EventArgs e)
         {
-            configFileName = GetFileName();
-            lblConfigFile.Text = GetShortPath(configFileName);
+            configDirectoryName = GetFolderName();
+            lblConfigFile.Text = GetShortPath(configDirectoryName);
         }
 
         private void btnTemplatePath_Click(object sender, EventArgs e)
@@ -159,14 +159,15 @@ namespace LoopDrawingDataUI
 
         private void btnLoadTestConfig_Click(object sender, EventArgs e)
         {
-            configFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\code\DucoLoopDrawings\ConfigFiles\loop_drawing_config.json";
+            configDirectoryName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\code\DucoLoopDrawings\ConfigFiles\";
+            //configFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\code\DucoLoopDrawings\ConfigFiles\loop_drawing_config.json";
             excelFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\2023.03.28 - Automation Wiring Data.xlsm";
             templatePath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\templates";
             outputResultPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\output_test_data.json";
             outputDrawingPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output";
             logFilePath = Path.Combine(Path.GetDirectoryName(outputResultPath), "logs");
 
-            lblConfigFile.Text = GetShortPath(configFileName);
+            lblConfigFile.Text = GetShortPath(configDirectoryName);
             lblExcelFile.Text = GetShortPath(excelFileName);
             lblTemplatePath.Text = GetShortPath(templatePath);
             lblDrawingOutputPath.Text = GetShortPath(outputDrawingPath);

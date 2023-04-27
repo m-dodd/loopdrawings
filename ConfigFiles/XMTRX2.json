@@ -1,0 +1,134 @@
+{
+    "XMTRX2": {
+        "TemplateName": "XMTRX2",
+        "TemplateFileName": "",
+        "BlockMap": [
+            {
+                "Name": "EMPTY_BLOCK",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "AI-1",
+                    "AI-2"
+                ]
+            }
+        ]
+    },
+    "XMTRX2_0JB": {
+        "TemplateName": "XMTRX2_0JB",
+        "TemplateFileName": "XMTRX2_0JB.dwg",
+        "BlockMap": []
+    },
+    "XMTRX2_1JB": {
+        "TemplateName": "XMTRX2_1JB",
+        "TemplateFileName": "XMTRX2_1JB.dwg",
+        "BlockMap": [
+            {
+                "Name": "JB_3-TERM_SINGLE",
+                "UID": "JB_3-TERM_SINGLE-1",
+                "Tags": [
+                    "AI-1"
+                ]
+            },
+            {
+                "Name": "JB_3-TERM_SINGLE",
+                "UID": "JB_3-TERM_SINGLE-2",
+                "Tags": [
+                    "AI-2"
+                ]
+            }
+        ]
+    },
+    "XMTRX2_2JB": {
+        "TemplateName": "XMTRX2_2JB",
+        "TemplateFileName": "XMTRX2_2JB.dwg",
+        "BlockMap": [
+            {
+                "Name": "JB_3-TERM_DUAL",
+                "UID": "JB_3-TERM_DUAL-1",
+                "Tags": [
+                    "AI-1"
+                ]
+            },
+            {
+                "Name": "JB_3-TERM_DUAL",
+                "UID": "JB_3-TERM_DUAL-2",
+                "Tags": [
+                    "AI-2"
+                ]
+            }
+        ]
+    },
+    "COMMON_BLOCKS": {
+        "TemplateName": "COMMON_BLOCKS",
+        "BlockMap": [
+            {
+                "Name": "STD B SIZE SHEET",
+                "UID": "STD B SIZE SHEET-1",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "AI-1"
+                ]
+            },
+            {
+                "Name": "SD_TABLE_10-ROW",
+                "UID": "SD_TABLE_10-ROW-1",
+                "Tags": [
+                    "AI-1",
+                    "AI-2"
+                ]
+            },
+            {
+                "Name": "INST_AI_2W",
+                "UID": "INST_AI_2W-1",
+                "Tags": [
+                    "AI-1"
+                ]
+            },
+            {
+                "Name": "PNL_3-TERM_24VDC-2",
+                "UID": "PNL_3-TERM_24VDC-2-1",
+                "Tags": [
+                    "AI-1"
+                ]
+            },
+            {
+                "Name": "MOD_1-TERM_1-PT_DYN",
+                "UID": "MOD_1-TERM_1-PT_DYN-1",
+                "Tags": [
+                    "AI-1",
+                    "AI-1"
+                ]
+            },
+            {
+                "Name": "INST_AI_2W",
+                "UID": "INST_AI_2W-2",
+                "Tags": [
+                    "AI-2"
+                ]
+            },
+            {
+                "Name": "PNL_3-TERM_24VDC-2",
+                "UID": "PNL_3-TERM_24VDC-2-2",
+                "Tags": [
+                    "AI-2"
+                ]
+            },
+            {
+                "Name": "MOD_1-TERM_1-PT_DYN",
+                "UID": "MOD_1-TERM_1-PT_DYN-2",
+                "Tags": [
+                    "AI-2",
+                    "AI-2"
+                ]
+            },
+            {
+                "Name": "MATERIAL_LIST_5-ROW",
+                "UID": "MATERIAL_LIST_5-ROW-1",
+                "Tags": [
+                    "AI-1",
+                    "AI-2"
+                ]
+            }
+        ]
+    }
+}

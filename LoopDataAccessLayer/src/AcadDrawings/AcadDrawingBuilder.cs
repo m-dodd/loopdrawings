@@ -75,7 +75,7 @@ namespace LoopDataAccessLayer
             {
                 string drawingName1 = tagMap["DRAWING_NAME"] + "-1";
                 string drawingName2 = tagMap["DRAWING_NAME"] + "-2";
-                logger.Information($"SDK drawing required... Drawings {drawingName1} and {drawingName2}.");
+                logger.Information($"SDK drawing required... Drawing will be renamed {drawingName1} and sdk will be named {drawingName2}.");
 
                 tagMap["DRAWING_NAME"] = drawingName1;
                 tagMap["DRAWING_NAME_SD"] = drawingName2;

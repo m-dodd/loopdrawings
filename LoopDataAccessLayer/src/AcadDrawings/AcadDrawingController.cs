@@ -34,27 +34,29 @@ namespace LoopDataAccessLayer
 
         public AcadDrawingController(
             string excelFileName,
-            string configFileName,
+            string configDirectoryName,
             string templatePath,
             string outputDrawingPath,
             ILogger logger)
-            : this(CreateDataLoader(excelFileName), new LoopDataConfig(), logger)
+            : this(CreateDataLoader(excelFileName), new LoopDataConfig(logger, configDirectoryName), logger)
         {
             loopConfig.TemplateDrawingPath = templatePath;
             loopConfig.OutputDrawingPath = outputDrawingPath;
 
             try
             {
-                loopConfig.LoadConfig(configFileName);
+                loopConfig.LoadConfig();
             }
-            catch (FileNotFoundException)
+            catch (LoopDataException ex)
             {
-                string msg = "Unable to find"
-                    + Environment.NewLine
-                    + configFileName
-                    + Environment.NewLine
-                    + "Please relocate the file and try again.";
-                throw new FileNotFoundException(msg);
+                //string msg = "Unable to find"
+                //    + Environment.NewLine
+                //    + configDirectoryName
+                //    + Environment.NewLine
+                //    + "Please relocate the file and try again.";
+
+                //throw new FileNotFoundException(msg);
+                throw;
             }
         }
 

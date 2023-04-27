@@ -50,9 +50,9 @@ namespace LoopDataAccessLayer
                 : null;
         }
 
-        private TemplateConfig? GetSimpleTemplate(TemplateConfig template, Dictionary<string, string> tagMap, string tagType)
+        private TemplateConfig? GetSimpleTemplate(TemplateConfig template, Dictionary<string, string> tagMap, string tagType, int MAX_JBS = 2)
         {
-            return GetTemplate( BuildSimpleName(template, tagMap, tagType) );
+            return GetTemplate( BuildSimpleName(template, tagMap, tagType, MAX_JBS) );
         }
 
         private TemplateConfig? GetPidTemplate(Dictionary<string, string> tagMap)
@@ -71,7 +71,7 @@ namespace LoopDataAccessLayer
             return GetTemplate(BuildXV2XYName(tagMap));
         }
 
-        private string BuildSimpleName(TemplateConfig template, Dictionary<string, string> tagMap, string tagType)
+        private string BuildSimpleName(TemplateConfig template, Dictionary<string, string> tagMap, string tagType, int MAX_JBS = 2)
         {
             int numberOfJbs = -1;
             try
@@ -86,7 +86,6 @@ namespace LoopDataAccessLayer
                 throw new TemplateTagTypeNotFoundException(msg, tagType, ex);
             }
             string templateName;
-            const int MAX_JBS = 1;
             if (0 <= numberOfJbs && numberOfJbs <= MAX_JBS)
             {
                 templateName = template.TemplateName + "_" + numberOfJbs.ToString() + "JB";
