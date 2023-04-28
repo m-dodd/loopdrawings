@@ -54,6 +54,7 @@ namespace LoopDrawingDataUI
                 string timestamp = DateTime.Now.ToString("yyyy.MM.dd-HHmmss");
                 string logFileName = $"log_{timestamp}.log";
                 Log.Logger = new LoggerConfiguration()
+                            .Enrich.FromLogContext()
                             .MinimumLevel.Debug()
                             .WriteTo.File(new JsonFormatter(),
                                           Path.Combine(logFilePath, "important.json"), restrictedToMinimumLevel: LogEventLevel.Warning)

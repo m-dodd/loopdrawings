@@ -49,6 +49,8 @@ namespace LoopDataAccessLayer
             {
                 try
                 {
+                    var filNameForDebugging = Path.GetFileName(file);
+                    logger.Debug($"Reading config data from {Path.GetFileName(file)}");
                     var templates = ReadTemplateConfigFile(file);
                     templateConfigsList.Add(templates);
                 }
@@ -59,21 +61,35 @@ namespace LoopDataAccessLayer
                 }
             }
 
-            var mergedTemplateConfigs = templateConfigsList
-                .SelectMany(dict => dict)
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value,
-                    StringComparer.OrdinalIgnoreCase);
-
-            return mergedTemplateConfigs;
+            try
+            {
+                var mergedTemplateConfigs = templateConfigsList
+                                            .SelectMany(dict => dict)
+                                            .ToDictionary(
+                                                kvp => kvp.Key,
+                                                kvp => kvp.Value,
+                                                StringComparer.OrdinalIgnoreCase);
+                return mergedTemplateConfigs;
+            }
+            catch (ArgumentException ex)
+            {
+                string msg = $"Trying to add a duplicate key when merging dictionaries...";
+                logger.Error(msg);
+                throw new LoopDataException(msg, ex);
+            }
         }
+
         private Dictionary<string, TemplateConfig> ReadTemplateConfigFile(string filePath)
         {
-            var json = File.ReadAllText(filePath);
-            var config = JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
-            config ??= new Dictionary<string, TemplateConfig>();
-            var lookupBaseKey = Path.GetFileNameWithoutExtension(filePath);
+
+            var json = File.ReadAllText(filePath).ToUpper();
+            var jsonData = JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
+            // in case file names are not all uppercase we shoud make the dictionary ignore case on teh keys
+            var config = jsonData is not null
+                         ? new Dictionary<string, TemplateConfig>(jsonData, StringComparer.OrdinalIgnoreCase)
+                         : new Dictionary<string, TemplateConfig>();
+            var lookupBaseKey = Path.GetFileNameWithoutExtension(filePath).ToUpper();
+            logger.Debug($"Lookup key is {lookupBaseKey}");
             if (config.TryGetValue(lookupBaseKey, out var baseTemplate))
             {
                 if (config.TryGetValue("COMMON_BLOCKS", out var commonTemplate))
@@ -90,6 +106,14 @@ namespace LoopDataAccessLayer
                     }
                     config.Remove("COMMON_BLOCKS");
                 }
+                else
+                {
+                    logger.Debug("Base key was found, but no COMMON_BLOCKS");
+                }
+            }
+            else
+            {
+                logger.Debug("Base key was not found");
             }
             return config;
         }
