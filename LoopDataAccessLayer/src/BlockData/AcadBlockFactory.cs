@@ -20,15 +20,18 @@ namespace LoopDataAccessLayer
             {
                 "JB_3-TERM_SINGLE" or
                 "JB_4-TERM_SINGLE_SHLD" => new JB_ANALOG_TERM_SINGLE(dataLoader, blockMap, tagMap),
+                "JB_3-TERM_DUAL" or
+                "JB_4-TERM_DUAL_SHLD" => new JB_ANALOG_TERM_DUAL(dataLoader, blockMap, tagMap),
+
                 "JB_2-TERM_SINGLE" or
                 "JB_2-TERM_SINGLE_JOG" or
                 "JB_4-TERM_SINGLE" => new JB_TERM_SINGLE(dataLoader, blockMap, tagMap),
+                "JB_2-TERM_DUAL" or
+                "JB_4-TERM_DUAL" => new JB_TERM_DUAL(dataLoader, blockMap, tagMap),
                 
                 "PNL_2-TERM" => new PNL_2_TERM(dataLoader, blockMap, tagMap),
                 "PNL_2-TERM_24VDC" => new PNL_2_TERM_24VDC(dataLoader, blockMap, tagMap),
-
                 "PNL_2-TERM_EXT_PWR" => new PNL_2_TERM_EXT_PWR(dataLoader, blockMap, tagMap),
-                
                 "PNL_3-TERM_24VDC-1" => new PNL_2_TERM_24VDC(dataLoader, blockMap, tagMap),
                 
                 "PNL_3-TERM_24VDC-2" or

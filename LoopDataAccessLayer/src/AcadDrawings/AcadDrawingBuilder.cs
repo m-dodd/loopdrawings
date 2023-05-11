@@ -40,34 +40,30 @@ namespace LoopDataAccessLayer
         public IEnumerable<AcadDrawingDataMappable> BuildDrawings(LoopNoTemplatePair loop)
         {
             TemplateConfig sdkTemplate = GetTemplate("SDK") ?? throw new NullReferenceException("SDK is missing from configuration.");
-            TemplateConfig? template = GetTemplate(loop);
             List<AcadDrawingDataMappable> drawings = new();
-
-            // **************************************************************************
-            // SHOULD I BE THROWING EXCEPTIONS INSTEAD OF RETURNING??
-            // **************************************************************************
+            
+            TemplateConfig? template = GetTemplate(loop);
             if (template is null)
             {
-                logger.Warning("No template found.", loop.LoopNo);
-                return drawings;
+                string msg = "No template found.";
+                logger.Error(msg, loop.LoopNo);
+                throw new DrawingBuilderException(msg);
             }
-            // **************************************************************************
-            // SHOULD I BE THROWING EXCEPTIONS INSTEAD OF RETURNING??
-            // **************************************************************************
+            
             Dictionary<string, string> tagMap = GetLoopTagMap(loop, template);
             if (tagMap.Count == 0)
             {
-                logger.Warning("No tags found.", loop.LoopNo);
-                return drawings;
+                string msg = "No tags found.";
+                logger.Error(msg, loop.LoopNo);
+                throw new DrawingBuilderException(msg);
             }
-            // **************************************************************************
-            // SHOULD I BE THROWING EXCEPTIONS INSTEAD OF RETURNING??
-            // **************************************************************************
+            
             TemplateConfig? correctTemplate = templatePicker.GetCorrectTemplate(template, tagMap);
             if (correctTemplate is null)
             {
-                logger.Warning("Correct template could not be determined - contact system administrator.", loop.LoopNo);
-                return drawings;
+                string msg = "Correct template could not be determined - contact system administrator.";
+                logger.Error(msg, loop.LoopNo);
+                throw new DrawingBuilderException(msg);
             }
 
             SDKDrawingProvider sdk = new(dataLoader, correctTemplate, tagMap, loopConfig);
@@ -179,6 +175,16 @@ namespace LoopDataAccessLayer
                 .Select(blockData => blockFactory.GetBlock(blockData, tagMap))
                 .Where(block => block is not EMPTY_BLOCK)
                 .ToList();
+        }
+    }
+
+    public class DrawingBuilderException : Exception
+    {
+        public DrawingBuilderException(string? message) : base(message)
+        {
+        }
+        public DrawingBuilderException(string? message, Exception? innerException) : base(message, innerException)
+        {
         }
     }
 }

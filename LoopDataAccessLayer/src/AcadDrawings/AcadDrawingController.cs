@@ -119,6 +119,11 @@ namespace LoopDataAccessLayer
                     logger.Error(ex.Message);
                     loopsWithProblems.Add(loop.LoopNo);
                 }
+                catch (DrawingBuilderException ex)
+                {
+                    logger.Error(ex.Message);
+                    loopsWithProblems.Add(loop.LoopNo);
+                }
             }
             if(loopsWithProblems.Count > 0)
             {

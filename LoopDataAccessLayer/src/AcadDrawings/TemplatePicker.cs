@@ -73,7 +73,7 @@ namespace LoopDataAccessLayer
 
         private string BuildSimpleName(TemplateConfig template, Dictionary<string, string> tagMap, string tagType, int MAX_JBS = 2)
         {
-            int numberOfJbs = -1;
+            int numberOfJbs;
             try
             {
                 numberOfJbs = CountNumberJbs(tagMap[tagType]);
@@ -88,7 +88,7 @@ namespace LoopDataAccessLayer
             string templateName;
             if (0 <= numberOfJbs && numberOfJbs <= MAX_JBS)
             {
-                templateName = template.TemplateName + "_" + numberOfJbs.ToString() + "JB";
+                templateName = $"{template.TemplateName}_{numberOfJbs}JB";
             }
             else
             {
@@ -107,7 +107,7 @@ namespace LoopDataAccessLayer
             string templateName;
             if ((0 <= numberOfAIJbs && numberOfAIJbs <= MAX_JBS) & (0 <= numberOfAOJbs && numberOfAOJbs <= MAX_JBS))
             {
-                templateName = "PID_AI_" + numberOfAIJbs.ToString() + "JB_AO_" + numberOfAOJbs.ToString() + "JB";
+                templateName = $"PID_AI_{numberOfAIJbs}JB_AO_{numberOfAOJbs}JB";
             }
             else
             {
@@ -128,23 +128,20 @@ namespace LoopDataAccessLayer
             int numberOfSISJbs = CountNumberJbs(tagMap["SOL-SIS"]);
             string templateName;
             const int MAX_JBS = 1;
-            if ((0 <= numberOfBPCSJbs && numberOfBPCSJbs <= MAX_JBS) & (0 <= numberOfSISJbs && numberOfSISJbs <= MAX_JBS))
+
+            if (!(0 <= numberOfBPCSJbs && numberOfBPCSJbs <= MAX_JBS))
             {
-                templateName = "XV_2XY_BPCS_"
-                    + numberOfBPCSJbs.ToString()
-                    + "JB_SIS_"
-                    + numberOfSISJbs.ToString()
-                    + "JB";
-            }
-            else
-            {
-                string msg = "Number of JBs must be between 0 and 2, not ("
-                    + numberOfBPCSJbs.ToString()
-                    + ","
-                    + numberOfSISJbs.ToString()
-                    + ").";
+                string msg = $"Number of JBs for BPCS must be between 0 and {MAX_JBS}, not {numberOfBPCSJbs}";
                 throw new TemplateNumberOfJbsException(msg, MAX_JBS);
             }
+
+            if (!(0 <= numberOfSISJbs && numberOfSISJbs <= MAX_JBS))
+            {
+                string msg = $"Number of JBs for SIS must be between 0 and {MAX_JBS}, not {numberOfSISJbs}";
+                throw new TemplateNumberOfJbsException(msg, MAX_JBS);
+            }
+
+            templateName = $"XV_2XY_BPCS_{numberOfBPCSJbs}JB_SIS_{numberOfSISJbs}JB";
 
             return templateName;
         }
