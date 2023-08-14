@@ -48,32 +48,35 @@ namespace LoopDataAccessLayer
         {
             string[] currentTestingLoops =
             {
-                // DIN-4W tests
-                "F-1521",
-                "F-1914B",
+                //// DIN-4W tests
+                //"F-1521",
+                //"F-1914B",
 
-                // AIN tests
-                "L-7100",
-                "P-1102",
-                "A-1100C",
+                //// AIN tests
+                //"L-7100",
+                //"P-1102",
+                //"A-1100C",
 
-                // PID tests
-                "L-1400",
+                //// PID tests
+                //"L-1400",
 
-                // XV tests
-                "X-1300",
+                //// XV tests
+                //"X-1300",
 
-                // Motor Test
-                "CM-301",
+                //// Motor Test
+                //"CM-301",
 
-                // DI
-                "X-0018",
+                //// DI
+                //"X-0018",
 
-                // DO-RELAY
-                "X-9001",
+                //// DO-RELAY
+                //"X-9001",
 
-                // AI x2
-                "P-1533",
+                //// AI x2
+                //"P-1533",
+
+                // funky double template
+                "S-1220",
             };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future

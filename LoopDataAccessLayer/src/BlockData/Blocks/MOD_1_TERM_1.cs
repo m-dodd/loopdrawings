@@ -21,9 +21,10 @@ namespace LoopDataAccessLayer
         protected override void FetchDBData()
         {
             DBLoopData data = dataLoader.GetLoopData(Tag);
+            DBLoopData controllerData = dataLoader.GetLoopData(ControllerTag);
 
             PopulateRackSlotChannel(data);
-            PopulateLoopFields(data, "FUNCTIONAL_ID", "LOOP_NO");
+            PopulateLoopFields(controllerData, "FUNCTIONAL_ID", "LOOP_NO");
             PopulateAlarms(data);
 
             Attributes["DRAWING_NO"] = data.PidDrawingNumber;

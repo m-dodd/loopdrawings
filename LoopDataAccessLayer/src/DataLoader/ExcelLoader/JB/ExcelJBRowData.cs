@@ -11,6 +11,7 @@ namespace LoopDataAccessLayer
     {
 #pragma warning disable CS8618
         public T JBTag {get; set;}
+        public T ItemTag { get; set;}
         public T TerminalStrip {get; set;}
         public T Terminal {get; set;}
         public T SignalType {get; set;}

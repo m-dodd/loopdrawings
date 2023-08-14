@@ -42,6 +42,19 @@ namespace LoopDataAccessLayer
             };
         }
 
+        public IEnumerable<TemplateConfig?> GetCorrectDoubleTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
+        {
+            var templateConfigList = new List<TemplateConfig?>();
+            // this is going to get hardcoded as it's a unique template and there isn't much value in making it more general right now
+            // in the future this could obviously be improved significantly
+            if (template.TemplateName.ToUpper() == "PID_AI_DOX2")
+            {
+                templateConfigList.Add( GetTemplate("PID_AI_1JB_DOx2_0JB-1") );
+                templateConfigList.Add( GetTemplate("PID_AI_1JB_DOx2_0JB-2") );
+            }
+            return templateConfigList;
+        }
+
         private TemplateConfig? GetTemplate(string templateName)
         {
             

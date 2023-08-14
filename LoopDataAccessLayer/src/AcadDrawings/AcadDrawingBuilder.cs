@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using WTEdge.Entities;
 using Serilog;
+using Org.BouncyCastle.Bcpg;
 
 namespace LoopDataAccessLayer
 {
     public class AcadDrawingBuilder : IAcadDrawingBuilder
     {
-        
+
         private readonly IDataLoader dataLoader;
         private readonly ITemplatePicker templatePicker;
         private readonly IAcadBlockFactory blockFactory;
@@ -39,9 +40,6 @@ namespace LoopDataAccessLayer
 
         public IEnumerable<AcadDrawingDataMappable> BuildDrawings(LoopNoTemplatePair loop)
         {
-            TemplateConfig sdkTemplate = GetTemplate("SDK") ?? throw new NullReferenceException("SDK is missing from configuration.");
-            List<AcadDrawingDataMappable> drawings = new();
-            
             TemplateConfig? template = GetTemplate(loop);
             if (template is null)
             {
@@ -49,7 +47,7 @@ namespace LoopDataAccessLayer
                 logger.Error(msg, loop.LoopNo);
                 throw new DrawingBuilderException(msg);
             }
-            
+
             Dictionary<string, string> tagMap = GetLoopTagMap(loop, template);
             if (tagMap.Count == 0)
             {
@@ -57,7 +55,89 @@ namespace LoopDataAccessLayer
                 logger.Error(msg, loop.LoopNo);
                 throw new DrawingBuilderException(msg);
             }
-            
+
+            if (template.TemplateRequiresTwoDrawings)
+            {
+                return BuildDoubleDrawing(loop, template, tagMap);
+            }
+            else
+            {
+                return BuildSingleDrawing(loop, template, tagMap);
+            }
+        }
+
+        private IEnumerable<AcadDrawingDataMappable> BuildDoubleDrawing(LoopNoTemplatePair loop, TemplateConfig template, Dictionary<string, string> tagMap)
+        {
+            IEnumerable<TemplateConfig?> correctTemplates = templatePicker.GetCorrectDoubleTemplate(template, tagMap);
+
+            if (correctTemplates.Any(x => x == null) || correctTemplates.Count() != 2)
+            {
+                string msg = "Correct template could not be determined - contact system administrator.";
+                logger.Error(msg, loop.LoopNo);
+                throw new DrawingBuilderException(msg);
+            }
+
+            TemplateConfig sdkTemplate = GetTemplate("SDK") ?? throw new NullReferenceException("SDK is missing from configuration.");
+            List<AcadDrawingDataMappable> drawings = new();
+
+            bool newSDKTemplateDrawing = false;
+            string sdkTag = string.Empty;
+            foreach (var correctTemplate in correctTemplates)
+            {
+                if (correctTemplate is not null)
+                {
+                    SDKDrawingProvider sdk = new(dataLoader, correctTemplate, tagMap, loopConfig);
+                    if (sdk.NewDrawingRequired())
+                    {
+                        newSDKTemplateDrawing = true;
+                        sdkTag = sdk.GetSDTags();
+                        break;
+                    }
+                }
+            }
+            string drawingName1 = tagMap["DRAWING_NAME"] + "-1";
+            string drawingName2 = tagMap["DRAWING_NAME"] + "-2";
+            if (newSDKTemplateDrawing)
+            {
+                string drawingName3 = tagMap["DRAWING_NAME"] + "-3";
+                logger.Information($"SDK drawing required... SDK will be named {drawingName3}.");
+
+                // create first drawing of the template
+                tagMap["DRAWING_NAME"] = drawingName1;
+                tagMap["DRAWING_NAME_SD"] = drawingName3;
+                tagMap["DELETE_SD"] = "true";
+                drawings.Add(ConstructDrawing(loop, correctTemplates.ElementAt(0)!, tagMap));
+
+                // create second drawing of the template
+                tagMap["DRAWING_NAME"] = drawingName2;
+                drawings.Add(ConstructDrawing(loop, correctTemplates.ElementAt(1)!, tagMap));
+
+                // modify tagmap for third drawing (SDK) and create
+                tagMap["SDK_TAG"] = sdkTag;
+                tagMap["DELETE_SD"] = "false";
+                tagMap["DRAWING_NAME_SD"] = string.Empty;
+                if (!string.IsNullOrEmpty(tagMap["SDK_TAG"]))
+                {
+                    drawings.Add(ConstructDrawing(loop, sdkTemplate, tagMap));
+                }
+            }
+            else
+            {
+                // create first drawing
+                tagMap["DRAWING_NAME"] = drawingName1;
+                tagMap["DRAWING_NAME_SD"] = string.Empty;
+                tagMap["DELETE_SD"] = "false";
+                drawings.Add(ConstructDrawing(loop, correctTemplates.ElementAt(0)!, tagMap));
+
+                // create second drawing
+                tagMap["DRAWING_NAME"] = drawingName2;
+                drawings.Add(ConstructDrawing(loop, correctTemplates.ElementAt(1)!, tagMap));
+            }
+            return drawings;
+        }
+
+        private IEnumerable<AcadDrawingDataMappable> BuildSingleDrawing(LoopNoTemplatePair loop, TemplateConfig template, Dictionary<string, string> tagMap)
+        {
             TemplateConfig? correctTemplate = templatePicker.GetCorrectTemplate(template, tagMap);
             if (correctTemplate is null)
             {
@@ -65,6 +145,9 @@ namespace LoopDataAccessLayer
                 logger.Error(msg, loop.LoopNo);
                 throw new DrawingBuilderException(msg);
             }
+
+            TemplateConfig sdkTemplate = GetTemplate("SDK") ?? throw new NullReferenceException("SDK is missing from configuration.");
+            List<AcadDrawingDataMappable> drawings = new();
 
             SDKDrawingProvider sdk = new(dataLoader, correctTemplate, tagMap, loopConfig);
             if (sdk.NewDrawingRequired())
@@ -79,12 +162,12 @@ namespace LoopDataAccessLayer
                 drawings.Add(ConstructDrawing(loop, correctTemplate, tagMap));
 
 
-                // replace the last two characters of the name
+                // modify tagmap for second drawing (SDK) and create
                 tagMap["DRAWING_NAME"] = drawingName2;
                 tagMap["DRAWING_NAME_SD"] = string.Empty;
 
                 // get the tag to use for the blocks
-                tagMap["SDK_TAG"] = sdk.GetSDTag();
+                tagMap["SDK_TAG"] = sdk.GetSDTags();
                 tagMap["DELETE_SD"] = "false";
                 if (!string.IsNullOrEmpty(tagMap["SDK_TAG"]))
                 {
@@ -95,7 +178,7 @@ namespace LoopDataAccessLayer
             {
                 tagMap["DELETE_SD"] = "false";
                 tagMap["DRAWING_NAME_SD"] = string.Empty;
-                drawings.Add( ConstructDrawing(loop, correctTemplate, tagMap) );
+                drawings.Add(ConstructDrawing(loop, correctTemplate, tagMap));
             }
             return drawings;
         }
@@ -144,7 +227,7 @@ namespace LoopDataAccessLayer
             return Path.Combine(loopConfig.TemplateDrawingPath, template.TemplateFileName);
         }
 
-        private string BuildDrawingIdentifier(LoopNoTemplatePair loop) 
+        private string BuildDrawingIdentifier(LoopNoTemplatePair loop)
         {
             if (string.IsNullOrEmpty(loopConfig.SiteID))
             {
@@ -156,7 +239,7 @@ namespace LoopDataAccessLayer
         private Dictionary<string, string> GetLoopTagMap(LoopNoTemplatePair loop, TemplateConfig template)
         {
             List<LoopTagData> tags = (List<LoopTagData>)dataLoader.GetLoopTags(loop);
-            if (tags.Count > 0) 
+            if (tags.Count > 0)
             {
                 Dictionary<string, string> tagMap = loopTagMapper.BuildTagMap(tags, template);
                 tagMap["DRAWING_NAME"] = BuildDrawingIdentifier(loop);

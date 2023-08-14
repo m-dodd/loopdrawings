@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
@@ -17,34 +18,37 @@ namespace LoopDataAccessLayer
         {
             this.jbCols = jbCols;
             TerminalData = jbRows
-                .OrderBy(r => ExcelHelper.GetRowString(r, jbCols.Terminal))
+                .OrderBy(r => ConvertToSortableInt(ExcelHelper.GetRowString(r, jbCols.Terminal)))
                 .Select(GetJBData)
                 .ToList();
         }
 
-        private IExcelJBRowData<string> GetJBData(IXLRow row)
+        private static int ConvertToSortableInt(string value)
         {
-            return new ExcelJBRowData<string>()
+            string numericPart = Regex.Replace(value, "[^0-9]", "");
+            return Convert.ToInt32(numericPart);
+        }
+
+        private IExcelJBRowData<string> GetJBData(IXLRow row) => new ExcelJBRowData<string>()
+        {
+            JBTag = ExcelHelper.GetRowString(row, jbCols.JBTag),
+            ItemTag = ExcelHelper.GetRowString(row, jbCols.ItemTag),
+            TerminalStrip = ExcelHelper.GetRowString(row, jbCols.TerminalStrip),
+            Terminal = ExcelHelper.GetRowString(row, jbCols.Terminal),
+            SignalType = ExcelHelper.GetRowString(row, jbCols.SignalType),
+            DeviceTag = ExcelHelper.GetRowString(row, jbCols.DeviceTag),
+            LeftSide = CreateExcelJBRowSide(row, jbCols.LeftSide),
+            RightSide = CreateExcelJBRowSide(row, jbCols.RightSide),
+        };
+
+        private static ExcelJBRowSide<string> CreateExcelJBRowSide(IXLRow row, IExcelJBRowSide<int> sideCols)
+        {
+            return new ExcelJBRowSide<string>
             {
-                JBTag = ExcelHelper.GetRowString(row, jbCols.JBTag),
-                TerminalStrip = ExcelHelper.GetRowString(row, jbCols.TerminalStrip),
-                Terminal = ExcelHelper.GetRowString(row, jbCols.Terminal),
-                SignalType = ExcelHelper.GetRowString(row, jbCols.SignalType),
-                DeviceTag = ExcelHelper.GetRowString(row, jbCols.DeviceTag),
-                LeftSide = new ExcelJBRowSide<string>()
-                {
-                    Cable = ExcelHelper.GetRowString(row, jbCols.LeftSide.Cable),
-                    Core = ExcelHelper.GetRowString(row, jbCols.LeftSide.Core),
-                    Color = ExcelHelper.GetRowString(row, jbCols.LeftSide.Color),
-                    WireTag = ExcelHelper.GetRowString(row, jbCols.LeftSide.WireTag)
-                },
-                RightSide = new ExcelJBRowSide<string>()
-                {
-                    Cable = ExcelHelper.GetRowString(row, jbCols.RightSide.Cable),
-                    Core = ExcelHelper.GetRowString(row, jbCols.RightSide.Core),
-                    Color = ExcelHelper.GetRowString(row, jbCols.RightSide.Color),
-                    WireTag = ExcelHelper.GetRowString(row, jbCols.RightSide.WireTag)
-                }
+                Cable = ExcelHelper.GetRowString(row, sideCols.Cable),
+                Core = ExcelHelper.GetRowString(row, sideCols.Core),
+                Color = ExcelHelper.GetRowString(row, sideCols.Color),
+                WireTag = ExcelHelper.GetRowString(row, sideCols.WireTag)
             };
         }
     }

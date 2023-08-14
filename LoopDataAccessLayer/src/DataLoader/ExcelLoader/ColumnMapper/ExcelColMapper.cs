@@ -50,6 +50,8 @@ namespace LoopDataAccessLayer
                 JB1 = excelColumnProvider.GetColumnNumber("JB1"),
                 JB2 = excelColumnProvider.GetColumnNumber("JB2"),
                 JB3 = excelColumnProvider.GetColumnNumber("JB3"),
+                IsolatorTag = excelColumnProvider.GetColumnNumber("ISOLATOR_TAG"),
+                PowerCabinetSource = excelColumnProvider.GetColumnNumber("PWR_CAB_SOURCE"),
                 PowerTerminalStrip = excelColumnProvider.GetColumnNumber("PWR_TERM_STRIP"),
                 PowerVolts = excelColumnProvider.GetColumnNumber("PWR_VOLTS"),
                 PowerTerm1 = excelColumnProvider.GetColumnNumber("PWR_TERM_1"),
@@ -59,6 +61,7 @@ namespace LoopDataAccessLayer
                 PowerCore1 = excelColumnProvider.GetColumnNumber("PWR_CORE_1"),
                 PowerCore2 = excelColumnProvider.GetColumnNumber("PWR_CORE_2"),
                 PowerCable = excelColumnProvider.GetColumnNumber("PWR_CABLE"),
+                ESDDrawing = excelColumnProvider.GetColumnNumber("ESD_DWG"),
 
                 Device = new ExcelIODeviceCommon<int>
                 {
@@ -67,6 +70,8 @@ namespace LoopDataAccessLayer
                     Terminal2 = excelColumnProvider.GetColumnNumber("DEV_TERM_2"),
                     Terminal3 = excelColumnProvider.GetColumnNumber("DEV_TERM_3"),
                     Terminal4 = excelColumnProvider.GetColumnNumber("DEV_TERM_4"),
+                    Terminal5 = excelColumnProvider.GetColumnNumber("DEV_TERM_5"),
+                    Terminal6 = excelColumnProvider.GetColumnNumber("DEV_TERM_6"),
                     WireTag1 = excelColumnProvider.GetColumnNumber("DEV_WIRE_1"),
                     WireTag2 = excelColumnProvider.GetColumnNumber("DEV_WIRE_2"),
                     WireTag3 = excelColumnProvider.GetColumnNumber("DEV_WIRE_3"),
@@ -74,6 +79,7 @@ namespace LoopDataAccessLayer
                     WireColor1 = excelColumnProvider.GetColumnNumber("DEV_COLOR_1"),
                     WireColor2 = excelColumnProvider.GetColumnNumber("DEV_COLOR_2"),
                     WireColor3 = excelColumnProvider.GetColumnNumber("DEV_COLOR_3"),
+                    WireColor4 = excelColumnProvider.GetColumnNumber("DEV_COLOR_4"),
                     CorePair1 = excelColumnProvider.GetColumnNumber("DEV_CORE_1"),
                     CorePair2 = excelColumnProvider.GetColumnNumber("DEV_CORE_2"),
                     CorePair3 = excelColumnProvider.GetColumnNumber("DEV_CORE_3"),
@@ -128,6 +134,7 @@ namespace LoopDataAccessLayer
             {
 
                 JBTag = excelColumnProvider.GetColumnNumber("JB_TAG"),
+                ItemTag = excelColumnProvider.GetColumnNumber("ITEM_TAG"),
                 TerminalStrip = excelColumnProvider.GetColumnNumber("TS"),
                 Terminal = excelColumnProvider.GetColumnNumber("TERMINAL"),
                 SignalType = excelColumnProvider.GetColumnNumber("SIGNAL_TYPE"),

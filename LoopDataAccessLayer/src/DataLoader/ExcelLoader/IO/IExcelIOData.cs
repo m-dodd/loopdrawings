@@ -19,6 +19,8 @@ namespace LoopDataAccessLayer
         T JB1 { get; set; }
         T JB2 { get; set; }
         T JB3 { get; set; }
+        T IsolatorTag { get; set; }
+        T PowerCabinetSource { get; set; }
         T PowerTerminalStrip { get; set; }
         T PowerVolts { get; set; }
         T PowerTerm1 { get; set; }
@@ -28,6 +30,7 @@ namespace LoopDataAccessLayer
         T PowerCore1 { get; set; }
         T PowerCore2 { get; set; }
         T PowerCable { get; set; }
+        T ESDDrawing { get; set; }
         IExcelOverload<T> Overload { get; set; }
         IExcelIODeviceCommon<T> Device { get; set; }
         IExcelIODeviceCommon<T> IO { get; set; }
@@ -42,6 +45,8 @@ namespace LoopDataAccessLayer
         T Terminal2 { get; set; }
         T Terminal3 { get; set; }
         T Terminal4 { get; set; }
+        T Terminal5 { get; set; }
+        T Terminal6 { get; set; }
         T WireTag1 { get; set; }
         T WireTag2 { get; set; }
         T WireTag3 { get; set; }
@@ -49,6 +54,7 @@ namespace LoopDataAccessLayer
         T WireColor1 { get; set; }
         T WireColor2 { get; set; }
         T WireColor3 { get; set; }
+        T WireColor4 { get; set; }
         T CorePair1 { get; set; }
         T CorePair2 { get; set; }
         T CorePair3 { get; set; }

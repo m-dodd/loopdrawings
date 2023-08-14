@@ -18,6 +18,8 @@ namespace LoopDataAccessLayer
         {
             return blockMap.Name switch
             {
+                "JB_11-TERM_I.S." => new JB_TERM_ISOLATOR(dataLoader, blockMap, tagMap),
+
                 "JB_3-TERM_SINGLE" or
                 "JB_4-TERM_SINGLE_SHLD" => new JB_ANALOG_TERM_SINGLE(dataLoader, blockMap, tagMap),
                 "JB_3-TERM_DUAL" or
@@ -25,16 +27,17 @@ namespace LoopDataAccessLayer
 
                 "JB_2-TERM_SINGLE" or
                 "JB_2-TERM_SINGLE_JOG" or
-                "JB_4-TERM_SINGLE" => new JB_TERM_SINGLE(dataLoader, blockMap, tagMap),
+                "JB_4-TERM_SINGLE" => new JB_TERM(dataLoader, blockMap, tagMap),
                 "JB_2-TERM_DUAL" or
                 "JB_4-TERM_DUAL" => new JB_TERM_DUAL(dataLoader, blockMap, tagMap),
-                
+
                 "PNL_2-TERM" => new PNL_2_TERM(dataLoader, blockMap, tagMap),
                 "PNL_2-TERM_24VDC" => new PNL_2_TERM_24VDC(dataLoader, blockMap, tagMap),
-                "PNL_2-TERM_EXT_PWR" => new PNL_2_TERM_EXT_PWR(dataLoader, blockMap, tagMap),
+                "PNL_2-TERM_EXT_PWR" or
+                "PNL_2-TERM_EXT_PWR-2" => new PNL_2_TERM_EXT_PWR(dataLoader, blockMap, tagMap),
                 "PNL_3-TERM_24VDC-1" => new PNL_2_TERM_24VDC(dataLoader, blockMap, tagMap),
-                
                 "PNL_3-TERM_24VDC-2" or
+                "PNL_3-TERM_DYN" or
                 "PNL_4-TERM_24VDC_SHLD" => new PNL_3_or_4_TERM_24VDC(dataLoader, blockMap, tagMap),
                 "PNL_3-TERM" => new PNL_3_TERM(dataLoader, blockMap, tagMap),
                 "PNL_4-TERM_24VDC" => new PNL_4_TERM_24VDC(dataLoader, blockMap, tagMap),
@@ -61,6 +64,7 @@ namespace LoopDataAccessLayer
                 "INST_DI_4W" => new INST_DI_4W(dataLoader, blockMap, tagMap),
                 "INST_DI_4W_ZS" => new INST_DI_4W_ZS(dataLoader, blockMap, tagMap),
                 "INST_DO_2W" => new INST_DO_2W(dataLoader, blockMap, tagMap),
+
                 "TERM_DO_1W" or
                 "TERM_DO_2W" => new TERM_DO_2W(dataLoader, blockMap, tagMap),
                 "TERM_DI_2W" => new TERM_DI_2W(dataLoader, blockMap, tagMap),

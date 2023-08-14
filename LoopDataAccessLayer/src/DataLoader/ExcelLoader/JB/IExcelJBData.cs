@@ -9,6 +9,7 @@ namespace LoopDataAccessLayer
     public interface IExcelJBRowData<T>
     {
         T JBTag { get; set; }
+        T ItemTag { get; set; }
         T TerminalStrip { get; set; }
         T Terminal { get; set; }
         T SignalType { get; set; }

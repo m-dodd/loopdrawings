@@ -1,0 +1,167 @@
+{
+    "PID_AI_DOx2": {
+        "TemplateName": "PID_AI_DOx2",
+        "TemplateFileName": "",
+        "TemplateRequiresTwoDrawings": "true",
+        "BlockMap": [
+            {
+                "Name": "EMPTY_BLOCK",
+                "Tags": [
+                    "AI",
+                    "SOL-UNLOAD",
+                    "SOL-LOAD", 
+                    "CONTROLLER"
+                ]
+            }
+        ]
+    },
+
+    "PID_AI_1JB_DOx2_0JB-1": {
+        "TemplateName": "PID_AI_1JB_DOx2_0JB-01",
+        "TemplateFileName": "PID_AI_1JB_DOx2_0JB-01.dwg",
+        "TemplateRequiresTwoDrawings": "true",
+        "BlockMap": [
+            {
+                "Name": "JB_11-TERM_I.S.",
+                "UID": "JB_11-TERM_I.S.-1",
+                "Tags": [
+                    "AI"
+                ]
+            },
+            {
+                "Name": "SD_TABLE_10-ROW",
+                "UID": "SD_TABLE_10-ROW-1",
+                "Tags": [
+                    "AI"
+                ]
+            },
+            {
+                "Name": "INST_AI_3W",
+                "UID": "INST_AI_3W-1",
+                "Tags": [
+                    "AI"
+                ]
+            },
+            {
+                "Name": "PNL_2-TERM_EXT_PWR-2",
+                "UID": "PNL_2-TERM_EXT_PWR-2-1",
+                "Tags": [
+                    "AI"
+                ]
+            },
+            {
+                "Name": "PNL_3-TERM_24VDC-2",
+                "UID": "PNL_3-TERM_24VDC-2-1",
+                "Tags": [
+                    "AI"
+                ]
+            },
+
+            {
+                "Name": "MOD_1-TERM_1-PT_DYN",
+                "UID": "MOD_1-TERM_1-PT_DYN-1",
+                "Tags": [
+                    "AI",
+                    "CONTROLLER"
+                ]
+            },
+            {
+                "Name": "MATERIAL_LIST_5-ROW",
+                "UID": "MATERIAL_LIST_5-ROW-1",
+                "Tags": [
+                    "AI",
+                    "CONTROLLER"
+                ]
+            }
+        ]
+    },
+
+    "PID_AI_1JB_DOx2_0JB-2": {
+        "TemplateName": "PID_AI_1JB_DOx2_0JB-02",
+        "TemplateFileName": "PID_AI_1JB_DOx2_0JB-02.dwg",
+        "TemplateRequiresTwoDrawings": "true",
+        "BlockMap": [
+            {
+                "Name": "TERM_DI_2W",
+                "UID": "TERM_DI_2W-1",
+                "Tags": [
+                    "SOL-UNLOAD"
+                ]
+            },
+            {
+                "Name": "PNL_3-TERM_DYN",
+                "UID": "PNL_3-TERM_DYN-1",
+                "Tags": [
+                    "SOL-UNLOAD"
+                ]
+            },
+            {
+                "Name": "MOD_2-TERM_1-PT_DYN_MIR",
+                "UID": "MOD_2-TERM_1-PT_DYN_MIR-1",
+                "Tags": [
+                    "SOL-UNLOAD",
+                    "CONTROLLER"
+                ]
+            },
+            {
+                "Name": "RELAY_24VDC-2",
+                "UID": "RELAY_24VDC-2-1",
+                "Tags": [
+                    "SOL-UNLOAD"
+                ]
+            },
+
+            {
+                "Name": "TERM_DI_2W",
+                "UID": "TERM_DI_2W-2",
+                "Tags": [
+                    "SOL-LOAD"
+                ]
+            },
+            {
+                "Name": "PNL_3-TERM_DYN",
+                "UID": "PNL_3-TERM_DYN-2",
+                "Tags": [
+                    "SOL-LOAD"
+                ]
+            },
+            {
+                "Name": "MOD_2-TERM_1-PT_DYN_MIR",
+                "UID": "MOD_2-TERM_1-PT_DYN_MIR-2",
+                "Tags": [
+                    "SOL-LOAD",
+                    "CONTROLLER"
+                ]
+            },
+            {
+                "Name": "RELAY_24VDC-2",
+                "UID": "RELAY_24VDC-2-2",
+                "Tags": [
+                    "SOL-LOAD"
+                ]
+            },
+            {
+                "Name": "MATERIAL_LIST_5-ROW",
+                "UID": "MATERIAL_LIST_5-ROW-1",
+                "Tags": [
+                    "SOL-UNLOAD",
+                    "SOL-LOAD"
+                ]
+            }
+        ]
+    },
+
+    "COMMON_BLOCKS": {
+        "TemplateName": "COMMON_BLOCKS",
+        "BlockMap":[
+            {
+                "Name": "STD B SIZE SHEET",
+                "UID": "STD B SIZE SHEET-1",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "CONTROLLER"
+                ]
+            }
+        ]
+    }
+}

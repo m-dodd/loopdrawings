@@ -83,41 +83,50 @@ namespace LoopDataAccessLayer
         {
 
             var json = File.ReadAllText(filePath).ToUpper();
-            var jsonData = JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
-            // in case file names are not all uppercase we shoud make the dictionary ignore case on teh keys
-            var config = jsonData is not null
+            try
+            {
+                var jsonData = JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
+                var config = jsonData is not null
                          ? new Dictionary<string, TemplateConfig>(jsonData, StringComparer.OrdinalIgnoreCase)
                          : new Dictionary<string, TemplateConfig>();
-            var lookupBaseKey = Path.GetFileNameWithoutExtension(filePath).ToUpper();
-            logger.Debug($"Lookup key is {lookupBaseKey}");
-            if (config.TryGetValue(lookupBaseKey, out var baseTemplate))
-            {
-                if (config.TryGetValue("COMMON_BLOCKS", out var commonTemplate))
+                // in case file names are not all uppercase we shoud make the dictionary ignore case on teh keys
+
+                var lookupBaseKey = Path.GetFileNameWithoutExtension(filePath).ToUpper();
+                logger.Debug($"Lookup key is {lookupBaseKey}");
+                if (config.TryGetValue(lookupBaseKey, out var baseTemplate))
                 {
-                    var commonBlocks = commonTemplate.BlockMap;
-                    foreach (var template in config.Values)
+                    if (config.TryGetValue("COMMON_BLOCKS", out var commonTemplate))
                     {
-                        if (template == baseTemplate)
-                            continue;
+                        var commonBlocks = commonTemplate.BlockMap;
+                        foreach (var template in config.Values)
+                        {
+                            if (template == baseTemplate)
+                                continue;
 
-                        template.BlockMap ??= new List<BlockMapData>();
-
-                        template.BlockMap.AddRange(commonBlocks);
+                            template.BlockMap ??= new List<BlockMapData>();
+                            template.BlockMap.AddRange(commonBlocks);
+                        }
+                        config.Remove("COMMON_BLOCKS");
                     }
-                    config.Remove("COMMON_BLOCKS");
+                    else
+                    {
+                        logger.Debug("Base key was found, but no COMMON_BLOCKS");
+                    }
                 }
                 else
                 {
-                    logger.Debug("Base key was found, but no COMMON_BLOCKS");
+                    logger.Debug("Base key was not found");
                 }
+                return config;
             }
-            else
+            catch (JsonReaderException ex )
             {
-                logger.Debug("Base key was not found");
+                var filNameForDebugging = Path.GetFileName(filePath);
+                string msg = $"Error trying to deserialize '{filePath}': {ex}";
+                logger.Error(msg);
+                throw new LoopDataException(msg, ex);
             }
-            return config;
         }
-
     }
 
 
@@ -125,6 +134,7 @@ namespace LoopDataAccessLayer
     {
         public string TemplateName { get; set; } = string.Empty;
         public string TemplateFileName { get; set; } = string.Empty;
+        public bool TemplateRequiresTwoDrawings { get; set; } = false;
         public List<BlockMapData> BlockMap { get; set; } = new List<BlockMapData>();
     }
 

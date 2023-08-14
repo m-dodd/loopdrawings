@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Serilog;
 using System.Runtime.Serialization;
+using Org.BouncyCastle.Utilities;
 
 namespace LoopDataAccessLayer
 {
@@ -49,13 +50,13 @@ namespace LoopDataAccessLayer
             }
             catch (LoopDataException ex)
             {
-                //string msg = "Unable to find"
-                //    + Environment.NewLine
-                //    + configDirectoryName
-                //    + Environment.NewLine
-                //    + "Please relocate the file and try again.";
+                string msg = "Unable to find"
+                    + Environment.NewLine
+                    + configDirectoryName
+                    + Environment.NewLine
+                    + "Please relocate the file and try again.";
 
-                //throw new FileNotFoundException(msg);
+                logger.Error(msg, ex);
                 throw;
             }
         }
@@ -87,6 +88,12 @@ namespace LoopDataAccessLayer
             return new DataLoader(excelDL, dbDL);
         }
 
+        private void HandleException(Exception ex, List<string> loopsWithProblems, LoopNoTemplatePair loop)
+        {
+            logger.Error(ex.Message);
+            loopsWithProblems.Add(loop.LoopNo);
+        }
+
         public void BuildDrawings()
         {
             ErrorsDetected = false;
@@ -104,25 +111,23 @@ namespace LoopDataAccessLayer
                 {
                     logger.Information("Creating drawing(s) for " + loop.LoopNo);
                     IEnumerable<AcadDrawingDataMappable> drawings = drawingBuilder.BuildDrawings(loop);
-                    foreach (AcadDrawingDataMappable drawing in drawings)
-                    {
-                        Drawings.Add(drawing);
-                    }
+                    Drawings.AddRange(drawings);
                 }
                 catch (TemplateNumberOfJbsException ex)
                 {
-                    logger.Error(ex.Message); 
-                    loopsWithProblems.Add(loop.LoopNo);
+                    HandleException(ex, loopsWithProblems, loop);
                 }
                 catch (TemplateTagTypeNotFoundException ex)
                 {
-                    logger.Error(ex.Message);
-                    loopsWithProblems.Add(loop.LoopNo);
+                    HandleException(ex, loopsWithProblems, loop);
                 }
                 catch (DrawingBuilderException ex)
                 {
-                    logger.Error(ex.Message);
-                    loopsWithProblems.Add(loop.LoopNo);
+                    HandleException(ex, loopsWithProblems, loop);
+                }
+                catch (ExcelColumnNotFoundException ex)
+                {
+                    HandleException(ex, loopsWithProblems, loop);
                 }
             }
             if(loopsWithProblems.Count > 0)

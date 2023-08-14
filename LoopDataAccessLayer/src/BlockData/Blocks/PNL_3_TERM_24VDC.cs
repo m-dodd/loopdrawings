@@ -37,6 +37,11 @@ namespace LoopDataAccessLayer
                 Attributes["CABLE_TAG_PANEL"] = IOData.IO.CableTag;
                 Attributes["CABLE_SIZE"] = cableData?.CableSizeType ?? string.Empty;
                 Attributes["BREAKER_NO"] = IOData.BreakerNumber;
+
+                Attributes["WIRE_TAG_PANEL1"] = IOData.IO.WireTag1;
+                Attributes["WIRE_TAG_PANEL2"] = IOData.IO.WireTag2;
+                Attributes["COND_NO1"] = IOData.IO.CorePair1;
+                Attributes["COND_NO2"] = IOData.IO.CorePair2;
             }
         }
     }

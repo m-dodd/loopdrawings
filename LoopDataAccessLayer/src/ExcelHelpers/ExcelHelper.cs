@@ -12,7 +12,11 @@ namespace LoopDataAccessLayer
     {
         public static string GetRowString(IXLRow row, int col)
         {
-            return row.Cell(col)?.GetString() ?? string.Empty;
+            if (0 < col && col <= 16384 ) // check to make sure the col is within range
+            {
+                return row.Cell(col)?.GetString() ?? string.Empty;
+            }
+            return string.Empty;
         }
 
         public static bool IsExcelFile(string fileName)

@@ -14,6 +14,8 @@ namespace LoopDataAccessLayer
         public T Terminal2 { get; set; }
         public T Terminal3 { get; set; }
         public T Terminal4 { get; set; }
+        public T Terminal5 { get; set; }
+        public T Terminal6 { get; set; }
         public T WireTag1 { get; set; }
         public T WireTag2 { get; set; }
         public T WireTag3 { get; set; }
@@ -21,6 +23,7 @@ namespace LoopDataAccessLayer
         public T WireColor1 { get; set; }
         public T WireColor2 { get; set; }
         public T WireColor3 { get; set; }
+        public T WireColor4 { get; set; }
         public T CorePair1 { get; set; }
         public T CorePair2 { get; set; }
         public T CorePair3 { get; set; }

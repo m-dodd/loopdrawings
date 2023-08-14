@@ -20,6 +20,8 @@ namespace LoopDataAccessLayer
         public T JB1 { get; set; }
         public T JB2 { get; set; }
         public T JB3 { get; set; }
+        public T IsolatorTag { get; set; }
+        public T PowerCabinetSource { get; set; }
         public T PowerTerminalStrip { get; set; }
         public T PowerVolts { get; set; }
         public T PowerTerm1 { get; set; }
@@ -29,6 +31,7 @@ namespace LoopDataAccessLayer
         public T PowerCore1 { get; set; }
         public T PowerCore2 { get; set; }
         public T PowerCable { get; set; }
+        public T ESDDrawing { get; set; }
         public IExcelOverload<T> Overload { get; set; }
         public IExcelIODeviceCommon<T> Device { get; set; }
         public IExcelIODeviceCommon<T> IO { get; set; }

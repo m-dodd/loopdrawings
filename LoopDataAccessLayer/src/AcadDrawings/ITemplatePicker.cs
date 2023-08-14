@@ -9,5 +9,7 @@ namespace LoopDataAccessLayer
     public interface ITemplatePicker
     {
         TemplateConfig? GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap);
+        IEnumerable<TemplateConfig?> GetCorrectDoubleTemplate(TemplateConfig template, Dictionary<string, string> tagMap);
+
     }
 }

@@ -58,7 +58,6 @@ namespace LoopDataAccessLayer
             string tag = data.Tag;
             if (data.IsMotorSD)
             {
-                // maybe I could have just used data.LoopNo?????
                 tag = Regex.Match(data.Tag, @"^.*?(?=SD|SZD)").Value;
             }
             

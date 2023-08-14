@@ -25,6 +25,8 @@ namespace LoopDataAccessLayer
                     { "AO", tagData => tagData.IsAO },
                     { "DI", tagData => tagData.IsDI },
                     { "DO", tagData => tagData.IsDO },
+                    { "SOL-UNLOAD", tagData => tagData.IsDO && tagData.EndsWith("UN") }, // unload solenoid
+                    { "SOL-LOAD", tagData => tagData.IsDO && tagData.EndsWith("LD") }, // load solenoid
                     { "CONTROLLER", tagData => tagData.IsSoft && tagData.TagContains("IC")},
                     { "VALVE", tagData => tagData.IsValve },
                     { "ZSC", tagData => tagData.IsDI && tagData.TagContains("ZSC") },
