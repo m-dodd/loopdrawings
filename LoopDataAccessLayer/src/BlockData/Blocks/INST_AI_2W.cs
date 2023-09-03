@@ -21,7 +21,7 @@ namespace LoopDataAccessLayer
 
         protected override void FetchDBData()
         {
-            DBLoopData data = dataLoader.GetLoopData(Tag);
+            DBLoopData data = dataLoader.GetLoopTagData(Tag);
 
             Attributes["RANGE"] = data.Range;
             PopulateFourLineDescription(data);

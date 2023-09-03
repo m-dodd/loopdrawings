@@ -20,7 +20,7 @@
         string Tag { get; set; }
 
         bool EndsWith(string suffix);
-        bool IsInstrumentType(string instrumentType);
+        bool IsInstrumentTypeMatch(string instrumentType);
         bool IsIOType(string ioType);
         bool IsSystemType(string systemType);
     }

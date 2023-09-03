@@ -22,7 +22,7 @@ namespace LoopDataAccessLayer
 
         protected override void FetchDBData()
         {
-            DBLoopData data = dataLoader.GetLoopData(Tag);
+            DBLoopData data = dataLoader.GetLoopTagData(Tag);
             PopulateLoopFields(data, "FUNCTIONAL_ID1", "LOOP_NO1");
             PopulateLoopFields(data, "FUNCTIONAL_ID2", "LOOP_NO2");
         }

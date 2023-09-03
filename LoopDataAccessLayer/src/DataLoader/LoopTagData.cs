@@ -51,9 +51,14 @@ namespace LoopDataAccessLayer
         public bool IsBPCS => IsSystemType("BPCS");
         public bool IsSIS => IsSystemType("SIS");
 
-        public bool IsValve => IsEmptyIOType && Regex.IsMatch(InstrumentType, @"ball|gate|globe|butterfly", RegexOptions.IgnoreCase);
-        public bool IsSolenoid => IsDO && IsInstrumentType("SOLENOID");
-        public bool IsMotor => IsDO && IsInstrumentType("MOTOR-SD");
+        public bool IsESDButton => IsInstrumentTypeMatch("esd") && IsInstrumentTypeMatch("button", "btn");
+
+        public bool IsValve => IsEmptyIOType && IsInstrumentTypeMatch("ball", "gate", "globe", "butterfly");
+
+        public bool IsSolenoid => IsDO && IsInstrumentTypeMatch("SOLENOID");
+        public bool IsMotor => IsDO && IsInstrumentTypeMatch("MOTOR-SD");
+        public bool IsBeacon => IsDO && (IsInstrumentTypeMatch("beacon", "light", "indicator", "strobe") || IsTagType("XL"));
+        public bool IsHorn => IsDO && (IsInstrumentTypeMatch("horn") || IsTagType("XH"));
 
 
         public bool IsIOType(string ioType)
@@ -66,21 +71,40 @@ namespace LoopDataAccessLayer
             return SystemType.Equals(systemType, StringComparison.OrdinalIgnoreCase);
         }
 
-        public bool IsInstrumentType(string instrumentType)
+        public bool IsInstrumentTypeMatch(string targetInstrumentType)
         {
-            string pattern = @"^\w+[-_]?.*$";
+            string escapedTarget = Regex.Escape(targetInstrumentType);
+            string cleanedTargetInstrumentType = Regex.Replace(escapedTarget, @"[-_]", "[-_]");
+            string pattern = $"^.*{cleanedTargetInstrumentType}.*$";
 
             return Regex.IsMatch(InstrumentType, pattern, RegexOptions.IgnoreCase);
+        }
+
+        public bool IsInstrumentTypeMatch(params string[] targetInstrumentTypes)
+        {
+            return targetInstrumentTypes.Any(targetType => IsInstrumentTypeMatch(targetType));
         }
 
         public bool EndsWith(string suffix)
         {
             return Tag.EndsWith(suffix, StringComparison.OrdinalIgnoreCase);
         }
-
-        public bool TagContains(string value)
+        public bool EndsWith(params string[] suffixes)
         {
-            return Tag.Contains(value, StringComparison.OrdinalIgnoreCase);
+            bool endsWith = suffixes.Any(suffix => Tag.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));
+            return endsWith;
+        }
+
+        public bool TagContains(string targetTagContainsThis)
+        {
+            return Tag.Contains(targetTagContainsThis, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public bool IsTagType(string targetTagType)
+        {
+            string[] tagComponents = Tag.Split('-');
+            string tagType = tagComponents[0];
+            return tagType.Contains(targetTagType, StringComparison.OrdinalIgnoreCase);
         }
     }
 

@@ -80,10 +80,10 @@ namespace LoopDataAccessLayer
         }
 
 
-        public DBLoopData GetLoopData(string tag)
+        public DBLoopData GetLoopTagData(string tag)
         {
             //logger.LogInformation("Getting loop data from the database");
-            return GetDataOrMemoizeGetData<DBLoopData>(tag, loopData!, dbLoader.GetLoopData)!;
+            return GetDataOrMemoizeGetData<DBLoopData>(tag, loopData!, dbLoader.GetLoopTagData)!;
         }
 
         public IXLRow? GetIORow(string tag)
@@ -135,32 +135,3 @@ namespace LoopDataAccessLayer
     }
         
 }
-
-// an example of how to instantiate and set up logging
-/*
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.File;
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        var excelFileName = "path/to/excel/file.xlsx";
-        var excelLoader = new ExcelDataLoader(excelFileName);
-
-        var dbLoader = new DBDataLoader();
-
-        var loggerFactory = LoggerFactory.Create(builder =>
-        {
-            builder
-                .AddFilter("Microsoft", LogLevel.Warning)
-                .AddFilter("System", LogLevel.Warning)
-                .AddFilter("Program", LogLevel.Debug)
-                .AddFile("logs/data-access.log");
-        });
-        var logger = loggerFactory.CreateLogger<DataLoader>();
-
-        var dataLoader = new DataLoader(excelLoader, dbLoader, logger);
-    }
-}
-*/

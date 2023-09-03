@@ -24,7 +24,7 @@ namespace LoopDataAccessLayer
         protected override void FetchExcelData()
         {
             IExcelTitleBlockData<string> titleBlockData = dataLoader.GetTitleBlockData();
-            var data = dataLoader.GetLoopData(DescriptionTag);
+            var data = dataLoader.GetLoopTagData(DescriptionTag);
 
             Attributes["TITLE_1"] = titleBlockData.GeneralRevData.Description;
             Attributes["TITLE_2"] = data.LoopNo + " LOOP DIAGRAM";

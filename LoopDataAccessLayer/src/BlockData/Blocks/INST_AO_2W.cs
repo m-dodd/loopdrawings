@@ -24,7 +24,7 @@ namespace LoopDataAccessLayer
         protected override void FetchDBData()
         {
             base.FetchDBData();
-            DBLoopData valveData = dataLoader.GetLoopData(ValveTag);
+            DBLoopData valveData = dataLoader.GetLoopTagData(ValveTag);
 
             Attributes.Remove("RANGE");
             Attributes["VALVE_FAIL"] = valveData.FailPosition;

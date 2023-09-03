@@ -22,9 +22,21 @@ namespace LoopDataAccessLayer
                     { "AI", tagData => tagData.IsAI },
                     { "AI-1", tagData => tagData.IsAI && tagData.EndsWith("A") },
                     { "AI-2", tagData => tagData.IsAI && tagData.EndsWith("B") },
-                    { "AO", tagData => tagData.IsAO },
+                    { "AO", tagData => tagData.IsAO } ,
                     { "DI", tagData => tagData.IsDI },
+                    // DI-1 / DI-2 are a bit complicated
+                    // we can have a loop that has tags ending in A and B, or ST/SP, but also have loops where tag1 is BPCS and tag2 is SIS
+                    { "DI-1", tagData => tagData.IsDI && tagData.IsBPCS && (tagData.IsESDButton || tagData.EndsWith("A", "ST"))},
+                    { "DI-2", tagData => tagData.IsDI && ((tagData.IsSIS && tagData.IsESDButton) || (tagData.IsBPCS && tagData.EndsWith("B", "SP")))},
                     { "DO", tagData => tagData.IsDO },
+                    // I'm not seeing a solution for these tag matches as they can be either horns or beacons or both
+                    // if they are both the same then they end with A / B but if they are different than they don't
+                    // this is fucked but let's think it through
+                    // if both are beacons then we need a suffix, if one is a horn then we don't care about suffix
+                    //      so what if we say DO-1 IsHorn || (IsBeacon & Suffix(A))
+                    //      and DO-2 IsBeacon & !Suffix(A)
+                    { "DO-1", tagData => tagData.IsHorn || (tagData.IsBeacon && tagData.EndsWith("A"))},
+                    { "DO-2", tagData => tagData.IsBeacon && !tagData.EndsWith("A")},
                     { "SOL-UNLOAD", tagData => tagData.IsDO && tagData.EndsWith("UN") }, // unload solenoid
                     { "SOL-LOAD", tagData => tagData.IsDO && tagData.EndsWith("LD") }, // load solenoid
                     { "CONTROLLER", tagData => tagData.IsSoft && tagData.TagContains("IC")},
@@ -40,7 +52,7 @@ namespace LoopDataAccessLayer
                 };
         }
 
-       public Dictionary<string, string> BuildTagMap(IEnumerable<LoopTagData> tags, TemplateConfig templateConfig)
+        public Dictionary<string, string> BuildTagMap(IEnumerable<LoopTagData> tags, TemplateConfig templateConfig)
         {
             var tagMap = new Dictionary<string, string>();
             var tagTypes = templateConfig.BlockMap.SelectMany(block => block.Tags).Intersect(tagTypePredicateMap.Keys);
@@ -49,15 +61,22 @@ namespace LoopDataAccessLayer
             {
                 if (tagTypePredicateMap.TryGetValue(tagType, out var predicate))
                 {
-                    var tag = tags.FirstOrDefault(predicate);
-                    if (tag != null && !string.IsNullOrEmpty(tag.Tag))
+                    var matchingTags = tags.Where(predicate).ToList();
+
+                    if (matchingTags.Count > 1)
                     {
-                        tagMap[tagType] = tag.Tag;
+                        throw new Exception($"Multiple matching tags found for tag type '{tagType}'.");
+                    }
+
+                    if (matchingTags.Count == 1 && !string.IsNullOrEmpty(matchingTags[0].Tag))
+                    {
+                        tagMap[tagType] = matchingTags[0].Tag;
                     }
                 }
             }
-            
+
             return tagMap;
         }
+
     }
 }

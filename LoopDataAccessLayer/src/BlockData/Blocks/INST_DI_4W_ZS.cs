@@ -26,8 +26,8 @@ namespace LoopDataAccessLayer
 
         protected override void FetchDBData()
         {
-            DBLoopData dataZSC = dataLoader.GetLoopData(ZSOTag);
-            DBLoopData dataZSO = dataLoader.GetLoopData(ZSOTag);
+            DBLoopData dataZSC = dataLoader.GetLoopTagData(ZSOTag);
+            DBLoopData dataZSO = dataLoader.GetLoopTagData(ZSOTag);
             PopulateFourLineDescription(dataZSC);
             
             // we need to strip the C or O from teh ZSC upper tag

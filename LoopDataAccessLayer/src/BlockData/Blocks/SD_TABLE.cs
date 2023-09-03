@@ -54,14 +54,14 @@ namespace LoopDataAccessLayer
 
         protected virtual List<SDKData> GetSDData(IEnumerable<string> tags)
         {
-            List<List<SDKData>> allSDs = new();
+            List<SDKData> allSDs = new();
             foreach (string tag in tags)
             {
-                List<SDKData> sds = dataLoader.GetSDs(Tag);
-                allSDs.Add(sds);
+                List<SDKData> sds = dataLoader.GetSDs(tag);
+                allSDs.AddRange(sds);
             }
             //return dataLoader.GetSDs(Tag);
-            return allSDs.SelectMany(list => list).ToList();
+            return allSDs;
         }
     }
 }

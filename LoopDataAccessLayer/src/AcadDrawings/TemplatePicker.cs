@@ -23,30 +23,37 @@ namespace LoopDataAccessLayer
 
         public TemplateConfig? GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
         {
-            return template.TemplateName.ToUpper() switch
+            string templateName = template.TemplateName.ToUpper() switch
             {
-                "XMTR" => GetSimpleTemplate(template, tagMap, "AI"),
+                "XMTR" or
+                "AIN_3W" => BuildSimpleName(template, tagMap, "AI"),
                 // this makes the assumption AI-1 and AI-2 have the same number of jbs
-                "XMTRX2" => GetSimpleTemplate(template, tagMap, "AI-1"),
-                "AIN_3W" => GetSimpleTemplate(template, tagMap, "AI"),
+                "XMTRX2" => BuildSimpleName(template, tagMap, "AI-1"),
 
-                "DIN_2W" => GetSimpleTemplate(template, tagMap, "DI"),
-                "DIN_4W" => GetSimpleTemplate(template, tagMap, "DI"),
+                "DIN_2W" or
+                "DIN_4W" => BuildSimpleName(template, tagMap, "DI"),
+                // this makes the assumption DI-1 and DI-2 have the same number of jbs
+                "DINX2_2W" or
+                "DINX2_2W_SIS" => BuildSimpleName(template, tagMap, "DI-1"),
 
-                "DOUT_2W_RLY" => GetSimpleTemplate(template, tagMap, "DO"),
+                "DOUT_2W_RLY" => BuildSimpleName(template, tagMap, "DO"),
+                "DOUTX2_2W_RLY" => BuildSimpleName(template, tagMap, "DO-1"),
 
-                "PID_AI_AO" => GetPidTemplate(tagMap),
-                "PID_AI_NOAO" => GetPidNoAOTemplate(tagMap),
-                "XV_2XY" => GetXV2XYTemplate(tagMap),
-                _ => template,
+                "PID_AI_AO" => BuildPidName(tagMap),
+                "PID_AI_NOAO" => BuildPidName(tagMap).Replace("AO", "noAO"),
+                "XV_1XY" => BuildSimpleName(template, tagMap, "SOL-BPCS"),
+                "XV_2XY" => BuildXV2XYName(tagMap),
+                _ => string.Empty,
             };
+
+            return string.IsNullOrEmpty(templateName) ? template : GetTemplate(templateName);
         }
 
         public IEnumerable<TemplateConfig?> GetCorrectDoubleTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
         {
             var templateConfigList = new List<TemplateConfig?>();
             // this is going to get hardcoded as it's a unique template and there isn't much value in making it more general right now
-            // in the future this could obviously be improved significantly
+            // FUTURE: in the future this could obviously be improved significantly
             if (template.TemplateName.ToUpper() == "PID_AI_DOX2")
             {
                 templateConfigList.Add( GetTemplate("PID_AI_1JB_DOx2_0JB-1") );
@@ -61,27 +68,6 @@ namespace LoopDataAccessLayer
             return loopConfig.TemplateDefs.TryGetValue(templateName.ToUpper(), out TemplateConfig? template)
                 ? template
                 : null;
-        }
-
-        private TemplateConfig? GetSimpleTemplate(TemplateConfig template, Dictionary<string, string> tagMap, string tagType, int MAX_JBS = 2)
-        {
-            return GetTemplate( BuildSimpleName(template, tagMap, tagType, MAX_JBS) );
-        }
-
-        private TemplateConfig? GetPidTemplate(Dictionary<string, string> tagMap)
-        {
-            return GetTemplate( BuildPidName(tagMap) );
-        }
-
-        private TemplateConfig? GetPidNoAOTemplate(Dictionary<string, string> tagMap)
-        {
-            string templateName = BuildPidName(tagMap).Replace("AO", "noAO");
-            return GetTemplate(templateName);
-        }
-
-        private TemplateConfig? GetXV2XYTemplate(Dictionary<string, string> tagMap)
-        {
-            return GetTemplate(BuildXV2XYName(tagMap));
         }
 
         private string BuildSimpleName(TemplateConfig template, Dictionary<string, string> tagMap, string tagType, int MAX_JBS = 2)

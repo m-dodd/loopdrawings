@@ -31,7 +31,7 @@ namespace LoopDataAccessLayer
                 if (i <= 5)
                 {
 
-                    DBLoopData data = dataLoader.GetLoopData(TagMap[tagType]);
+                    DBLoopData data = dataLoader.GetLoopTagData(TagMap[tagType]);
                     string iStr = i.ToString("D2");
                     Attributes["TAG_" + iStr] = data.Tag;
                     Attributes["MFR_" + iStr] = data.Manufacturer;

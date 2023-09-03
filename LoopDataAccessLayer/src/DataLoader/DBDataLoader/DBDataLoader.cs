@@ -1,4 +1,5 @@
 ﻿
+using DocumentFormat.OpenXml.Office2019.Presentation;
 using System.Text.RegularExpressions;
 using WTEdge.Entities;
 
@@ -63,20 +64,37 @@ namespace LoopDataAccessLayer
                 //// XV tests
                 //"X-1300",
 
-                //// Motor Test
-                //"CM-301",
+                // SIS Motor Test
+                "CM-301",
 
-                //// DI
-                //"X-0018",
+                // BPCS Motor Test
+                "PM-103",
 
-                //// DO-RELAY
+                ////// DI
+                ////"X-0018",
+
+                ////// DO-RELAY
+                ////"X-9001",
+
+                ////// AI x2
+                ////"P-1533",
+
+                //// funky double template
+                ////"S-1220",
+                
+                //// Double DI
+                //"H-1540",
+                //"Z-1211",
+
+                //// Double DI SIS
+                //"E-1538",
+
+                //// Double DO RLY
                 //"X-9001",
+                //"X-1801AB",
 
-                //// AI x2
-                //"P-1533",
-
-                // funky double template
-                "S-1220",
+                //// XV-1XY
+                //"X-1501",
             };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future
@@ -108,7 +126,7 @@ namespace LoopDataAccessLayer
                      .ToList();
         }
         
-        public DBLoopData GetLoopData(string tag)
+        public DBLoopData GetLoopTagData(string tag)
         {
             /// Memoized version
             ///     First check to see if the data is in the dictionar and if it is simply return it
@@ -120,59 +138,106 @@ namespace LoopDataAccessLayer
             }
             else
             {
-                data = db.Tblindices.Where(t => t.Tag == tag).Select(
-                    d => new DBLoopData
-                    {
-                        Tag = d.Tag,
-                        LoopNo = GetCleanString(d.Loopno),
-                        Description = GetCleanString(d.Servicedescription),
+                data = db.Tblindices
+                    .Where(t => t.Tag == tag)
+                    .Select( d => BuildLoopTagData(d))
+                    .FirstOrDefault();
 
-                        Manufacturer = FetchManufacturerModel(d.Tblbominstr, "Manufacturer"),
-                        Model = FetchManufacturerModel(d.Tblbominstr, "Model"),
-
-                        JB1Tag = GetCleanString(d.Jb1tag),
-                        JB2Tag = GetCleanString(d.Jb2tag),
-
-                        Rack = FetchRackSlotChannel(d, "rack"),
-                        Slot = FetchRackSlotChannel(d, "slot"),
-                        Channel = FetchRackSlotChannel(d, "channel"),
-
-                        PidDrawingNumber = GetCleanString(d.Pid),
-
-                        MinCalRange = FetchCalRange(d.Tblarss, "min"),
-                        MaxCalRange = FetchCalRange(d.Tblarss, "max"),
-                        RangeUnits = FetchCalRange(d.Tblarss, "units"),
-
-                        LoLoAlarm = FetchAlarmString(d.Tblarss, "ll"),
-                        LoAlarm = FetchAlarmString(d.Tblarss, "l"),
-                        HiAlarm = FetchAlarmString(d.Tblarss, "h"),
-                        HiHiAlarm = FetchAlarmString(d.Tblarss, "hh"),
-                        LoControl = FetchAlarmString(d.Tblarss, "lc"),
-                        HiControl = FetchAlarmString(d.Tblarss, "hc"),
-
-                        FailPosition = GetCleanString(d.Failposition),
-                        InstrumentType = GetCleanString(d.Instrumenttype),
-                        IoType = GetCleanString(d.Iotype),
-
-                        System = GetCleanString(d.System),
-                        SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
-
-                    }).FirstOrDefault();
-                if (data is not null)
+                if (data is not null && data.IsMotorSD)
                 {
-                    if (data.IsMotorSD)
-                    {
-                        UpdateMotorSDAlarms(data);
-                    }
-                    loopDataCache[tag] = data;
+                    UpdateMotorSDAlarms(data);
                 }
-                else
-                {
-                    loopDataCache[tag] = new DBLoopData();
-                }
+                loopDataCache[tag] = data ?? new DBLoopData();
 
                 return loopDataCache[tag];
             }
+        }
+
+        public IDictionary<string, DBLoopData> GetLoopTagsData(IEnumerable<string> tags)
+        {
+            /// Memoized version
+            ///     First check to see if the data is in the dictionar and if it is simply return it
+            ///     If it is not in the dict then fetch it and add it to the dict and return it
+            ///     Now any future call for this same data will not need to fetch it
+            ///     
+            /// NOT USED, but could be used to pre-fetch all of the tags for a loop and cache them
+
+            // Step 1: Initialize a dictionary to store the results
+            var resultDict = new Dictionary<string, DBLoopData>();
+
+            // Step 2: Determine which tags need to be fetched from the database
+            var tagsToFetch = tags.Except(loopDataCache.Keys).ToList();
+
+            // Step 3: Fetch the missing data from the database and update the cache
+            if (tagsToFetch.Any())
+            {
+                var dataDict = db.Tblindices
+                    .Where(t => tagsToFetch.Contains(t.Tag))
+                    .ToDictionary(
+                        t => t.Tag,
+                        d => BuildLoopTagData(d)
+                    );
+
+                foreach (var (tag, d) in dataDict)
+                {
+                    if (d is not null && d.IsMotorSD)
+                    {
+                        UpdateMotorSDAlarms(d);
+                    }
+                    loopDataCache[tag] = d ?? new DBLoopData();
+                    resultDict[tag] = d ?? new DBLoopData();
+                }
+            }
+
+            // Step 4: Populate resultDict with cached data
+            foreach (var tag in tags.Except(tagsToFetch))
+            {
+                resultDict[tag] = loopDataCache[tag];
+            }
+
+            return resultDict;
+
+        }
+
+        private static DBLoopData BuildLoopTagData(Tblindex d)
+        {
+            var data = new DBLoopData
+            {
+                Tag = d.Tag,
+                LoopNo = GetCleanString(d.Loopno),
+                Description = GetCleanString(d.Controldescription),
+
+                Manufacturer = FetchManufacturerModel(d.Tblbominstr, "Manufacturer"),
+                Model = FetchManufacturerModel(d.Tblbominstr, "Model"),
+
+                JB1Tag = GetCleanString(d.Jb1tag),
+                JB2Tag = GetCleanString(d.Jb2tag),
+
+                Rack = FetchRackSlotChannel(d, "rack"),
+                Slot = FetchRackSlotChannel(d, "slot"),
+                Channel = FetchRackSlotChannel(d, "channel"),
+
+                PidDrawingNumber = GetCleanString(d.Pid),
+
+                MinCalRange = FetchCalRange(d.Tblarss, "min"),
+                MaxCalRange = FetchCalRange(d.Tblarss, "max"),
+                RangeUnits = FetchCalRange(d.Tblarss, "units"),
+
+                LoLoAlarm = FetchAlarmString(d.Tblarss, "ll"),
+                LoAlarm = FetchAlarmString(d.Tblarss, "l"),
+                HiAlarm = FetchAlarmString(d.Tblarss, "h"),
+                HiHiAlarm = FetchAlarmString(d.Tblarss, "hh"),
+                LoControl = FetchAlarmString(d.Tblarss, "lc"),
+                HiControl = FetchAlarmString(d.Tblarss, "hc"),
+
+                FailPosition = GetCleanString(d.Failposition),
+                InstrumentType = GetCleanString(d.Instrumenttype),
+                IoType = GetCleanString(d.Iotype),
+
+                System = GetCleanString(d.System),
+                SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
+            };
+            return data;
         }
 
         private static string FetchRackSlotChannel(Tblindex index, string rackSlotChannel)

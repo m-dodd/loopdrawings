@@ -11,7 +11,7 @@ namespace LoopDataAccessLayer
     {
         List<LoopNoTemplatePair> GetLoops();
         IEnumerable<LoopTagData> GetLoopTags(LoopNoTemplatePair loop);
-        DBLoopData GetLoopData(string tag);
+        DBLoopData GetLoopTagData(string tag);
         List<SDKData> GetSDs(string tag);
     }
 }

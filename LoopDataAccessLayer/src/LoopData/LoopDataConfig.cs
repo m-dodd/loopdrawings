@@ -44,15 +44,13 @@ namespace LoopDataAccessLayer
 
         private Dictionary<string, TemplateConfig> ReadAllTemplateConfigFiles()
         {
-            var templateConfigsList = new List<Dictionary<string, TemplateConfig>>();
+            var mergedTemplateConfigs = new Dictionary<string, TemplateConfig>(StringComparer.OrdinalIgnoreCase);
             foreach (var file in Directory.GetFiles(configDirectory, "*.json"))
             {
                 try
                 {
-                    var filNameForDebugging = Path.GetFileName(file);
-                    logger.Debug($"Reading config data from {Path.GetFileName(file)}");
                     var templates = ReadTemplateConfigFile(file);
-                    templateConfigsList.Add(templates);
+                    mergedTemplateConfigs.AddRange(templates, logger.Warning);
                 }
                 catch (Exception ex)
                 {
@@ -60,72 +58,87 @@ namespace LoopDataAccessLayer
                     throw new LoopDataException("Unexpected error", ex);
                 }
             }
+            return mergedTemplateConfigs;
+        }
+
+        private Dictionary<string, TemplateConfig> ReadTemplateConfigFile(string filePath)
+        {
+            var fileNameForDebugging = Path.GetFileName(filePath);
+            logger.Debug($"Reading config data from {fileNameForDebugging}");
 
             try
             {
-                var mergedTemplateConfigs = templateConfigsList
-                                            .SelectMany(dict => dict)
-                                            .ToDictionary(
-                                                kvp => kvp.Key,
-                                                kvp => kvp.Value,
-                                                StringComparer.OrdinalIgnoreCase);
-                return mergedTemplateConfigs;
+                string json = File.ReadAllText(filePath).ToUpper();
+                var jsonData = JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
+
+                var config = jsonData != null
+                    ? new Dictionary<string, TemplateConfig>(jsonData, StringComparer.OrdinalIgnoreCase)
+                    : new Dictionary<string, TemplateConfig>();
+
+                string lookupBaseKey = Path.GetFileNameWithoutExtension(filePath).ToUpper();
+                logger.Debug($"Lookup key is {lookupBaseKey}");
+
+                ProcessCommonBlocks(config, lookupBaseKey);
+
+                return config;
             }
-            catch (ArgumentException ex)
+            catch (JsonReaderException ex)
             {
-                string msg = $"Trying to add a duplicate key when merging dictionaries...";
+                string msg = $"Error trying to deserialize '{fileNameForDebugging}': {ex}";
                 logger.Error(msg);
                 throw new LoopDataException(msg, ex);
             }
         }
 
-        private Dictionary<string, TemplateConfig> ReadTemplateConfigFile(string filePath)
+        private void ProcessCommonBlocks(Dictionary<string, TemplateConfig> config, string lookupBaseKey)
         {
-
-            var json = File.ReadAllText(filePath).ToUpper();
-            try
+            if (config.TryGetValue("COMMON_BLOCKS", out var commonTemplate))
             {
-                var jsonData = JsonConvert.DeserializeObject<Dictionary<string, TemplateConfig>>(json);
-                var config = jsonData is not null
-                         ? new Dictionary<string, TemplateConfig>(jsonData, StringComparer.OrdinalIgnoreCase)
-                         : new Dictionary<string, TemplateConfig>();
-                // in case file names are not all uppercase we shoud make the dictionary ignore case on teh keys
+                config.Remove("COMMON_BLOCKS");
 
-                var lookupBaseKey = Path.GetFileNameWithoutExtension(filePath).ToUpper();
-                logger.Debug($"Lookup key is {lookupBaseKey}");
                 if (config.TryGetValue(lookupBaseKey, out var baseTemplate))
                 {
-                    if (config.TryGetValue("COMMON_BLOCKS", out var commonTemplate))
+                    var commonBlocks = commonTemplate.BlockMap;
+                    foreach (var template in config.Values.Where(template => template != baseTemplate))
                     {
-                        var commonBlocks = commonTemplate.BlockMap;
-                        foreach (var template in config.Values)
-                        {
-                            if (template == baseTemplate)
-                                continue;
-
-                            template.BlockMap ??= new List<BlockMapData>();
-                            template.BlockMap.AddRange(commonBlocks);
-                        }
-                        config.Remove("COMMON_BLOCKS");
-                    }
-                    else
-                    {
-                        logger.Debug("Base key was found, but no COMMON_BLOCKS");
+                        template.BlockMap ??= new List<BlockMapData>();
+                        template.BlockMap.AddRange(commonBlocks);
                     }
                 }
                 else
                 {
-                    logger.Debug("Base key was not found");
+                    logger.Debug("Base key was found, but no COMMON_BLOCKS");
                 }
-                return config;
             }
-            catch (JsonReaderException ex )
+            else
             {
-                var filNameForDebugging = Path.GetFileName(filePath);
-                string msg = $"Error trying to deserialize '{filePath}': {ex}";
-                logger.Error(msg);
-                throw new LoopDataException(msg, ex);
+                logger.Debug("Base key was not found");
             }
+
+        }
+    }
+
+    public static class DictionaryExtensions
+    {
+        public static void AddRange<TKey, TValue>(this IDictionary<TKey, TValue> destination, IEnumerable<KeyValuePair<TKey, TValue>> source, Action<string>? logger)
+        {
+            foreach (var kvp in source)
+            {
+                if (destination.ContainsKey(kvp.Key))
+                {
+                    // Log warning about duplicate key
+                    logger?.Invoke($"Duplicate key '{kvp.Key}' found in dictionaries. Using the value from the source dictionary.");
+                }
+                else
+                {
+                    destination.Add(kvp.Key, kvp.Value);
+                }
+            }
+        }
+
+        public static void AddRange<TKey, TValue>(this IDictionary<TKey, TValue> destination, IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            AddRange(destination, source, null);
         }
     }
 

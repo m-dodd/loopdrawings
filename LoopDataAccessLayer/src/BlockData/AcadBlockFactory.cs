@@ -70,6 +70,7 @@ namespace LoopDataAccessLayer
                 "TERM_DI_2W" => new TERM_DI_2W(dataLoader, blockMap, tagMap),
 
                 "VALVE_BODY" => new VALVE_BODY(dataLoader, blockMap, tagMap),
+                "VALVE_1-SOL" => new VALVE_ONE_SOL(dataLoader, blockMap, tagMap),
                 "VALVE_2-SOL" => new VALVE_TWO_SOL(dataLoader, blockMap, tagMap),
 
                 "SD_TABLE_0-ROW" or

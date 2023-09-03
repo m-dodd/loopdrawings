@@ -1,0 +1,161 @@
+{
+    "XV_1XY": {
+        "TemplateName": "XV_1XY",
+        "TemplateFileName": "",
+        "BlockMap": [
+            {
+                "Name": "EMPTY_BLOCK",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "ZSC",
+                    "ZSO",
+                    "SOL-BPCS",
+                    "VALVE"
+                ]
+            }
+        ]
+    },
+
+    "XV_1XY_0JB": {
+        "TemplateName": "XV_1XY_0JB",
+        "TemplateFileName": "XV_1XY_BPCS_0JB.dwg",
+        "BlockMap": []
+    },
+    
+    "XV_1XY_1JB": {
+        "TemplateName": "XV_1XY_1JB",
+        "TemplateFileName": "XV_1XY_BPCS_1JB.dwg",
+        "BlockMap": [
+            {
+                "Name": "JB_4-TERM_SINGLE",
+                "UID": "JB_4-TERM_SINGLE-1",
+                "Tags": [
+                    "ZSC",
+                    "ZSO"
+                ]
+            },
+            {
+                "Name": "JB_2-TERM_SINGLE",
+                "UID": "JB_2-TERM_SINGLE-1",
+                "Tags": [
+                    "SOL-BPCS"
+                ]
+            }
+        ]
+    },
+    
+    "XV_1XY_2JB": {
+        "TemplateName": "XV_1XY_2JB",
+        "TemplateFileName": "XV_1XY_BPCS_2JB.dwg",
+        "BlockMap": [
+            {
+                "Name": "JB_4-TERM_DUAL",
+                "UID": "JB_4-TERM_DUAL-1",
+                "Tags": [
+                    "ZSC",
+                    "ZSO"
+                ]
+            },
+            {
+                "Name": "JB_2-TERM_DUAL",
+                "UID": "JB_2-TERM_DUAL-1",
+                "Tags": [
+                    "SOL-BPCS"
+                ]
+            }
+        ]
+    },
+    
+    "COMMON_BLOCKS": {
+        "TemplateName": "COMMON_BLOCKS",
+        "BlockMap": [
+            {
+                "Name": "STD B SIZE SHEET",
+                "UID": "STD B SIZE SHEET-1",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "ZSC"
+                ]
+            },
+            {
+                "Name": "INST_DI_4W_ZS",
+                "UID": "INST_DI_4W_ZS-1",
+                "Tags": [
+                    "ZSC",
+                    "ZSO"
+                ]
+            },
+            {
+                "Name": "SD_TABLE_0-ROW",
+                "UID": "SD_TABLE_0-ROW-1",
+                "Tags": [
+                    "ZSC",
+                    "ZSO"
+                ]
+            },
+            {
+                "Name": "VALVE_1-SOL",
+                "UID": "VALVE_1-SOL-1",
+                "Tags": [
+                    "SOL-BPCS",
+                    "VALVE"
+                ]
+            },
+            {
+                "Name": "PNL_4-TERM_24VDC",
+                "UID": "PNL_4-TERM_24VDC-1",
+                "Tags": [
+                    "ZSC",
+                    "ZSO"
+                ]
+            },
+            {
+                "Name": "MOD_2-TERM_2-BPCS",
+                "UID": "MOD_2-TERM_2-BPCS-1",
+                "Tags": [
+                    "ZSC",
+                    "ZSO"
+                ]
+            },
+            {
+                "Name": "INST_DO_2W",
+                "UID": "INST_DO_2W-1",
+                "Tags": [
+                    "SOL-BPCS"
+                ]
+            },
+            {
+                "Name": "PNL_3-TERM_24VDC-1",
+                "UID": "PNL_3-TERM_24VDC-1-1",
+                "Tags": [
+                    "SOL-BPCS"
+                ]
+            },
+            {
+                "Name": "RELAY_24VDC-2",
+                "UID": "RELAY_24VDC-2-1",
+                "Tags": [
+                    "SOL-BPCS"
+                ]
+            },
+            {
+                "Name": "MOD_2-TERM_1-PT_DYN_MIR",
+                "UID": "MOD_2-TERM_1-PT_DYN_MIR-1",
+                "Tags": [
+                    "SOL-BPCS",
+                    "SOL-BPCS"
+                ]
+            },
+            {
+                "Name": "MATERIAL_LIST_5-ROW",
+                "UID": "MATERIAL_LIST_5-ROW-1",
+                "Tags": [
+                    "ZSC",
+                    "ZSO",
+                    "SOL-BPCS",
+                    "VALVE"
+                ]
+            }
+        ]
+    }
+}

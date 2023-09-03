@@ -24,8 +24,8 @@ namespace LoopDataAccessLayer
 
         protected override void FetchDBData()
         { 
-            DBLoopData ZSCData = dataLoader.GetLoopData(ZSCTag);
-            DBLoopData ZSOData = dataLoader.GetLoopData(ZSOTag);
+            DBLoopData ZSCData = dataLoader.GetLoopTagData(ZSCTag);
+            DBLoopData ZSOData = dataLoader.GetLoopTagData(ZSOTag);
 
             PopulateRackSlotChannel(ZSCData, "1");
             PopulateFourAlarms(ZSCData, "-1");

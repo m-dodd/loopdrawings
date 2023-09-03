@@ -1,0 +1,138 @@
+{
+    "DINX2_2W": {
+        "TemplateName": "DINX2_2W",
+        "TemplateFileName": "",
+        "BlockMap": [
+            {
+                "Name": "EMPTY_BLOCK",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "DI-1",
+                    "DI-2"
+                ]
+            }
+        ]
+    },
+
+    "DINX2_2W_0JB": {
+        "TemplateName": "DINX2_2W_0JB",
+        "TemplateFileName": "DINX2_2W_0JB.dwg",
+        "BlockMap": [ ]
+    },
+
+    "DINX2_2W_1JB": {
+        "TemplateName": "DINX2_2W_1JB",
+        "TemplateFileName": "DINX2_2W_1JB.dwg",
+        "BlockMap": [
+            {
+                "Name": "JB_2-TERM_SINGLE",
+                "UID": "JB_2-TERM_SINGLE-1",
+                "Tags": [
+                    "DI-1"
+                ]
+            },
+            {
+                "Name": "JB_2-TERM_SINGLE",
+                "UID": "JB_2-TERM_SINGLE-2",
+                "Tags": [
+                    "DI-2"
+                ]
+            }
+        ]
+    },
+
+    "DINX2_2W_2JB": {
+        "TemplateName": "DINX2_2W_2JB",
+        "TemplateFileName": "DINX2_2W_2JB.dwg",
+        "BlockMap": [
+            {
+                "Name": "JB_2-TERM_DUAL",
+                "UID": "JB_2-TERM_DUAL-1",
+                "Tags": [
+                    "DI-1"
+                ]
+            },
+            {
+                "Name": "JB_2-TERM_DUAL",
+                "UID": "JB_2-TERM_DUAL-2",
+                "Tags": [
+                    "DI-2"
+                ]
+            }
+        ]
+    },
+
+    "COMMON_BLOCKS": {
+        "TemplateName": "COMMON_BLOCKS",
+        "BlockMap":[
+            {
+                "Name": "STD B SIZE SHEET",
+                "UID": "STD B SIZE SHEET-1",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "DI-1"
+                ]
+            },
+            {
+                "Name": "SD_TABLE_10-ROW",
+                "UID": "SD_TABLE_10-ROW-1",
+                "Tags": [
+                    "DI-1",
+                    "DI-2"
+                ]
+            },
+            {
+                "Name": "TERM_DI_2W",
+                "UID": "TERM_DI_2W-1",
+                "Tags": [
+                    "DI-1"
+                ]
+            },
+            {
+                "Name": "PNL_2-TERM_24VDC",
+                "UID": "PNL_2-TERM_24VDC-1",
+                "Tags": [
+                    "DI-1"
+                ]
+            },
+            {
+                "Name": "MOD_1-TERM_1-PT_DYN",
+                "UID": "MOD_1-TERM_1-PT_DYN-1",
+                "Tags": [
+                    "DI-1",
+                    "DI-1"
+                ]
+            },
+            {
+                "Name": "TERM_DI_2W",
+                "UID": "TERM_DI_2W-2",
+                "Tags": [
+                    "DI-2"
+                ]
+            },
+            {
+                "Name": "PNL_2-TERM_24VDC",
+                "UID": "PNL_2-TERM_24VDC-2",
+                "Tags": [
+                    "DI-2"
+                ]
+            },
+            {
+                "Name": "MOD_1-TERM_1-PT_DYN",
+                "UID": "MOD_1-TERM_1-PT_DYN-2",
+                "Tags": [
+                    "DI-2",
+                    "DI-2"
+                ]
+            },
+            {
+                "Name": "MATERIAL_LIST_5-ROW",
+                "UID": "MATERIAL_LIST_5-ROW-1",
+                "Tags": [
+                    "DI-1",
+                    "DI-2",
+                ]
+            }
+        ]
+    }
+}

@@ -20,8 +20,8 @@ namespace LoopDataAccessLayer
 
         protected override void FetchDBData()
         {
-            DBLoopData data = dataLoader.GetLoopData(Tag);
-            DBLoopData controllerData = dataLoader.GetLoopData(ControllerTag);
+            DBLoopData data = dataLoader.GetLoopTagData(Tag);
+            DBLoopData controllerData = dataLoader.GetLoopTagData(ControllerTag);
 
             PopulateRackSlotChannel(data);
             PopulateLoopFields(controllerData, "FUNCTIONAL_ID", "LOOP_NO");

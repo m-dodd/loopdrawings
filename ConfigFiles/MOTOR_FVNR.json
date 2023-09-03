@@ -1,0 +1,59 @@
+{
+    "MOTOR_FVNR": {
+        "TemplateName": "MOTOR_FVNR",
+        "TemplateFileName": "MOTOR_FVNR.dwg",
+        "BlockMap": [
+            {
+                "Name": "STD B SIZE SHEET",
+                "UID": "STD B SIZE SHEET-1",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "MOTOR-SD-BPCS"
+                ]
+            },
+            {
+                "Name": "SD_TABLE_0-ROW",
+                "UID": "SD_TABLE_0-ROW-1",
+                "Tags": [
+                    "MOTOR-SD-BPCS"
+                ]
+            },
+            {
+                "Name": "ETHERNET_PORT",
+                "UID": "ETHERNET_PORT-1",
+                "Tags": [
+                    "MOTOR-SD-BPCS"
+                ]
+            },
+            {
+                "Name": "MOD_2-BPCS_ETH",
+                "UID": "MOD_2-BPCS_ETH-1",
+                "Tags": [
+                    "MOTOR-SD-BPCS"
+                ]
+            },
+            {
+                "Name": "TERM_DO_2W",
+                "UID": "TERM_DO_2W-1",
+                "Tags": [
+                    "MOTOR-SD-BPCS"
+                ]
+            },
+            {
+                "Name": "RELAY_120VAC",
+                "UID": "RELAY_120VAC-1",
+                "Tags": [
+                    "MOTOR-SD-BPCS"
+                ]
+            },
+            {
+                "Name": "MOD_1-TERM_1-PT_DYN",
+                "UID": "MOD_1-TERM_1-PT_DYN-1",
+                "Tags": [
+                    "MOTOR-SD-BPCS",
+                    "MOTOR-SD-BPCS"
+                ]
+            }
+        ]
+    }
+}
