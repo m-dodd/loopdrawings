@@ -88,13 +88,16 @@ namespace LoopDataAccessLayer
             return new DataLoader(excelDL, dbDL);
         }
 
-        private void HandleException(Exception ex, List<string> loopsWithProblems, LoopNoTemplatePair loop)
+        private void HandleException(Exception ex, List<string> loopsWithProblems, LoopNoTemplatePair loop, ProgressReportModel report)
         {
-            logger.Error(ex.Message);
+            logger.Error($"Drawing failed to complete for loop {loop.LoopNo}.");
+            logger.Error(ex.GetType().Name + ": " + ex.Message, ex);
             loopsWithProblems.Add(loop.LoopNo);
+            report.LoopsComplete.Add(loop.LoopNo);
+            report.ErrorsFound = true;
         }
 
-        public void BuildDrawings()
+        public async Task BuildDrawings(IProgress<ProgressReportModel> progress)
         {
             ErrorsDetected = false;
             var blockFactory = new AcadBlockFactory(dataLoader, logger);
@@ -102,9 +105,14 @@ namespace LoopDataAccessLayer
             var drawingBuilder = new AcadDrawingBuilder(dataLoader, loopConfig, templatePicker, blockFactory, new LoopTagMapper(), logger);
             
             IEnumerable<LoopNoTemplatePair> loops = dataLoader.GetLoops();
+            //var loopNames = loops.Select(l => l.LoopNo).ToList();
             logger.Information($"{loops.Count()} loops found");
 
             List<string> loopsWithProblems = new();
+            var report = new ProgressReportModel
+            {
+                NumberOfLoops = loops.Count()
+            };
             foreach (LoopNoTemplatePair loop in loops)
             {
                 try
@@ -112,28 +120,42 @@ namespace LoopDataAccessLayer
                     logger.Information("Creating drawing(s) for " + loop.LoopNo);
                     IEnumerable<AcadDrawingDataMappable> drawings = drawingBuilder.BuildDrawings(loop);
                     Drawings.AddRange(drawings);
+
+                    report.LoopsComplete.Add(loop.LoopNo);
+                    progress.Report(report);
                 }
                 catch (TemplateNumberOfJbsException ex)
                 {
-                    HandleException(ex, loopsWithProblems, loop);
+                    HandleException(ex, loopsWithProblems, loop, report);
                 }
                 catch (TemplateTagTypeNotFoundException ex)
                 {
-                    HandleException(ex, loopsWithProblems, loop);
+                    HandleException(ex, loopsWithProblems, loop, report);
                 }
                 catch (DrawingBuilderException ex)
                 {
-                    HandleException(ex, loopsWithProblems, loop);
+                    HandleException(ex, loopsWithProblems, loop, report);
                 }
                 catch (ExcelColumnNotFoundException ex)
                 {
-                    HandleException(ex, loopsWithProblems, loop);
+                    HandleException(ex, loopsWithProblems, loop, report);
+                }
+                catch (NumberOfTagsForTypeExceededException ex)
+                {
+                    HandleException(ex, loopsWithProblems, loop, report);
+                }
+                catch (BlockDataMappableKeyNotFoundException ex)
+                {
+                    HandleException(ex, loopsWithProblems, loop, report);
                 }
             }
+            int successfulLoopsCount = loops.Count() - loopsWithProblems.Count;
+            logger.Information($"Loops successfully created {successfulLoopsCount} of {loops.Count()}");
+
             if(loopsWithProblems.Count > 0)
             {
                 ErrorsDetected = true;
-                logger.Warning("Loops with problems:");
+                logger.Warning($"Loops with problems ({loopsWithProblems.Count}):");
                 logger.Warning(string.Join(",", loopsWithProblems));
             }
         }

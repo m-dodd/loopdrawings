@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
@@ -12,9 +13,10 @@ namespace LoopDataAccessLayer
         public Dictionary<string, string> TagMap { get; set; } = new Dictionary<string, string>();
         public List<string> TagTypeList {get; set; } = new List<string>();
         public MATERIAL_LIST_5_ROW(
+            ILogger logger,
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader) 
+            Dictionary<string, string> tagMap) : base(logger, dataLoader) 
         {
             Name = blockMap.Name;
             UID = blockMap.UID;

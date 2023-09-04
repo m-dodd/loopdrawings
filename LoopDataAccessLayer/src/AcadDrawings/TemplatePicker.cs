@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using WTEdge.Entities;
 using Serilog;
+using System.Diagnostics.Tracing;
 
 namespace LoopDataAccessLayer
 {
@@ -13,56 +14,66 @@ namespace LoopDataAccessLayer
         private readonly IDataLoader dataLoader;
         private readonly LoopDataConfig loopConfig;
         private readonly ILogger logger;
+        private TemplateConfig template;
+        private Dictionary<string, string> tagMap;
 
         public TemplatePicker(IDataLoader dataLoader, LoopDataConfig loopConfig, ILogger logger)
         {
             this.dataLoader = dataLoader;
             this.loopConfig = loopConfig;
             this.logger = logger;
+
+            // these will be set by the public functions
+            this.template = new TemplateConfig();
+            this.tagMap = new Dictionary<string, string>();
         }
 
         public TemplateConfig? GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
         {
+            this.template = template;
+            this.tagMap = tagMap;
             string templateName = template.TemplateName.ToUpper() switch
             {
                 "XMTR" or
-                "AIN_3W" => BuildSimpleName(template, tagMap, "AI"),
+                "AIN_3W" => BuildSimpleName("AI"),
                 // this makes the assumption AI-1 and AI-2 have the same number of jbs
-                "XMTRX2" => BuildSimpleName(template, tagMap, "AI-1"),
+                "XMTRX2" => BuildSimpleName("AI-1"),
 
                 "DIN_2W" or
-                "DIN_4W" => BuildSimpleName(template, tagMap, "DI"),
+                "DIN_4W" => BuildSimpleName("DI"),
                 // this makes the assumption DI-1 and DI-2 have the same number of jbs
                 "DINX2_2W" or
-                "DINX2_2W_SIS" => BuildSimpleName(template, tagMap, "DI-1"),
+                "DINX2_2W_SIS" => BuildSimpleName("DI-1"),
 
-                "DOUT_2W_RLY" => BuildSimpleName(template, tagMap, "DO"),
-                "DOUTX2_2W_RLY" => BuildSimpleName(template, tagMap, "DO-1"),
+                "DOUT_2W_RLY" => BuildSimpleName("DO"),
+                "DOUTX2_2W_RLY" => BuildSimpleName("DO-1"),
 
-                "PID_AI_AO" => BuildPidName(tagMap),
-                "PID_AI_NOAO" => BuildPidName(tagMap).Replace("AO", "noAO"),
-                "XV_1XY" => BuildSimpleName(template, tagMap, "SOL-BPCS"),
-                "XV_2XY" => BuildXV2XYName(tagMap),
+                "PID_AI_AO" => BuildPidName(),
+                "PID_AI_NOAO" => BuildPidName().Replace("AO", "noAO"),
+                "XV_1XY" => BuildSimpleName("SOL-BPCS"),
+                "XV_2XY" => BuildXV2XYName(),
                 _ => string.Empty,
             };
 
-            return string.IsNullOrEmpty(templateName) ? template : GetTemplate(templateName);
+            return string.IsNullOrEmpty(templateName) ? template : GetTemplateFromName(templateName);
         }
 
         public IEnumerable<TemplateConfig?> GetCorrectDoubleTemplate(TemplateConfig template, Dictionary<string, string> tagMap)
         {
+            this.template = template;
+            this.tagMap = tagMap;
             var templateConfigList = new List<TemplateConfig?>();
             // this is going to get hardcoded as it's a unique template and there isn't much value in making it more general right now
             // FUTURE: in the future this could obviously be improved significantly
             if (template.TemplateName.ToUpper() == "PID_AI_DOX2")
             {
-                templateConfigList.Add( GetTemplate("PID_AI_1JB_DOx2_0JB-1") );
-                templateConfigList.Add( GetTemplate("PID_AI_1JB_DOx2_0JB-2") );
+                templateConfigList.Add( GetTemplateFromName("PID_AI_1JB_DOx2_0JB-1") );
+                templateConfigList.Add( GetTemplateFromName("PID_AI_1JB_DOx2_0JB-2") );
             }
             return templateConfigList;
         }
 
-        private TemplateConfig? GetTemplate(string templateName)
+        private TemplateConfig? GetTemplateFromName(string templateName)
         {
             
             return loopConfig.TemplateDefs.TryGetValue(templateName.ToUpper(), out TemplateConfig? template)
@@ -70,43 +81,45 @@ namespace LoopDataAccessLayer
                 : null;
         }
 
-        private string BuildSimpleName(TemplateConfig template, Dictionary<string, string> tagMap, string tagType, int MAX_JBS = 2)
+        private string TryGetTag(string tagType)
         {
-            int numberOfJbs;
             try
             {
-                numberOfJbs = CountNumberJbs(tagMap[tagType]);
+                return tagMap[tagType];
             }
             catch (KeyNotFoundException ex)
             {
-                string msg = $"For template {template.TemplateName} - Tagtype {tagType} not created as part of tag map. " +
-                             $"If the template is configured correctly please contact system designer and create a tag map for {tagType}.";
-                logger.Error(msg, ex);
-                throw new TemplateTagTypeNotFoundException(msg, tagType, ex);
+                throw new TemplateTagTypeNotFoundException(template.TemplateName, tagType, ex);
             }
-            string templateName;
+        }
+
+        private string BuildSimpleName(string tagType, int MAX_JBS = 2)
+        {
+            string tag = TryGetTag(tagType);
+            int numberOfJbs = CountNumberJbs(tag);
+         
             if (0 <= numberOfJbs && numberOfJbs <= MAX_JBS)
             {
-                templateName = $"{template.TemplateName}_{numberOfJbs}JB";
+                return $"{template.TemplateName}_{numberOfJbs}JB";
             }
             else
             {
                 string msg = $"Number of JBs must be between 0 and {MAX_JBS}, not (" + numberOfJbs.ToString() + ").";
                 throw new TemplateNumberOfJbsException(msg, MAX_JBS);
             }
-
-            return templateName;
         }
 
-        private string BuildPidName(Dictionary<string, string> tagMap)
+        private string BuildPidName()
         {
-            int numberOfAIJbs = CountNumberJbs(tagMap["AI"]);
-            int numberOfAOJbs = CountNumberJbs(tagMap["AO"]);
+            string ai = TryGetTag("AI");
+            string ao = TryGetTag("AO");
+            int numberOfAIJbs = CountNumberJbs(ai);
+            int numberOfAOJbs = CountNumberJbs(ao);
+            
             const int MAX_JBS = 1;
-            string templateName;
             if ((0 <= numberOfAIJbs && numberOfAIJbs <= MAX_JBS) & (0 <= numberOfAOJbs && numberOfAOJbs <= MAX_JBS))
             {
-                templateName = $"PID_AI_{numberOfAIJbs}JB_AO_{numberOfAOJbs}JB";
+                return $"PID_AI_{numberOfAIJbs}JB_AO_{numberOfAOJbs}JB";
             }
             else
             {
@@ -118,14 +131,15 @@ namespace LoopDataAccessLayer
                 throw new TemplateNumberOfJbsException(msg, MAX_JBS);
             }
 
-            return templateName;
         }
 
-        private string BuildXV2XYName(Dictionary<string, string> tagMap)
+        private string BuildXV2XYName()
         {
-            int numberOfBPCSJbs = CountNumberJbs(tagMap["SOL-BPCS"]);
-            int numberOfSISJbs = CountNumberJbs(tagMap["SOL-SIS"]);
-            string templateName;
+            string solBPCS = TryGetTag("SOL-BPCS");
+            string solSIS = TryGetTag("SOL-SIS");
+            int numberOfBPCSJbs = CountNumberJbs(solBPCS);
+            int numberOfSISJbs = CountNumberJbs(solSIS);
+
             const int MAX_JBS = 1;
 
             if (!(0 <= numberOfBPCSJbs && numberOfBPCSJbs <= MAX_JBS))
@@ -140,9 +154,7 @@ namespace LoopDataAccessLayer
                 throw new TemplateNumberOfJbsException(msg, MAX_JBS);
             }
 
-            templateName = $"XV_2XY_BPCS_{numberOfBPCSJbs}JB_SIS_{numberOfSISJbs}JB";
-
-            return templateName;
+            return $"XV_2XY_BPCS_{numberOfBPCSJbs}JB_SIS_{numberOfSISJbs}JB";
         }
 
         private int CountNumberJbs(string tag)
@@ -163,17 +175,20 @@ namespace LoopDataAccessLayer
     public class TemplateTagTypeNotFoundException : Exception
     {
         private const string defaultMessage = "Tagtype {0} not created as part of tag map.";
+        private const string descriptiveTemplateMessage = 
+            "For template {0} - Tagtype {1} not created as part of tag map. " +
+            "If the template is configured correctly please contact system designer and create a tag map for {1}.";
         public TemplateTagTypeNotFoundException(string key) : base(string.Format(defaultMessage, key))
         {
             Key = key;
         }
 
-        public TemplateTagTypeNotFoundException(string msg, string key) : base(msg)
+        public TemplateTagTypeNotFoundException(string key, Exception innerException) : base(string.Format(defaultMessage, key), innerException)
         {
             Key = key;
         }
 
-        public TemplateTagTypeNotFoundException(string msg, string key, Exception innerException) : base(msg, innerException)
+        public TemplateTagTypeNotFoundException(string template, string key, Exception innerException) : base(string.Format(descriptiveTemplateMessage, template, key), innerException)
         {
             Key = key;
         }

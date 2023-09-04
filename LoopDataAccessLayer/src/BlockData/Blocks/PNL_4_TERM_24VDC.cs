@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
@@ -13,15 +14,16 @@ namespace LoopDataAccessLayer
         public string ZSCTag { get; set; } = string.Empty;
 
         public PNL_4_TERM_24VDC(
+            ILogger logger,
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader)
+            Dictionary<string, string> tagMap) : base(logger, dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
             Tag = string.Empty;
-            ZSCTag = tagMap[blockMap.Tags[0]];
-            ZSOTag = tagMap[blockMap.Tags[1]];
+            ZSCTag = GetTag(blockMap, tagMap, 0);
+            ZSOTag = GetTag(blockMap, tagMap, 1);
         }
 
 

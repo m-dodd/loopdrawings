@@ -70,8 +70,8 @@
                 ]
             },
             {
-                "Name": "PNL_3-TERM_24VDC-1",
-                "UID": "PNL_3-TERM_24VDC-1-1",
+                "Name": "PNL_3-TERM_DYN",
+                "UID": "PNL_3-TERM_DYN-1",
                 "Tags": [
                     "DO"
                 ]

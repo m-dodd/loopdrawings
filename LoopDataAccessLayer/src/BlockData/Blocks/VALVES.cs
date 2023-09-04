@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
     public class VALVE_BODY : BlockValveBase
     {
-        public VALVE_BODY(
-            IDataLoader dataLoader,
-            BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader)
+        public VALVE_BODY(ILogger logger, IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(logger, dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
-            Tag = tagMap[blockMap.Tags[0]];
+            Tag = GetTag(blockMap, tagMap, 0);
         }
 
         protected override void FetchDBData()
@@ -29,9 +27,10 @@ namespace LoopDataAccessLayer
     {
         public string Solenoid { get; set; } = string.Empty; 
         public VALVE_ONE_SOL(
+            ILogger logger,
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader)
+            Dictionary<string, string> tagMap) : base(logger, dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
@@ -52,9 +51,10 @@ namespace LoopDataAccessLayer
         public string SolenoidBPCS { get; set; } = string.Empty;
         public string SolenoidSIS { get; set; } = string.Empty;
         public VALVE_TWO_SOL(
+            ILogger logger,
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader)
+            Dictionary<string, string> tagMap) : base(logger, dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;

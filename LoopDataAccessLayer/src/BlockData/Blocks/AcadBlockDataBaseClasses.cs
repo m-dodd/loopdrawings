@@ -6,15 +6,51 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
+    public class BlockDataMappableKeyNotFoundException : Exception
+    {
+        private const string defaultMessage = "Error in block: {0}. Cannot access tagtype {1}. Possibly an error in template configuration or the wrong template was selected.";
+        public BlockDataMappableKeyNotFoundException(string blockName, string key) : base(string.Format(defaultMessage, blockName, key))
+        {
+            BlockName = blockName;
+            Key = key;
+        }
+
+        public BlockDataMappableKeyNotFoundException(string blockName, string key, Exception innerException) : base(string.Format(defaultMessage, blockName, key))
+        {
+            BlockName = blockName;
+            Key = key;
+        }
+
+        public BlockDataMappableKeyNotFoundException(string msg, string blockName, string key) : base(msg)
+        {
+            BlockName = blockName; 
+            Key = key;
+        }
+
+        public BlockDataMappableKeyNotFoundException(string msg, string blockName, string key, Exception innerException) : base(msg, innerException)
+        {
+            BlockName = blockName; 
+            Key = key;
+        }
+
+        public string Key { get; }
+        public string BlockName { get; }
+    }
+
+
+
     public abstract class BlockDataMappable : AcadBlockData, IMappableBlock
     {
         protected readonly IDataLoader dataLoader;
-        public BlockDataMappable(IDataLoader dataLoader)
+        protected readonly ILogger logger;
+        public BlockDataMappable(ILogger logger, IDataLoader dataLoader)
         {
             this.dataLoader = dataLoader ?? throw new ArgumentNullException(nameof(dataLoader));
+            this.logger = logger;
         }
 
         public abstract void MapData(); 
@@ -59,12 +95,25 @@ namespace LoopDataAccessLayer
             }
         }
 
+        protected string GetTag(BlockMapData blockMap, Dictionary<string, string> tagMap, int index)
+        {
+            try
+            {
+                return tagMap[blockMap.Tags[index]];
+            }
+            catch (KeyNotFoundException ex)
+            {
+                var e = new BlockDataMappableKeyNotFoundException(Name, blockMap.Tags[index], ex);
+                throw e;
+            }
+        }
+
     }
 
     public abstract class BlockDataExcel : BlockDataMappable
     {
 
-        public BlockDataExcel(IDataLoader dataLoader) : base(dataLoader) { }
+        public BlockDataExcel(ILogger logger, IDataLoader dataLoader) : base(logger, dataLoader) { }
 
         public override void MapData()
         {
@@ -77,7 +126,7 @@ namespace LoopDataAccessLayer
 
     public abstract class BlockDataDB : BlockDataMappable
     {
-        public BlockDataDB(IDataLoader dataLoader) : base(dataLoader) { }
+        public BlockDataDB(ILogger logger, IDataLoader dataLoader) : base(logger, dataLoader) { }
 
         public override void MapData()
         {
@@ -90,7 +139,7 @@ namespace LoopDataAccessLayer
 
     public abstract class BlockDataExcelDB : BlockDataMappable
     {
-        public BlockDataExcelDB(IDataLoader dataLoader) : base(dataLoader) { }
+        public BlockDataExcelDB(ILogger logger, IDataLoader dataLoader) : base(logger, dataLoader) { }
 
         public override void MapData()
         {

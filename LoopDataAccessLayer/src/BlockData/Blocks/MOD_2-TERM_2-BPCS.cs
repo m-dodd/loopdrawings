@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
@@ -10,16 +11,13 @@ namespace LoopDataAccessLayer
     {
         public string ZSCTag { get; set; } = string.Empty;
         public string ZSOTag { get; set; } = string.Empty;
-        public MOD_2_TERM_2_BPCS(
-            IDataLoader dataLoader,
-            BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader) 
+        public MOD_2_TERM_2_BPCS(ILogger logger, IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(logger, dataLoader) 
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
             Tag = string.Empty;
-            ZSCTag = tagMap[blockMap.Tags[0]];
-            ZSOTag = tagMap[blockMap.Tags[1]];
+            ZSCTag = GetTag(blockMap, tagMap, 0);
+            ZSOTag = GetTag(blockMap, tagMap, 1);
         }
 
         protected override void FetchDBData()

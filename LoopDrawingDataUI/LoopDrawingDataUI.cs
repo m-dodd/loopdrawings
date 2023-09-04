@@ -3,10 +3,14 @@ using System.IO;
 using System.Text;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
+using System.Threading.Tasks;
+using System.Threading;
+
 using LoopDataAccessLayer;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
+using System.Diagnostics;
 
 namespace LoopDrawingDataUI
 {
@@ -24,75 +28,146 @@ namespace LoopDrawingDataUI
             InitializeComponent();
         }
 
-        private void btnBuildObjects_Click(object sender, EventArgs e)
+        private async void btnBuildObjects_Click(object sender, EventArgs e)
+        {
+            UpdateStatusLabel("Validating data sources..."); 
+
+            (string timestamp, string resultFile) = InitializeAndGetTimestampAndResultFile();
+            
+            if (!AreFilesAndFoldersValid()) return;
+            if (IsOutputFileLocked(resultFile)) return;
+
+            InitializeLogger(timestamp);
+
+            UpdateStatusLabel("Excuting...");
+            await RunApplication(resultFile, timestamp);
+        }
+
+        private void UpdateStatusLabel(string message)
+        {
+            if (lblStatusInfo.InvokeRequired)
+            {
+                // If we're not on the UI thread, use Invoke to execute the update on the UI thread.
+                Invoke((Action)(() => { lblStatusInfo.Text = message; }));
+            }
+            else
+            {
+                // We're already on the UI thread, so we can directly update the label.
+                lblStatusInfo.Text = message;
+            }
+        }
+
+        private (string Timestamp, string ResultFile) InitializeAndGetTimestampAndResultFile()
+        {
+            progressDrawingsComplete.Value = 0;
+            lblLastDrawingComplete.Text = string.Empty;
+
+            string timestamp = DateTime.Now.ToString("yyyy.MM.dd-HHmmss");
+            string resultFile = TestOutputFileName(outputResultPath);
+
+            return (Timestamp: timestamp, ResultFile: resultFile);
+        }
+
+        private bool AreFilesAndFoldersValid()
         {
             if (!FilesAndFoldersValid())
             {
-                string invalidFilesMessage = "Please check configuration. One or more paths / filenames are invalid.";
-                string invalidCaption = "Invalid Input";
-                MessageBox.Show(invalidFilesMessage, invalidCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                ShowErrorMessage("Invalid Input", "Please check configuration. One or more paths / filenames are invalid.");
+                return false;
             }
+            return true;
+        }
 
-            string resultFile = TestOutputFileName(outputResultPath);
+        private bool IsOutputFileLocked(string resultFile)
+        {
             if (IsFileLocked(resultFile))
             {
-                string invalidFilesMessage = "Output file appears to be open. Not going to run, as it would be pointless as we can't save if it is open. Close the file and try again.";
-                string invalidCaption = "Output File Open";
-                MessageBox.Show(invalidFilesMessage, invalidCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                ShowErrorMessage("Output File Open", "Output file appears to be open. Close the file and try again.");
+                return true;
             }
+            return false;
+        }
 
-            if (!Directory.Exists(logFilePath))
-            {
-                Directory.CreateDirectory(logFilePath);
-            }
+        private static void ShowErrorMessage(string caption, string message)
+        {
+            MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void InitializeLogger(string timestamp)
+        {
+            
+            string logFileName = $"log_{timestamp}.log";
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .MinimumLevel.Debug()
+                .WriteTo.File(new JsonFormatter(),
+                    Path.Combine(logFilePath, "important.json"), restrictedToMinimumLevel: LogEventLevel.Warning)
+                .WriteTo.File(Path.Combine(logFilePath, logFileName))
+                .CreateLogger();
+        }
+
+        private async Task RunApplication(string resultFile, string timestamp)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
+            progress.ProgressChanged += ReportProgress;
+            progressDrawingsComplete.Visible = true;
 
             try
             {
-                // build the logger
-                string timestamp = DateTime.Now.ToString("yyyy.MM.dd-HHmmss");
-                string logFileName = $"log_{timestamp}.log";
-                Log.Logger = new LoggerConfiguration()
-                            .Enrich.FromLogContext()
-                            .MinimumLevel.Debug()
-                            .WriteTo.File(new JsonFormatter(),
-                                          Path.Combine(logFilePath, "important.json"), restrictedToMinimumLevel: LogEventLevel.Warning)
-                            //.WriteTo.File(Path.Combine(logFilePath, "log.log"), rollingInterval: RollingInterval.Day)
-                            .WriteTo.File(Path.Combine(logFilePath, logFileName))
-                            .CreateLogger();
-                
-                // run the application
                 Log.Debug($"Creating drawings - run started at {timestamp}...");
+                lblStatusInfo.Text = "Opening Excel and connecting to the database...";
                 AcadDrawingController controller = new(excelFileName, configDirectoryName, templatePath, outputDrawingPath, Log.Logger);
-                controller.BuildDrawings();
+
+                // Use Task.Run to run the operation on a background thread
+                await Task.Run( () => controller.BuildDrawings(progress) );
+                
                 controller.SaveDrawingsToFile(resultFile);
-                string resultMessage;
-                if (controller.ErrorsDetected)
-                {
-                    resultMessage = "Drawings completed - WITH errors! Please check log file";
-                }
-                else
-                {
-                    resultMessage = "Drawings completed - without errors!";
-                }
+
+                stopwatch.Stop();
+                float elapsedSeconds = stopwatch.ElapsedMilliseconds / 1000f;
+                string resultMessage = controller.ErrorsDetected
+                    ? $"Drawings completed ({elapsedSeconds:F1}s) - WITH errors! Please check the log file."
+                    : $"Drawings completed ({elapsedSeconds:F1}s)- without errors!";
                 Log.Information(resultMessage);
-                MessageBox.Show(resultMessage, "Duco Loop Drawing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Marshal UI update back to the main thread
+                Invoke((Action)(() =>
+                {
+                    MessageBox.Show(resultMessage, "Duco Loop Drawing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }));
+                //MessageBox.Show(resultMessage, "Duco Loop Drawing", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (LoopDataException ex)
             {
-                Log.Error(ex.Message);
-                MessageBox.Show(ex.Message, "Error reading loop configuration files.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                HandleException(ex, "Error reading loop configuration files.");
             }
             catch (IOException ex)
             {
-                Log.Error(ex.Message);
-                MessageBox.Show(ex.Message, "Close Excel File", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                HandleException(ex, "Close Excel File");
             }
-            
         }
+
+        private void ReportProgress(object? sender, ProgressReportModel e)
+        {
+            // Marshal UI update back to the main thread
+            Invoke((Action)(() =>
+            {
+                progressDrawingsComplete.Value = e.PercentageComplete;
+                lblLastDrawingComplete.Text = e.LoopsComplete.Last();
+                string errorMsg = e.ErrorsFound ? "Errors detected - please check log file." : "No errors detected.";
+                string status = $"Processing {e.NumberOfCurrentLoop} of {e.NumberOfLoops} total. {errorMsg}";
+                lblStatusInfo.Text = status;
+            }));
+        }
+
+        private static void HandleException(Exception ex, string errorMessage)
+        {
+            Log.Error(ex.Message);
+            MessageBox.Show(ex.Message, errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
 
         private string TestOutputFileName(string outputResultPath)
         {
@@ -102,7 +177,7 @@ namespace LoopDrawingDataUI
         public string AppendDateToFileName(string filePath)
         {
             // Get the directory path, file name, and file extension
-            string directory = Path.GetDirectoryName(filePath);
+            string directory = Path.GetDirectoryName(filePath) ?? string.Empty;
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
             string extension = Path.GetExtension(filePath);
 
@@ -122,7 +197,8 @@ namespace LoopDrawingDataUI
             lblTemplatePath.Text = string.Empty;
             lblResultOutputPath.Text = string.Empty;
             lblExcelFile.Text = string.Empty;
-            //lblLogFilePath.Text = string.Empty;
+            lblLastDrawingComplete.Text = string.Empty;
+            lblStatusInfo.Text = string.Empty;
         }
 
         private void btnConfigFile_Click(object sender, EventArgs e)
@@ -145,12 +221,14 @@ namespace LoopDrawingDataUI
 
         private void btnResultOutputPath_Click(object sender, EventArgs e)
         {
-            //GetFolderSetLabel(lblResultOutputPath);
             outputResultPath = SetFileName();
-            logFilePath = Path.Combine(Path.GetDirectoryName(outputResultPath), "logs");
-
-            lblResultOutputPath.Text = GetShortPath(outputResultPath);
+            if (outputResultPath != null)
+            {
+                logFilePath = Path.Combine(Path.GetDirectoryName(outputResultPath) ?? "", "logs");
+                lblResultOutputPath.Text = GetShortPath(outputResultPath);
+            }
         }
+
 
         private void btnExcelFile_Click(object sender, EventArgs e)
         {
@@ -166,7 +244,7 @@ namespace LoopDrawingDataUI
             templatePath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\templates";
             outputResultPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\output_test_data.json";
             outputDrawingPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output";
-            logFilePath = Path.Combine(Path.GetDirectoryName(outputResultPath), "logs");
+            logFilePath = Path.Combine(Path.GetDirectoryName(outputResultPath) ?? "", "logs");
 
             lblConfigFile.Text = GetShortPath(configDirectoryName);
             lblExcelFile.Text = GetShortPath(excelFileName);

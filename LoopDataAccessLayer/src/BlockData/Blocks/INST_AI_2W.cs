@@ -4,19 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
     public class INST_AI_2W : BlockFieldDeviceBase
     {
-        public INST_AI_2W(
-            IDataLoader dataLoader,
-            BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader) 
+        public INST_AI_2W(ILogger logger, IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(logger, dataLoader) 
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
-            Tag = tagMap[blockMap.Tags[0]];
+            Tag = GetTag(blockMap, tagMap, 0);
         }
 
         protected override void FetchDBData()

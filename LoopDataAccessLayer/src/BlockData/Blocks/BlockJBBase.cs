@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Features;
 using DocumentFormat.OpenXml.Math;
 using Google.Protobuf.WellKnownTypes;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,14 @@ namespace LoopDataAccessLayer
     public abstract class BlockJBBase: BlockDataExcel
     {
         public BlockJBBase(
+            ILogger logger,
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader)
+            Dictionary<string, string> tagMap) : base(logger, dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
-            Tag = tagMap[blockMap.Tags[0]];
+            Tag = GetTag(blockMap, tagMap, 0);
         }
 
         protected virtual void PopulateAttributesForSingleJB(bool isAnalog, bool isIsolator = false)

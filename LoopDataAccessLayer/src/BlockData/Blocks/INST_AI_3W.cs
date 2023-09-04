@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
     public class INST_AI_3W : INST_AI_2W
     {
-        public INST_AI_3W(
-            IDataLoader dataLoader,
-            BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader, blockMap, tagMap) 
+        public INST_AI_3W(ILogger logger, IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(logger, dataLoader, blockMap, tagMap) 
         {
         }
 

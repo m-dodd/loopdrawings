@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
@@ -10,12 +11,12 @@ namespace LoopDataAccessLayer
     {
         public string ControllerTag { get; set; } = string.Empty;
 
-        public MOD_1_TERM_1(IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(dataLoader)
+        public MOD_1_TERM_1(ILogger logger, IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(logger, dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
-            Tag = tagMap[blockMap.Tags[0]];
-            ControllerTag = tagMap[blockMap.Tags[1]];
+            Tag = GetTag(blockMap, tagMap, 0);
+            ControllerTag = GetTag(blockMap, tagMap, 1);
         }
 
         protected override void FetchDBData()

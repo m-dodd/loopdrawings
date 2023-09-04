@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
@@ -11,15 +12,16 @@ namespace LoopDataAccessLayer
         public string TagRelayA { get; }
         public string TagRelayB { get; }
         public RELAY_SERIES(
+            ILogger logger,
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader)
+            Dictionary<string, string> tagMap) : base(logger, dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
             Tag = tagMap[blockMap.Tags[0]];
-            TagRelayA = tagMap[blockMap.Tags[0]];
-            TagRelayB = tagMap[blockMap.Tags[1]];
+            TagRelayA = GetTag(blockMap, tagMap, 0);
+            TagRelayB = GetTag(blockMap, tagMap, 1);
         }
 
         protected override void FetchExcelData()

@@ -5,6 +5,15 @@ using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
 {
+    public interface IDBLoader
+    {
+        List<LoopNoTemplatePair> GetLoops();
+        IEnumerable<LoopTagData> GetLoopTags(LoopNoTemplatePair loop);
+        DBLoopData GetLoopTagData(string tag);
+        List<SDKData> GetSDs(string tag);
+    }
+
+
     public class DBDataLoader : IDBLoader
     {
         private readonly WTEdgeContext db;
@@ -55,32 +64,32 @@ namespace LoopDataAccessLayer
 
                 //// AIN tests
                 //"L-7100",
-                //"P-1102",
+
                 //"A-1100C",
 
                 //// PID tests
                 //"L-1400",
 
-                //// XV tests
+                // XV tests -2xy
                 //"X-1300",
 
-                // SIS Motor Test
-                "CM-301",
+                //// SIS Motor Test
+                //"CM-301",
 
-                // BPCS Motor Test
-                "PM-103",
+                //// BPCS Motor Test
+                //"PM-103",
 
-                ////// DI
-                ////"X-0018",
+                // //DI
+                //"X-0018",
 
-                ////// DO-RELAY
-                ////"X-9001",
+                //// DO-RELAY
+                //"X-9001",
 
-                ////// AI x2
-                ////"P-1533",
+                //// AI x2
+                //"P-1533",
 
                 //// funky double template
-                ////"S-1220",
+                //"S-1220",
                 
                 //// Double DI
                 //"H-1540",
@@ -95,12 +104,22 @@ namespace LoopDataAccessLayer
 
                 //// XV-1XY
                 //"X-1501",
+
+                // DEBUG TESTING
+                "X-1004",
+                //"X-1005",
+                //"X-1220",
+                //"V-1401A",
+                //"V-1401B",
             };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future
                       // I'm thinking of a log file message or something, but for now, I don't want it
-                      .Where(x => (x.Loopno != "---") && (x.Loopno != null) && (x.Looptemplate != null))
-                      .Where(x => currentTestingLoops.Contains(x.Loopno)) // just to limit the results for testing purposes
+                      .Where(x => x.Loopno != "---"
+                                  && x.Loopno != null
+                                  && x.Looptemplate != "---"
+                                  && x.Looptemplate != null)
+                      //.Where(x => currentTestingLoops.Contains(x.Loopno)) // just to limit the results for testing purposes
                       .Select(loop => new LoopNoTemplatePair
                                       {
                                           LoopNo = loop.Loopno ?? string.Empty,

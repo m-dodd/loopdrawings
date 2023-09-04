@@ -8,7 +8,9 @@ using WTEdge.Entities;
 
 namespace LoopDataAccessLayer
 {
-    
+    public interface IDataLoader : IExcelDataLoader, IDBLoader
+    {
+    }
 
     public class DataLoader : IDataLoader
     {

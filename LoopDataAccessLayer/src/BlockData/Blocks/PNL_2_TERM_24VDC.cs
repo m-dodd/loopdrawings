@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
     public class PNL_2_TERM_24VDC : PNL_3_or_4_TERM_24VDC
     {
         public PNL_2_TERM_24VDC(
+            ILogger logger,
             IDataLoader dataLoader, 
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader, blockMap, tagMap) { }
+            Dictionary<string, string> tagMap) : base(logger, dataLoader, blockMap, tagMap) { }
 
         protected override void FetchExcelData()
         {

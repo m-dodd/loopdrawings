@@ -6,12 +6,13 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
     public abstract class BlockValveBase: BlockDataDB
     {
-        public BlockValveBase(IDataLoader dataLoader) : base(dataLoader) { }
+        public BlockValveBase(ILogger logger, IDataLoader dataLoader) : base(logger, dataLoader) { }
 
         protected void PopulateValveDate(DBLoopData data)
         {

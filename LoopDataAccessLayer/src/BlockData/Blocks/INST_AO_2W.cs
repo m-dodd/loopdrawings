@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
@@ -11,14 +12,15 @@ namespace LoopDataAccessLayer
         public string ValveTag { get; set; } = string.Empty;
 
         public INST_AO_2W(
+            ILogger logger,
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader, blockMap, tagMap)
+            Dictionary<string, string> tagMap) : base(logger, dataLoader, blockMap, tagMap)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
-            Tag = tagMap[blockMap.Tags[0]];
-            ValveTag = tagMap[blockMap.Tags[1]];
+            Tag = GetTag(blockMap, tagMap, 0);
+            ValveTag = GetTag(blockMap, tagMap, 1);
         }
 
         protected override void FetchDBData()

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
@@ -13,17 +14,20 @@ namespace LoopDataAccessLayer
         protected bool deleteSDTable;
         protected string sdDrawingName;
         protected BlockMapData blockMap;
+        protected Dictionary<string, string> tagMap;
         public SD_TABLE(
+            ILogger logger,
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader) 
+            Dictionary<string, string> tagMap) : base(logger, dataLoader) 
         {
             this.blockMap = blockMap;
             Name = blockMap.Name;
             UID = blockMap.UID;
-            Tag = tagMap[blockMap.Tags[0]];
+            Tag = GetTag(blockMap, tagMap, 0);
             deleteSDTable = Boolean.Parse(tagMap["DELETE_SD"]);
             sdDrawingName = tagMap["DRAWING_NAME_SD"];
+            this.tagMap = tagMap;
 
         }
 
@@ -49,19 +53,14 @@ namespace LoopDataAccessLayer
 
         protected virtual List<SDKData> GetSDData()
         {
-            return GetSDData(blockMap.Tags);
+            List<string> tags = blockMap.Tags.Select(tagType => tagMap[tagType]).ToList();
+            
+            return GetSDData(tags);
         }
 
         protected virtual List<SDKData> GetSDData(IEnumerable<string> tags)
         {
-            List<SDKData> allSDs = new();
-            foreach (string tag in tags)
-            {
-                List<SDKData> sds = dataLoader.GetSDs(tag);
-                allSDs.AddRange(sds);
-            }
-            //return dataLoader.GetSDs(Tag);
-            return allSDs;
+            return tags.SelectMany(tag => dataLoader.GetSDs(tag)).ToList();
         }
     }
 }

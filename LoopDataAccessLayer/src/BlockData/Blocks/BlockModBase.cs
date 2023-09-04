@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
     public abstract class BlockModBase : BlockDataExcelDB
     {
-        public BlockModBase(IDataLoader dataLoader) : base(dataLoader) { }
+        public BlockModBase(ILogger logger, IDataLoader dataLoader) : base(logger, dataLoader) { }
 
         protected void PopulateAlarms(IDBLoopData data)
         {

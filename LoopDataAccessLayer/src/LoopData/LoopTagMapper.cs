@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using LoopDataAdapterLayer;
+using Microsoft.VisualBasic;
 using Org.BouncyCastle.Asn1.Pkcs;
 using System;
 using System.Collections.Generic;
@@ -24,19 +25,18 @@ namespace LoopDataAccessLayer
                     { "AI-2", tagData => tagData.IsAI && tagData.EndsWith("B") },
                     { "AO", tagData => tagData.IsAO } ,
                     { "DI", tagData => tagData.IsDI },
+                    
                     // DI-1 / DI-2 are a bit complicated
                     // we can have a loop that has tags ending in A and B, or ST/SP, but also have loops where tag1 is BPCS and tag2 is SIS
                     { "DI-1", tagData => tagData.IsDI && tagData.IsBPCS && (tagData.IsESDButton || tagData.EndsWith("A", "ST"))},
                     { "DI-2", tagData => tagData.IsDI && ((tagData.IsSIS && tagData.IsESDButton) || (tagData.IsBPCS && tagData.EndsWith("B", "SP")))},
+                    
                     { "DO", tagData => tagData.IsDO },
-                    // I'm not seeing a solution for these tag matches as they can be either horns or beacons or both
-                    // if they are both the same then they end with A / B but if they are different than they don't
-                    // this is fucked but let's think it through
-                    // if both are beacons then we need a suffix, if one is a horn then we don't care about suffix
-                    //      so what if we say DO-1 IsHorn || (IsBeacon & Suffix(A))
-                    //      and DO-2 IsBeacon & !Suffix(A)
+                    
+                    // beacons and horns got a little... more complex, but pretty sure this logic holds
                     { "DO-1", tagData => tagData.IsHorn || (tagData.IsBeacon && tagData.EndsWith("A"))},
                     { "DO-2", tagData => tagData.IsBeacon && !tagData.EndsWith("A")},
+
                     { "SOL-UNLOAD", tagData => tagData.IsDO && tagData.EndsWith("UN") }, // unload solenoid
                     { "SOL-LOAD", tagData => tagData.IsDO && tagData.EndsWith("LD") }, // load solenoid
                     { "CONTROLLER", tagData => tagData.IsSoft && tagData.TagContains("IC")},
@@ -65,7 +65,9 @@ namespace LoopDataAccessLayer
 
                     if (matchingTags.Count > 1)
                     {
-                        throw new Exception($"Multiple matching tags found for tag type '{tagType}'.");
+                        string msg = $"Multiple matching tags found for tag type '{tagType}'. " +
+                                      "Do you have the right template configured for this loop?";
+                        throw new NumberOfTagsForTypeExceededException(msg);
                     }
 
                     if (matchingTags.Count == 1 && !string.IsNullOrEmpty(matchingTags[0].Tag))
@@ -78,5 +80,15 @@ namespace LoopDataAccessLayer
             return tagMap;
         }
 
+    }
+
+    public class NumberOfTagsForTypeExceededException : Exception
+    {
+        public NumberOfTagsForTypeExceededException(string? message) : base(message)
+        {
+        }
+        public NumberOfTagsForTypeExceededException(string? message, Exception? innerException) : base(message, innerException)
+        {
+        }
     }
 }

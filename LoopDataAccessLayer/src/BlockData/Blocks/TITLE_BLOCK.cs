@@ -4,21 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
     public class TITLE_BLOCK : BlockDataExcel
     {
         public string DescriptionTag { get; set; } = string.Empty;
-        public TITLE_BLOCK(
-            IDataLoader dataLoader,
-            BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader)
+        public TITLE_BLOCK(ILogger logger, IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(logger, dataLoader)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
-            Tag = tagMap[blockMap.Tags[0]];
-            DescriptionTag = tagMap[blockMap.Tags[1]];
+            Tag = GetTag(blockMap, tagMap, 0);
+            DescriptionTag = GetTag(blockMap, tagMap, 1);
         }
 
         protected override void FetchExcelData()

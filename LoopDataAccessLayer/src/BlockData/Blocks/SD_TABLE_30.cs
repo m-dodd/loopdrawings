@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace LoopDataAccessLayer
 {
     public class SD_TABLE_30 : SD_TABLE
     {
         public SD_TABLE_30(
+            ILogger logger,
             IDataLoader dataLoader,
             BlockMapData blockMap,
-            Dictionary<string, string> tagMap) : base(dataLoader, blockMap, tagMap)
+            Dictionary<string, string> tagMap) : base(logger, dataLoader, blockMap, tagMap)
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
