@@ -1,0 +1,109 @@
+{
+    "DINX2_2W_SIS_RLY": {
+        "TemplateName": "DINX2_2W_SIS_RLY",
+        "TemplateFileName": "",
+        "BlockMap": [
+            {
+                "Name": "EMPTY_BLOCK",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "DI-BPCS",
+                    "DI-ESD"
+                ]
+            }
+        ]
+    },
+
+    "DINX2_2W_SIS_RLY_0JB": {
+        "TemplateName": "DINX2_2W_SIS_RLY_0JB",
+        "TemplateFileName": "DINX2_2W_SIS_RLY_0JB.dwg",
+        "BlockMap": [ ]
+    },
+
+    "DINX2_2W_SIS_RLY_1JB": {
+        "TemplateName": "DINX2_2W_SIS_RLY_1JB",
+        "TemplateFileName": "DINX2_2W_SIS_RLY_1JB.dwg",
+        "BlockMap": [
+            {
+                "Name": "JB_2-TERM_SINGLE",
+                "UID": "JB_2-TERM_SINGLE-1",
+                "Tags": [
+                    "DI-BPCS"
+                ]
+            },
+            {
+                "Name": "JB_2-TERM_SINGLE",
+                "UID": "JB_2-TERM_SINGLE-1",
+                "Tags": [
+                    "DI-ESD"
+                ]
+            }
+        ]
+    },
+
+    "COMMON_BLOCKS": {
+        "TemplateName": "COMMON_BLOCKS",
+        "BlockMap":[
+            {
+                "Name": "STD B SIZE SHEET",
+                "UID": "STD B SIZE SHEET-1",
+                "Tags": [
+                    "DRAWING_NAME",
+                    "DI-BPCS"
+                ]
+            },
+            {
+                "Name": "SD_TABLE_10-ROW",
+                "UID": "SD_TABLE_10-ROW-1",
+                "Tags": [
+                    "DI-BPCS",
+                    "DI-ESD"
+                ]
+            },
+            {
+                "Name": "TERM_DI_2W",
+                "UID": "TERM_DI_2W-1",
+                "Tags": [
+                    "DI-BPCS"
+                ]
+            },
+            {
+                "Name": "PNL_2-TERM_24VDC",
+                "UID": "PNL_2-TERM_24VDC-1",
+                "Tags": [
+                    "DI-BPCS"
+                ]
+            },
+            {
+                "Name": "MOD_1-TERM_1-PT_DYN",
+                "UID": "MOD_1-TERM_1-PT_DYN-1",
+                "Tags": [
+                    "DI-BPCS",
+                    "DI-BPCS"
+                ]
+            },
+            {
+                "Name": "TERM_DI_2W",
+                "UID": "TERM_DI_2W-1",
+                "Tags": [
+                    "DI-ESD"
+                ]
+            },
+            {
+                "Name": "ESD_STRING_DYN",
+                "UID": "ESD_STRING_DYN-1",
+                "Tags": [
+                    "DI-ESD"
+                ]
+            },
+            {
+                "Name": "MATERIAL_LIST_5-ROW",
+                "UID": "MATERIAL_LIST_5-ROW-1",
+                "Tags": [
+                    "DI-BPCS",
+                    "DI-ESD"
+                ]
+            }
+        ]
+    }
+}

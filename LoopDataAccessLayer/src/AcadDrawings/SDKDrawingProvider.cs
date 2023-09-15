@@ -11,20 +11,19 @@ namespace LoopDataAccessLayer
     {
         IDataLoader dataLoader;
         TemplateConfig template;
-        IDictionary<string, string> tagMap;
-        LoopDataConfig loopConfig;
+        LoopNoTemplatePair loopData;
+        List<SDKData> loopSDs;
 
         public SDKDrawingProvider(
             IDataLoader dataLoader,
             TemplateConfig template,
-            IDictionary<string, string> tagMap,
-            LoopDataConfig loopConfig
+            LoopNoTemplatePair loopData
             )
         {
             this.dataLoader = dataLoader;
             this.template = template;
-            this.tagMap = tagMap;
-            this.loopConfig = loopConfig;
+            this.loopData = loopData;
+            loopSDs = new List<SDKData>();
         }
 
         public bool NewDrawingRequired()
@@ -35,25 +34,11 @@ namespace LoopDataAccessLayer
             int numberOfSDs = GetNumberOfSDs();
             return numberOfSDs > sdkBlockSize;
         }
-
-        /// <summary>
-        /// Method <c>GetSDTags</c> returns a string of all tag name seperated by | that will be used by the SDK drawing.
-        /// </summary>
-        public string GetSDTags()
+        public string GetSDTag()
         {
-            return string.Join("|", GetSDTagList());
-        }
-
-        private List<string> GetSDTagList()
-        {
-            BlockMapData? sdTableBlock = GetSDBlock();
-            if (sdTableBlock == null) return new List<string>();
-            return sdTableBlock
-                        .Tags
-                        .Select(tag => tagMap.TryGetValue(tag, out string? value)
-                                       ? value
-                                       : string.Empty)
-                        .ToList();
+            // it no longer matters what tag is returned here as long as a tag is returned - it is used to build the drawing description
+            this.loopSDs = dataLoader.GetSDsForLoop(loopData.LoopNo);
+            return this.loopSDs.First().ParentTag;
         }
 
         private int GetSDKBlockSize()
@@ -69,9 +54,8 @@ namespace LoopDataAccessLayer
 
         private int GetNumberOfSDs()
         {
-            return GetSDTagList()
-                   .Where(tag => !string.IsNullOrEmpty(tag))
-                   .Sum(tag => dataLoader.GetSDs(tag).Count);
+            this.loopSDs = dataLoader.GetSDsForLoop(loopData.LoopNo);
+            return this.loopSDs.Count;
         }
 
         private BlockMapData? GetSDBlock()

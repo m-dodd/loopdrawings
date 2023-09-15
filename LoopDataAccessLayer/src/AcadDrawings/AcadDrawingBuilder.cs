@@ -10,6 +10,12 @@ using Org.BouncyCastle.Bcpg;
 
 namespace LoopDataAccessLayer
 {
+    public interface IAcadDrawingBuilder
+    {
+        public IEnumerable<AcadDrawingDataMappable> BuildDrawings(LoopNoTemplatePair loop);
+    }
+
+
     public class AcadDrawingBuilder : IAcadDrawingBuilder
     {
 
@@ -43,7 +49,7 @@ namespace LoopDataAccessLayer
             TemplateConfig? template = GetTemplate(loop);
             if (template is null)
             {
-                string msg = "No template found.";
+                string msg = $"No template found ({loop.Template}) for loop {loop.LoopNo}.";
                 logger.Error(msg, loop.LoopNo);
                 throw new DrawingBuilderException(msg);
             }
@@ -86,20 +92,21 @@ namespace LoopDataAccessLayer
             {
                 if (correctTemplate is not null)
                 {
-                    SDKDrawingProvider sdk = new(dataLoader, correctTemplate, tagMap, loopConfig);
+                    SDKDrawingProvider sdk = new(dataLoader, correctTemplate, loop);
                     if (sdk.NewDrawingRequired())
                     {
                         newSDKTemplateDrawing = true;
-                        sdkTag = sdk.GetSDTags();
+                        sdkTag = sdk.GetSDTag();
                         break;
                     }
                 }
             }
-            string drawingName1 = tagMap["DRAWING_NAME"] + "-1";
-            string drawingName2 = tagMap["DRAWING_NAME"] + "-2";
+            string drawingName = tagMap["DRAWING_NAME"];
+            string drawingName1 = drawingName.AppendDrawingNumber("-01");
+            string drawingName2 = drawingName.AppendDrawingNumber("-02");
             if (newSDKTemplateDrawing)
             {
-                string drawingName3 = tagMap["DRAWING_NAME"] + "-3";
+                string drawingName3 = drawingName.AppendDrawingNumber("-03");
                 logger.Information($"SDK drawing required... SDK will be named {drawingName3}.");
 
                 // create first drawing of the template
@@ -119,6 +126,10 @@ namespace LoopDataAccessLayer
                 if (!string.IsNullOrEmpty(tagMap["SDK_TAG"]))
                 {
                     drawings.Add(ConstructDrawing(loop, sdkTemplate, tagMap));
+                }
+                else
+                {
+                    throw new DrawingBuilderException($"Cannot find a SDK Tag - why are we trying to create a SDK drawing? Something is wrong with loop {loop.LoopNo}");
                 }
             }
             else
@@ -149,11 +160,12 @@ namespace LoopDataAccessLayer
             TemplateConfig sdkTemplate = GetTemplate("SDK") ?? throw new NullReferenceException("SDK is missing from configuration.");
             List<AcadDrawingDataMappable> drawings = new();
 
-            SDKDrawingProvider sdk = new(dataLoader, correctTemplate, tagMap, loopConfig);
+            SDKDrawingProvider sdk = new(dataLoader, correctTemplate, loop);
             if (sdk.NewDrawingRequired())
             {
-                string drawingName1 = tagMap["DRAWING_NAME"] + "-1";
-                string drawingName2 = tagMap["DRAWING_NAME"] + "-2";
+                string drawingName = tagMap["DRAWING_NAME"];
+                string drawingName1 = drawingName.AppendDrawingNumber("-01");
+                string drawingName2 = drawingName.AppendDrawingNumber("-02"); 
                 logger.Information($"SDK drawing required... Drawing will be renamed {drawingName1} and sdk will be named {drawingName2}.");
 
                 tagMap["DRAWING_NAME"] = drawingName1;
@@ -167,11 +179,15 @@ namespace LoopDataAccessLayer
                 tagMap["DRAWING_NAME_SD"] = string.Empty;
 
                 // get the tag to use for the blocks
-                tagMap["SDK_TAG"] = sdk.GetSDTags();
+                tagMap["SDK_TAG"] = sdk.GetSDTag(); 
                 tagMap["DELETE_SD"] = "false";
                 if (!string.IsNullOrEmpty(tagMap["SDK_TAG"]))
                 {
                     drawings.Add(ConstructDrawing(loop, sdkTemplate, tagMap));
+                }
+                else
+                {
+                    throw new DrawingBuilderException($"Cannot find a SDK Tag - why are we trying to create a SDK drawing? Something is wrong with loop {loop.LoopNo}");
                 }
             }
             else
@@ -227,14 +243,22 @@ namespace LoopDataAccessLayer
             return Path.Combine(loopConfig.TemplateDrawingPath, template.TemplateFileName);
         }
 
-        private string BuildDrawingIdentifier(LoopNoTemplatePair loop)
+        private string BuildDrawingName(LoopNoTemplatePair loop)
         {
+            string baseDrawingName;
+
             if (string.IsNullOrEmpty(loopConfig.SiteID))
             {
-                return loop.LoopNo;
+                baseDrawingName = loop.LoopNo;
             }
-            return loopConfig.SiteID + "-" + loop.LoopNo;
+            else
+            {
+                baseDrawingName = $"{loopConfig.SiteID}-{loop.LoopNo}";
+            }
+
+            return baseDrawingName.AppendDrawingNumber("-01");
         }
+
 
         private Dictionary<string, string> GetLoopTagMap(LoopNoTemplatePair loop, TemplateConfig template)
         {
@@ -242,7 +266,8 @@ namespace LoopDataAccessLayer
             if (tags.Count > 0)
             {
                 Dictionary<string, string> tagMap = loopTagMapper.BuildTagMap(tags, template);
-                tagMap["DRAWING_NAME"] = BuildDrawingIdentifier(loop);
+                tagMap["DRAWING_NAME"] = BuildDrawingName(loop);
+                tagMap["LoopNo"] = loop.LoopNo;
                 return tagMap;
             }
             else

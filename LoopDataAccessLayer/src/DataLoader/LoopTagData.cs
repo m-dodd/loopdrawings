@@ -45,11 +45,13 @@ namespace LoopDataAccessLayer
         public bool IsDI => IsIOType("DI");
         public bool IsDO => IsIOType("DO");
         public bool IsSoft => IsIOType("SOFT");
+        public bool IsTE => IsTagType("TE");
 
         public bool IsEmptyIOType => string.IsNullOrEmpty(IOType) || IOType == "---";
 
         public bool IsBPCS => IsSystemType("BPCS");
         public bool IsSIS => IsSystemType("SIS");
+        public bool IsESDLoop => IsSystemType("ESD_RELAY");
 
         public bool IsESDButton => IsInstrumentTypeMatch("esd") && IsInstrumentTypeMatch("button", "btn");
 

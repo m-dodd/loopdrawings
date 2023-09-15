@@ -1,0 +1,53 @@
+{
+  "XMTR_ELMT": {
+    "TemplateName": "XMTR_ELMT",
+    "TemplateFileName": "XMTR_ELMT_0JB.dwg",
+    "BlockMap": [
+      {
+        "Name": "STD B SIZE SHEET",
+        "UID": "STD B SIZE SHEET-1",
+        "Tags": [
+          "DRAWING_NAME",
+          "AI"
+        ]
+      },
+      {
+        "Name": "SD_TABLE_20-ROW",
+        "UID": "SD_TABLE_20-ROW-1",
+        "Tags": [
+          "AI"
+        ]
+      },
+      {
+        "Name": "INST_AI_2W_ELMT_4W",
+        "UID": "INST_AI_2W_ELMT_4W-1",
+        "Tags": [
+          "AI",
+          "TE"
+        ]
+      },
+      {
+        "Name": "PNL_3-TERM_24VDC-2",
+        "UID": "PNL_3-TERM_24VDC-2-1",
+        "Tags": [
+          "AI"
+        ]
+      },
+      {
+        "Name": "MOD_1-TERM_1-PT_DYN",
+        "UID": "MOD_1-TERM_1-PT_DYN-1",
+        "Tags": [
+          "AI",
+          "AI"
+        ]
+      },
+      {
+        "Name": "MATERIAL_LIST_5-ROW",
+        "UID": "MATERIAL_LIST_5-ROW-1",
+        "Tags": [
+          "AI"
+        ]
+      }
+    ]
+  }
+}

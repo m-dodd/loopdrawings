@@ -22,6 +22,11 @@ namespace LoopDrawingAcadUI
             try
             {
                 Transaction.Commit();
+                
+                // Check if the directory exists, and if not, create it
+                string directoryPath = Path.GetDirectoryName(AcadDrawingData.OutputDrawingFileName);
+                Directory.CreateDirectory(directoryPath);
+
                 Database.SaveAs(AcadDrawingData.OutputDrawingFileName, true, DwgVersion.Current, Database.SecurityParameters);
             }
             catch (Autodesk.AutoCAD.Runtime.Exception ex)

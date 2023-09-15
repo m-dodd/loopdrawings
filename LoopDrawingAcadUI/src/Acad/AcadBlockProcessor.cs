@@ -32,19 +32,6 @@ namespace LoopDrawingAcadUI
             }
         }
 
-        //public void ProcessBlock(AcadBlockData block)
-        //{
-        //    BlockReference br = GetAcadBlockReference(block.Name);
-        //    if (br != null)
-        //    {
-        //        if (block.Name == "VALVE_BODY")
-        //        {
-        //            SetDynamicPropertyValue(br, "Visibility1", block.Attributes["VALVE_TYPE"]);
-        //        }
-        //        ProcessBlockRefAttributes(br, block.Attributes);
-        //    }
-        //}
-
         public void ProcessBlock(AcadBlockData block)
         {
             
@@ -61,17 +48,15 @@ namespace LoopDrawingAcadUI
 
         private void ProcessDynamicBlocks(AcadBlockData block, BlockReference br)
         {
-
-            if (Regex.IsMatch(block.Name, @"VALVE_BODY|VALVE_2-SOL", RegexOptions.IgnoreCase))
+            // right now there are three different styles of blocks that have dynamic properties
+            // I'd like to remove this regex as it is hardcoding something that I don't think we should be, but for now, it works
+            // not sure what the idea solution might be though
+            if (Regex.IsMatch(block.Name, @"(VALVE_BODY|VALVE_2-SOL)|(^MOD(?=.*DYN).*$)|ESD_STRING", RegexOptions.IgnoreCase))
             {
-                SetDynamicPropertyValue(br, "Visibility1", block.Attributes["VALVE_TYPE"]);
-            }
-
-            // match dynamic mod blocks
-            if (Regex.IsMatch(block.Name, @"^MOD(?=.*DYN).*$", RegexOptions.IgnoreCase))
-            //if (block.Name == "MOD_1-TERM_1-PT_DYN")
-            {
-                SetDynamicPropertyValue(br, "Visibility1", block.Attributes["SYMBOL_TYPE"]);
+                if (block.Attributes.TryGetValue("Visibility1", out string visibility1))
+                {
+                    SetDynamicPropertyValue(br, "Visibility1", visibility1);
+                }
             }
         }
 

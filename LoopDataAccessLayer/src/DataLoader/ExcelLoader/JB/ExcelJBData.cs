@@ -18,7 +18,7 @@ namespace LoopDataAccessLayer
         {
             this.jbCols = jbCols;
             TerminalData = jbRows
-                .OrderBy(r => ConvertToSortableInt(ExcelHelper.GetRowString(r, jbCols.Terminal)))
+                .OrderBy(r => ConvertToSortableInt(r.GetCellString(jbCols.Terminal)))
                 .Select(GetJBData)
                 .ToList();
         }
@@ -31,12 +31,12 @@ namespace LoopDataAccessLayer
 
         private IExcelJBRowData<string> GetJBData(IXLRow row) => new ExcelJBRowData<string>()
         {
-            JBTag = ExcelHelper.GetRowString(row, jbCols.JBTag),
-            ItemTag = ExcelHelper.GetRowString(row, jbCols.ItemTag),
-            TerminalStrip = ExcelHelper.GetRowString(row, jbCols.TerminalStrip),
-            Terminal = ExcelHelper.GetRowString(row, jbCols.Terminal),
-            SignalType = ExcelHelper.GetRowString(row, jbCols.SignalType),
-            DeviceTag = ExcelHelper.GetRowString(row, jbCols.DeviceTag),
+            JBTag = row.GetCellString(jbCols.JBTag),
+            ItemTag = row.GetCellString(jbCols.ItemTag),
+            TerminalStrip = row.GetCellString(jbCols.TerminalStrip),
+            Terminal = row.GetCellString(jbCols.Terminal),
+            SignalType = row.GetCellString(jbCols.SignalType),
+            DeviceTag = row.GetCellString(jbCols.DeviceTag),
             LeftSide = CreateExcelJBRowSide(row, jbCols.LeftSide),
             RightSide = CreateExcelJBRowSide(row, jbCols.RightSide),
         };
@@ -45,10 +45,10 @@ namespace LoopDataAccessLayer
         {
             return new ExcelJBRowSide<string>
             {
-                Cable = ExcelHelper.GetRowString(row, sideCols.Cable),
-                Core = ExcelHelper.GetRowString(row, sideCols.Core),
-                Color = ExcelHelper.GetRowString(row, sideCols.Color),
-                WireTag = ExcelHelper.GetRowString(row, sideCols.WireTag)
+                Cable = row.GetCellString(sideCols.Cable),
+                Core = row.GetCellString(sideCols.Core),
+                Color = row.GetCellString(sideCols.Color),
+                WireTag = row.GetCellString(sideCols.WireTag)
             };
         }
     }

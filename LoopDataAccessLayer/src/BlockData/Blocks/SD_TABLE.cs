@@ -53,14 +53,9 @@ namespace LoopDataAccessLayer
 
         protected virtual List<SDKData> GetSDData()
         {
-            List<string> tags = blockMap.Tags.Select(tagType => tagMap[tagType]).ToList();
-            
-            return GetSDData(tags);
-        }
-
-        protected virtual List<SDKData> GetSDData(IEnumerable<string> tags)
-        {
-            return tags.SelectMany(tag => dataLoader.GetSDs(tag)).ToList();
+            var loopNo = tagMap["LoopNo"];
+            var sds = dataLoader.GetSDsForLoop(loopNo);
+            return sds;
         }
     }
 }

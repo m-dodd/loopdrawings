@@ -9,8 +9,10 @@ namespace LoopDataAccessLayer
     {
         List<LoopNoTemplatePair> GetLoops();
         IEnumerable<LoopTagData> GetLoopTags(LoopNoTemplatePair loop);
+        IEnumerable<LoopTagData> GetLoopTags(string loopNo);
         DBLoopData GetLoopTagData(string tag);
-        List<SDKData> GetSDs(string tag);
+        List<SDKData> GetSDsForTag(string tag);
+        List<SDKData> GetSDsForLoop(string loopNo);
     }
 
 
@@ -18,17 +20,24 @@ namespace LoopDataAccessLayer
     {
         private readonly WTEdgeContext db;
         private readonly Dictionary<string, DBLoopData> loopDataCache;
-        private readonly Dictionary<string, List<SDKData>> sdkDataCache;
+        private readonly Dictionary<string, List<SDKData>> sdkTagDataCache;
+        private readonly Dictionary<string, List<SDKData>> sdkLoopDataCache;
+        private readonly Dictionary<string, List<LoopTagData>> loopTagsCache;
+
+
         public DBDataLoader()
         {
             this.db = new WTEdgeContext();
             loopDataCache = new Dictionary<string, DBLoopData>();
-            sdkDataCache = new Dictionary<string, List<SDKData>>();
+            sdkTagDataCache = new Dictionary<string, List<SDKData>>();
+            sdkLoopDataCache = new Dictionary<string, List<SDKData>>();
+            loopTagsCache = new Dictionary<string, List<LoopTagData>>();
         }
 
-        public List<SDKData> GetSDs(string tag)
+        #region DataLoaderMethods
+        public List<SDKData> GetSDsForTag(string tag)
         {
-            if (sdkDataCache.TryGetValue(tag, out var data))
+            if (sdkTagDataCache.TryGetValue(tag, out var data))
             {
                 return data;
             }
@@ -37,19 +46,80 @@ namespace LoopDataAccessLayer
                 data = db.Tblsdkrelations
                     .Where(x => x.Parenttags == tag)
                     .Select(sd => new SDKData
-                            {
-                                ParentTag = GetCleanString(sd.Parenttags),
-                                InputTag = GetCleanString(sd.Inputtags),
-                                OutputTag = GetCleanString(sd.Outputtag),
-                                OutputDescription = sd.OutputtagNavigation == null ?
+                    {
+                        ParentTag = GetCleanString(sd.Parenttags),
+                        InputTag = GetCleanString(sd.Inputtags),
+                        OutputTag = GetCleanString(sd.Outputtag),
+                        OutputDescription = sd.OutputtagNavigation == null ?
                                                     string.Empty :
-                                                    GetCleanString(sd.OutputtagNavigation.Servicedescription),
-                                SdGroup = GetCleanString(sd.Sdgroup),
-                                SdAction1 = GetCleanString(sd.Sdaction1),
-                                SdAction2 = GetCleanString(sd.Sdaction2)
-                            })
+                                                    GetCleanString(sd.OutputtagNavigation.Controldescription),
+                        SdGroup = GetCleanString(sd.Sdgroup),
+                        SdAction1 = GetCleanString(sd.Sdaction1),
+                        SdAction2 = GetCleanString(sd.Sdaction2)
+                    })
                     .ToList();
-                sdkDataCache[tag] = data;
+                sdkTagDataCache[tag] = data;
+                return data;
+            }
+        }
+
+        public List<SDKData> GetSDsForTags(IEnumerable<string> tags)
+        {
+            // Filter the tags that are not already in the cache
+            var tagsToQuery = tags.Where(tag => !sdkTagDataCache.ContainsKey(tag)).ToList();
+
+            // Fetch data from the database for tags that are not in the cache and update cache
+            if (tagsToQuery.Count > 0)
+            {
+                // Fetch data from the database for tags that are not in the cache
+                var x = db.Tblsdkrelations
+                    .Where(sd => tagsToQuery.Contains(sd.Parenttags!)).ToList();
+                var dbDataDictionary = db.Tblsdkrelations
+                    .Where(sd => tagsToQuery.Contains(sd.Parenttags!))
+                    .Select(sd => new SDKData
+                    {
+                        ParentTag = GetCleanString(sd.Parenttags),
+                        InputTag = GetCleanString(sd.Inputtags),
+                        OutputTag = GetCleanString(sd.Outputtag),
+                        OutputDescription = sd.OutputtagNavigation == null ?
+                                                    string.Empty :
+                                                    GetCleanString(sd.OutputtagNavigation.Controldescription),
+                        SdGroup = GetCleanString(sd.Sdgroup),
+                        SdAction1 = GetCleanString(sd.Sdaction1),
+                        SdAction2 = GetCleanString(sd.Sdaction2)
+                    })
+                    .AsEnumerable() // Switch to LINQ to Objects
+                    .GroupBy(sd => sd.ParentTag)
+                    .ToDictionary(group => group.Key, group => group.ToList());
+
+                // Update the sdkTagDataCache with the fetched data or empty lists for missing tags
+                foreach (var tag in tagsToQuery)
+                {
+                    // Try to get data from dbDataDictionary or use an empty list if not found
+                    sdkTagDataCache[tag] = dbDataDictionary.TryGetValue(tag, out var data) ? data : new List<SDKData>();
+                }
+            }
+
+            // Retrieve SD data from the updated cache for the list of tags and convert it into a list of SDKData
+            var sdkDataList = tags
+                .Where(tag => sdkTagDataCache.ContainsKey(tag))
+                .SelectMany(tag => sdkTagDataCache[tag])
+                .ToList();
+
+            return sdkDataList;
+        }
+
+        public List<SDKData> GetSDsForLoop(string loopNo)
+        {
+            if (sdkLoopDataCache.TryGetValue(loopNo, out var data))
+            {
+                return data;
+            }
+            else
+            {
+                IEnumerable<LoopTagData> loopTags = GetLoopTags(loopNo);
+                var tags = loopTags.Select(t => t.Tag);
+                sdkLoopDataCache[loopNo] = data = GetSDsForTags(tags);
                 return data;
             }
         }
@@ -106,19 +176,25 @@ namespace LoopDataAccessLayer
                 //"X-1501",
 
                 // DEBUG TESTING
-                "X-1004",
+                //"H-1800",
+                //"E-9000",
+                "E-9001",
+                //"E-9002",
+                //"A-1100F",
+                //"X-1210",
                 //"X-1005",
                 //"X-1220",
                 //"V-1401A",
                 //"V-1401B",
             };
+            string[] excludedTemplates = { "---", "MANUAL", "DOUTX3_2W_RLY", "DINX3_2W" };
             return db.Tblloops
                       // it's possible that I will want to gracefully handle Looptemplate == null in the future
                       // I'm thinking of a log file message or something, but for now, I don't want it
                       .Where(x => x.Loopno != "---"
                                   && x.Loopno != null
-                                  && x.Looptemplate != "---"
-                                  && x.Looptemplate != null)
+                                  && x.Looptemplate != null
+                                  && !excludedTemplates.Contains(x.Looptemplate.ToUpper()))
                       //.Where(x => currentTestingLoops.Contains(x.Loopno)) // just to limit the results for testing purposes
                       .Select(loop => new LoopNoTemplatePair
                                       {
@@ -131,9 +207,20 @@ namespace LoopDataAccessLayer
 
         public IEnumerable<LoopTagData> GetLoopTags(LoopNoTemplatePair loop)
         {
+            return GetLoopTags(loop.LoopNo);
+        }
+
+        public IEnumerable<LoopTagData> GetLoopTags(string loopNo)
+        {
             string[] badStatus = { "OUT OF SCOPE", "DELETE", "HOLD" };
-            return db.Tblindices
-                     .Where(t => (t.Loopno == loop.LoopNo) && !badStatus.Contains(t.Status))
+            if (loopTagsCache.TryGetValue(loopNo, out List<LoopTagData>? data))
+            {
+                return data;
+            }
+            else
+            {
+                data = db.Tblindices
+                     .Where(t => (t.Loopno == loopNo) && !badStatus.Contains(t.Status))
                      .Select(tag => new LoopTagData
                      {
                          Tag = GetCleanString(tag.Tag),
@@ -143,8 +230,11 @@ namespace LoopDataAccessLayer
                          SystemType = (tag.Tblsystem == null) ? string.Empty : GetCleanString(tag.Tblsystem.SystemType),
                      })
                      .ToList();
+
+                return loopTagsCache[loopNo] = data;
+            }
         }
-        
+
         public DBLoopData GetLoopTagData(string tag)
         {
             /// Memoized version
@@ -207,6 +297,8 @@ namespace LoopDataAccessLayer
                     resultDict[tag] = d ?? new DBLoopData();
                 }
             }
+            #endregion DataLoaderMethods
+
 
             // Step 4: Populate resultDict with cached data
             foreach (var tag in tags.Except(tagsToFetch))
@@ -218,6 +310,7 @@ namespace LoopDataAccessLayer
 
         }
 
+        #region PrivateHelperMethods
         private static DBLoopData BuildLoopTagData(Tblindex d)
         {
             var data = new DBLoopData
@@ -252,6 +345,7 @@ namespace LoopDataAccessLayer
                 FailPosition = GetCleanString(d.Failposition),
                 InstrumentType = GetCleanString(d.Instrumenttype),
                 IoType = GetCleanString(d.Iotype),
+                SignalLevel = GetCleanString(d.Signallevel),
 
                 System = GetCleanString(d.System),
                 SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
@@ -341,6 +435,6 @@ namespace LoopDataAccessLayer
         }
 
         private static string GetCleanString(string? inputString) => (inputString ?? string.Empty).Trim();
-
+        #endregion PrivateHelperMethods
     }
 }

@@ -106,7 +106,7 @@ namespace LoopDataAccessLayer
             
             IEnumerable<LoopNoTemplatePair> loops = dataLoader.GetLoops();
             //var loopNames = loops.Select(l => l.LoopNo).ToList();
-            logger.Information($"{loops.Count()} loops found");
+             logger.Information($"{loops.Count()} loops found");
 
             List<string> loopsWithProblems = new();
             var report = new ProgressReportModel

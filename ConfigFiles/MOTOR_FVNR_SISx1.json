@@ -1,7 +1,7 @@
 {
-    "MOTOR_FVNR_SIS": {
-        "TemplateName": "MOTOR_FVNR_SIS",
-        "TemplateFileName": "MOTOR_FVNR_SIS.dwg",
+    "MOTOR_FVNR_SISx1": {
+        "TemplateName": "MOTOR_FVNR_SISx1",
+        "TemplateFileName": "MOTOR_FVNR_SISx1.dwg",
         "BlockMap": [
             {
                 "Name": "STD B SIZE SHEET",
@@ -33,17 +33,10 @@
                 ]
             },
             {
-                "Name": "TERM_DO_1W",
-                "UID": "TERM_DO_1W-1",
+                "Name": "TERM_DO_2W",
+                "UID": "TERM_DO_2W-2",
                 "Tags": [
-                    "MOTOR-SD-SIS-A"
-                ]
-            },
-            {
-                "Name": "TERM_DO_1W",
-                "UID": "TERM_DO_1W-2",
-                "Tags": [
-                    "MOTOR-SD-SIS-B"
+                    "MOTOR-SD-SIS"
                 ]
             },
             {
@@ -58,16 +51,8 @@
                 "Name": "MOD_2-TERM_1-PT_DYN",
                 "UID": "MOD_2-TERM_1-PT_DYN-2",
                 "Tags": [
-                    "MOTOR-SD-SIS-A",
-                    "MOTOR-SD-SIS-A"
-                ]
-            },
-            {
-                "Name": "MOD_2-TERM_1-PT_DYN",
-                "UID": "MOD_2-TERM_1-PT_DYN-3",
-                "Tags": [
-                    "MOTOR-SD-SIS-B",
-                    "MOTOR-SD-SIS-B"
+                    "MOTOR-SD-SIS",
+                    "MOTOR-SD-SIS"
                 ]
             },
             {
@@ -78,11 +63,10 @@
                 ]
             },
             {
-                "Name": "RELAY_120VAC_SERIES",
-                "UID": "RELAY_120VAC_SERIES-1",
+                "Name": "RELAY_120VAC",
+                "UID": "RELAY_120VAC-2",
                 "Tags": [
-                    "MOTOR-SD-SIS-A",
-                    "MOTOR-SD-SIS-B"
+                    "MOTOR-SD-SIS",
                 ]
             },
             {

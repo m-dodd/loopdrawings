@@ -1,4 +1,5 @@
 ﻿using System;
+using LoopDataAccessLayer.src.BlockData.Blocks;
 using Serilog;
 
 namespace LoopDataAccessLayer
@@ -47,19 +48,19 @@ namespace LoopDataAccessLayer
                 "MOD_1-TERM_1-PT_DYN" => new MOD_1_TERM_1(logger, dataLoader, blockMap, tagMap),
                 "MOD_2-TERM_1-PT_DYN" or
                 "MOD_2-TERM_1-PT_DYN_MIR" => new MOD_2_TERM_1(logger, dataLoader, blockMap, tagMap),
-                
                 "MOD_2-TERM_1-SIS" or
                 "MOD_2-TERM_1-BPCS_MIR" => new MOD_2_TERM_1_DISCRETE(logger, dataLoader, blockMap, tagMap),
-                
                 "MOD_2-TERM_2-BPCS" => new MOD_2_TERM_2_BPCS(logger, dataLoader, blockMap, tagMap),
                 
                 "RELAY_24VDC-2" or
                 "RELAY_120VAC" => new RELAY(logger, dataLoader, blockMap, tagMap),
                 "RELAY_120VAC_SERIES" => new RELAY_SERIES(logger, dataLoader, blockMap, tagMap),
 
-                
+                "ESD_STRING_DYN" => new ESD_STRING(logger, dataLoader, blockMap, tagMap),
+
                 "INST_AI_2W" => new INST_AI_2W(logger, dataLoader, blockMap, tagMap),
                 "INST_AI_3W" => new INST_AI_3W(logger, dataLoader, blockMap, tagMap),
+                "INST_AI_2W_ELMT_4W" => new INST_AI_2W_ELMT_4W(logger, dataLoader, blockMap, tagMap),
                 "INST_AO_2W" => new INST_AO_2W(logger, dataLoader, blockMap, tagMap),
                 "INST_DI_4W" => new INST_DI_4W(logger, dataLoader, blockMap, tagMap),
                 "INST_DI_4W_ZS" => new INST_DI_4W_ZS(logger, dataLoader, blockMap, tagMap),

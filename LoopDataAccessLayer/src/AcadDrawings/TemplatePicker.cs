@@ -9,6 +9,14 @@ using System.Diagnostics.Tracing;
 
 namespace LoopDataAccessLayer
 {
+    public interface ITemplatePicker
+    {
+        TemplateConfig? GetCorrectTemplate(TemplateConfig template, Dictionary<string, string> tagMap);
+        IEnumerable<TemplateConfig?> GetCorrectDoubleTemplate(TemplateConfig template, Dictionary<string, string> tagMap);
+
+    }
+
+
     public class TemplatePicker : ITemplatePicker
     {
         private readonly IDataLoader dataLoader;
@@ -36,14 +44,19 @@ namespace LoopDataAccessLayer
             {
                 "XMTR" or
                 "AIN_3W" => BuildSimpleName("AI"),
+
+                "AOUT_2W" => BuildSimpleName("AO"),
+
                 // this makes the assumption AI-1 and AI-2 have the same number of jbs
                 "XMTRX2" => BuildSimpleName("AI-1"),
 
                 "DIN_2W" or
                 "DIN_4W" => BuildSimpleName("DI"),
+
                 // this makes the assumption DI-1 and DI-2 have the same number of jbs
                 "DINX2_2W" or
                 "DINX2_2W_SIS" => BuildSimpleName("DI-1"),
+                "DINX2_2W_SIS_RLY" => BuildSimpleName("DI-BPCS", MAX_JBS: 1),
 
                 "DOUT_2W_RLY" => BuildSimpleName("DO"),
                 "DOUTX2_2W_RLY" => BuildSimpleName("DO-1"),
@@ -162,7 +175,7 @@ namespace LoopDataAccessLayer
             var rows = dataLoader.GetJBRows(tag);
             if (rows is not null)
             {
-                return rows.Select(r => ExcelHelper.GetRowString(r, dataLoader.ExcelJBCols.JBTag))
+                return rows.Select(r => r.GetCellString(dataLoader.ExcelJBCols.JBTag))
                            .Distinct()
                            .Count();
             }

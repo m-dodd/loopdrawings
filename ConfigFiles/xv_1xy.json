@@ -118,8 +118,8 @@
                 ]
             },
             {
-                "Name": "INST_DO_2W",
-                "UID": "INST_DO_2W-1",
+                "Name": "TERM_DI_2W",
+                "UID": "TERM_DI_2W-1",
                 "Tags": [
                     "SOL-BPCS"
                 ]

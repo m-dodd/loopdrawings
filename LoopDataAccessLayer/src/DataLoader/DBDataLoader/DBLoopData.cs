@@ -29,6 +29,7 @@ namespace LoopDataAccessLayer
         string PidDrawingNumber { get; set; }
         string Rack { get; set; }
         string RangeUnits { get; set; }
+        string SignalLevel { get; set; }
         string Slot { get; set; }
         string System { get; set; }
         string SystemType { get; set; }
@@ -47,11 +48,14 @@ namespace LoopDataAccessLayer
 
         private string failPosition;
         private string manufacturer;
+        private string signalLevel;
+
 
         public DBLoopData()
         {
             failPosition = string.Empty;
             manufacturer = string.Empty;
+            signalLevel = string.Empty;
         }
 
         public string Tag { get; set; } = string.Empty;
@@ -131,6 +135,27 @@ namespace LoopDataAccessLayer
                 }
             }
         
+        }
+        public string SignalLevel {
+            get { return signalLevel; }
+            set
+            {
+                string cleanedValue = string.IsNullOrWhiteSpace(value)
+                    ? string.Empty
+                    : Regex.Replace(value, @"[\s\-_]", "", RegexOptions.IgnoreCase).ToLower();
+
+                var validValues = new HashSet<string> { "120vac", "24vdc" };
+
+                if (!string.IsNullOrEmpty(cleanedValue) && validValues.Contains(cleanedValue))
+                {
+                    signalLevel = cleanedValue;
+                }
+                else
+                {
+                    signalLevel = string.Empty;
+                }
+            }
+
         }
 
         public string System { get; set; } = string.Empty;

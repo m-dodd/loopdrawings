@@ -8,6 +8,18 @@ using System.Threading.Tasks;
 
 namespace LoopDataAccessLayer
 {
+    public static class IXLRowExtensions
+    {
+        public static string GetCellString(this IXLRow row, int col)
+        {
+            if (0 < col && col <= 16384) // Check to make sure the col is within range
+            {
+                return row.Cell(col)?.GetString() ?? string.Empty;
+            }
+            return string.Empty;
+        }
+    }
+
     public static class ExcelHelper
     {
         public static string GetRowString(IXLRow row, int col)

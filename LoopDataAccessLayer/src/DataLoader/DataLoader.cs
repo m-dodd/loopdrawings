@@ -19,7 +19,8 @@ namespace LoopDataAccessLayer
 
         private readonly Dictionary<string, DBLoopData> loopData;
         private readonly Dictionary<string, IEnumerable<LoopTagData>> loopTagData;
-        private readonly Dictionary<string, List<SDKData>> sdkData;
+        private readonly Dictionary<string, List<SDKData>> sdkTagDataCache;
+        private readonly Dictionary<string, List<SDKData>> sdkLoopDataCache;
 
         private readonly Dictionary<string, IXLRow?> ioRowData;
         private readonly Dictionary<string, IXLRows?> jbRowsData;
@@ -41,7 +42,8 @@ namespace LoopDataAccessLayer
             
             loopData = new Dictionary<string, DBLoopData>();
             loopTagData = new Dictionary<string, IEnumerable<LoopTagData>>();
-            sdkData = new Dictionary<string, List<SDKData>>();
+            sdkTagDataCache = new Dictionary<string, List<SDKData>>();
+            sdkLoopDataCache = new Dictionary<string, List<SDKData>>();
 
             ioRowData = new Dictionary<string, IXLRow?>();
             jbRowsData = new Dictionary<string, IXLRows?>();
@@ -63,22 +65,32 @@ namespace LoopDataAccessLayer
 
         public IEnumerable<LoopTagData> GetLoopTags(LoopNoTemplatePair loop)
         {
+            return GetLoopTags(loop.LoopNo);
+        }
+
+        public IEnumerable<LoopTagData> GetLoopTags(string loopNo)
+        {
             //logger.LogInformation("Getting loop tags from the database");
-            if (loopTagData.TryGetValue(loop.LoopNo, out var data))
+            if (loopTagData.TryGetValue(loopNo, out var data))
             {
                 return data;
             }
             else
             {
-                data = dbLoader.GetLoopTags(loop);
-                loopTagData.Add(loop.LoopNo, data);
+                data = dbLoader.GetLoopTags(loopNo);
+                loopTagData.Add(loopNo, data);
                 return data;
             }
         }
 
-        public List<SDKData> GetSDs(string tag)
+        public List<SDKData> GetSDsForTag(string tag)
         {
-            return GetDataOrMemoizeGetData<List<SDKData>>(tag, sdkData!, dbLoader.GetSDs)!;
+            return GetDataOrMemoizeGetData<List<SDKData>>(tag, sdkTagDataCache!, dbLoader.GetSDsForTag)!;
+        }
+
+        public List<SDKData> GetSDsForLoop(string loopNo)
+        {
+            return GetDataOrMemoizeGetData<List<SDKData>>(loopNo, sdkLoopDataCache!, dbLoader.GetSDsForLoop)!;
         }
 
 

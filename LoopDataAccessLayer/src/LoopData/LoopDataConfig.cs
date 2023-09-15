@@ -118,30 +118,6 @@ namespace LoopDataAccessLayer
         }
     }
 
-    public static class DictionaryExtensions
-    {
-        public static void AddRange<TKey, TValue>(this IDictionary<TKey, TValue> destination, IEnumerable<KeyValuePair<TKey, TValue>> source, Action<string>? logger)
-        {
-            foreach (var kvp in source)
-            {
-                if (destination.ContainsKey(kvp.Key))
-                {
-                    // Log warning about duplicate key
-                    logger?.Invoke($"Duplicate key '{kvp.Key}' found in dictionaries. Using the value from the source dictionary.");
-                }
-                else
-                {
-                    destination.Add(kvp.Key, kvp.Value);
-                }
-            }
-        }
-
-        public static void AddRange<TKey, TValue>(this IDictionary<TKey, TValue> destination, IEnumerable<KeyValuePair<TKey, TValue>> source)
-        {
-            AddRange(destination, source, null);
-        }
-    }
-
 
     public class TemplateConfig
     {
@@ -151,12 +127,14 @@ namespace LoopDataAccessLayer
         public List<BlockMapData> BlockMap { get; set; } = new List<BlockMapData>();
     }
 
+
     public class BlockMapData
     {
         public string Name { get; set; } = string.Empty;
         public string UID { get; set; } = string.Empty;
         public List<string> Tags { get; set; } = new List<string>();
     }
+
 
     public class LoopDataException : Exception
     {

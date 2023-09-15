@@ -85,50 +85,52 @@ namespace LoopDataAccessLayer
                 var row = GetIORow(tag);
                 if (row is not null)
                 {
+                    var ioMap = ColumnMaps.IOColMap;
                     data = new ExcelIOData<string>()
                     {
-                        ModuleTerm01 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.ModuleTerm01),
-                        ModuleTerm02 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.ModuleTerm02),
-                        ModuleWireTag01 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.ModuleWireTag01),
-                        ModuleWireTag02 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.ModuleWireTag02),
-                        PanelTag = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PanelTag),
-                        BreakerNumber = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.BreakerNumber),
-                        Tag  = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Tag),
-                        PanelTerminalStrip = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PanelTerminalStrip),
-                        JB1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.JB1),
-                        JB2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.JB2),
-                        JB3 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.JB3),
+                        ModuleTerm01 = row.GetCellString(ioMap.ModuleTerm01),
+                        ModuleTerm02 = row.GetCellString(ioMap.ModuleTerm02),
+                        ModuleWireTag01 = row.GetCellString(ioMap.ModuleWireTag01),
+                        ModuleWireTag02 = row.GetCellString(ioMap.ModuleWireTag02),
+                        PanelTag = row.GetCellString(ioMap.PanelTag),
+                        BreakerNumber = row.GetCellString(ioMap.BreakerNumber),
+                        Tag  = row.GetCellString(ioMap.Tag),
+                        PanelTerminalStrip = row.GetCellString(ioMap.PanelTerminalStrip),
+                        JB1 = row.GetCellString(ioMap.JB1),
+                        JB2 = row.GetCellString(ioMap.JB2),
+                        JB3 = row.GetCellString(ioMap.JB3),
 
-                        PowerTerminalStrip = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerTerminalStrip),
-                        PowerVolts = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerVolts),
-                        PowerTerm1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerTerm1),
-                        PowerTerm2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerTerm2),
-                        PowerWireTag1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerWireTag1),
-                        PowerWireTag2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerWireTag2),
-                        PowerCore1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerCore1),
-                        PowerCore2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerCore2),
-                        PowerCable = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.PowerCable),
+                        PowerTerminalStrip = row.GetCellString(ioMap.PowerTerminalStrip),
+                        PowerVolts = row.GetCellString(ioMap.PowerVolts),
+                        PowerTerm1 = row.GetCellString(ioMap.PowerTerm1),
+                        PowerTerm2 = row.GetCellString(ioMap.PowerTerm2),
+                        PowerWireTag1 = row.GetCellString(ioMap.PowerWireTag1),
+                        PowerWireTag2 = row.GetCellString(ioMap.PowerWireTag2),
+                        PowerCore1 = row.GetCellString(ioMap.PowerCore1),
+                        PowerCore2 = row.GetCellString(ioMap.PowerCore2),
+                        PowerCable = row.GetCellString(ioMap.PowerCable),
+                        ESDDrawing = row.GetCellString(ioMap.ESDDrawing),
 
-                        Device = CreateExcelIODeviceCommon(row, ColumnMaps.IOColMap.Device),
-                        IO = CreateExcelIODeviceCommon(row, ColumnMaps.IOColMap.IO),
+                        Device = CreateExcelIODeviceCommon(row, ioMap.Device),
+                        IO = CreateExcelIODeviceCommon(row, ioMap.IO),
 
                         Relay = new ExcelIORelay<string>()
                         {
-                            Tag = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Relay.Tag),
-                            PanelTerminalStrip = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Relay.PanelTerminalStrip),
-                            Term1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Relay.Term1),
-                            Term2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Relay.Term2),
-                            ContactTag = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Relay.ContactTag),
-                            ContactTerm1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Relay.ContactTerm1),
-                            ContactTerm2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Relay.ContactTerm2)
+                            Tag = row.GetCellString(ioMap.Relay.Tag),
+                            PanelTerminalStrip = row.GetCellString(ioMap.Relay.PanelTerminalStrip),
+                            Term1 = row.GetCellString(ioMap.Relay.Term1),
+                            Term2 = row.GetCellString(ioMap.Relay.Term2),
+                            ContactTag = row.GetCellString(ioMap.Relay.ContactTag),
+                            ContactTerm1 = row.GetCellString(ioMap.Relay.ContactTerm1),
+                            ContactTerm2 = row.GetCellString(ioMap.Relay.ContactTerm2)
                         },
                         Overload = new ExcelOverload<string>
                         {
-                            Description1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Overload.Description1),
-                            Description2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Overload.Description2),
-                            Tag1 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Overload.Tag1),
-                            Tag2 = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Overload.Tag2),
-                            PortNum = ExcelHelper.GetRowString(row, ColumnMaps.IOColMap.Overload.PortNum),
+                            Description1 = row.GetCellString(ioMap.Overload.Description1),
+                            Description2 = row.GetCellString(ioMap.Overload.Description2),
+                            Tag1 = row.GetCellString(ioMap.Overload.Tag1),
+                            Tag2 = row.GetCellString(ioMap.Overload.Tag2),
+                            PortNum = row.GetCellString(ioMap.Overload.PortNum),
                         }
                     };
                 }
@@ -145,24 +147,27 @@ namespace LoopDataAccessLayer
         {
             return new ExcelIODeviceCommon<string>
             {
-                CableTag = ExcelHelper.GetRowString(row, ioDeviceCols.CableTag),
-                Terminal1 = ExcelHelper.GetRowString(row, ioDeviceCols.Terminal1),
-                Terminal2 = ExcelHelper.GetRowString(row, ioDeviceCols.Terminal2),
-                Terminal3 = ExcelHelper.GetRowString(row, ioDeviceCols.Terminal3),
-                Terminal4 = ExcelHelper.GetRowString(row, ioDeviceCols.Terminal4),
-                WireTag1 = ExcelHelper.GetRowString(row, ioDeviceCols.WireTag1),
-                WireTag2 = ExcelHelper.GetRowString(row, ioDeviceCols.WireTag2),
-                WireTag3 = ExcelHelper.GetRowString(row, ioDeviceCols.WireTag3),
-                WireTag4 = ExcelHelper.GetRowString(row, ioDeviceCols.WireTag4),
-                WireColor1 = ExcelHelper.GetRowString(row, ioDeviceCols.WireColor1),
-                WireColor2 = ExcelHelper.GetRowString(row, ioDeviceCols.WireColor2),
-                WireColor3 = ExcelHelper.GetRowString(row, ioDeviceCols.WireColor3),
-                CorePair1 = ExcelHelper.GetRowString(row, ioDeviceCols.CorePair1),
-                CorePair2 = ExcelHelper.GetRowString(row, ioDeviceCols.CorePair2),
-                CorePair3 = ExcelHelper.GetRowString(row, ioDeviceCols.CorePair3),
-                CorePair4 = ExcelHelper.GetRowString(row, ioDeviceCols.CorePair4),
-                PanelTag = ExcelHelper.GetRowString(row, ioDeviceCols.PanelTag),
-                PanelTerminalStrip = ExcelHelper.GetRowString(row, ioDeviceCols.PanelTerminalStrip),
+                CableTag = row.GetCellString(ioDeviceCols.CableTag),
+                Terminal1 = row.GetCellString(ioDeviceCols.Terminal1),
+                Terminal2 = row.GetCellString(ioDeviceCols.Terminal2),
+                Terminal3 = row.GetCellString(ioDeviceCols.Terminal3),
+                Terminal4 = row.GetCellString(ioDeviceCols.Terminal4),
+                Terminal6 = row.GetCellString(ioDeviceCols.Terminal5),
+                Terminal5 = row.GetCellString(ioDeviceCols.Terminal6),
+                WireTag1 = row.GetCellString(ioDeviceCols.WireTag1),
+                WireTag2 = row.GetCellString(ioDeviceCols.WireTag2),
+                WireTag3 = row.GetCellString(ioDeviceCols.WireTag3),
+                WireTag4 = row.GetCellString(ioDeviceCols.WireTag4),
+                WireColor1 = row.GetCellString(ioDeviceCols.WireColor1),
+                WireColor2 = row.GetCellString(ioDeviceCols.WireColor2),
+                WireColor3 = row.GetCellString(ioDeviceCols.WireColor3),
+                WireColor4 = row.GetCellString(ioDeviceCols.WireColor4),
+                CorePair1 = row.GetCellString(ioDeviceCols.CorePair1),
+                CorePair2 = row.GetCellString(ioDeviceCols.CorePair2),
+                CorePair3 = row.GetCellString(ioDeviceCols.CorePair3),
+                CorePair4 = row.GetCellString(ioDeviceCols.CorePair4),
+                PanelTag = row.GetCellString(ioDeviceCols.PanelTag),
+                PanelTerminalStrip = row.GetCellString(ioDeviceCols.PanelTerminalStrip),
             };
         }
 
@@ -183,7 +188,7 @@ namespace LoopDataAccessLayer
                 else
                 {
                     data = rows
-                        .GroupBy(r => ExcelHelper.GetRowString(r, ColumnMaps.JBColMap.JBTag))
+                        .GroupBy(r => r.GetCellString(ColumnMaps.JBColMap.JBTag))
                         .Select(group =>
                             new ExcelJBData(
                                 group,
@@ -215,11 +220,11 @@ namespace LoopDataAccessLayer
                 {
                     data = new ExcelCableData<string>()
                     {
-                        CableTag = ExcelHelper.GetRowString(row, ColumnMaps.CableColMap.CableTag),
-                        From = ExcelHelper.GetRowString(row, ColumnMaps.CableColMap.From),
-                        To = ExcelHelper.GetRowString(row, ColumnMaps.CableColMap.To),
-                        Conductors = ExcelHelper.GetRowString(row, ColumnMaps.CableColMap.Conductors),
-                        ConductorSize = ExcelHelper.GetRowString(row, ColumnMaps.CableColMap.ConductorSize),
+                        CableTag = row.GetCellString(ColumnMaps.CableColMap.CableTag),
+                        From = row.GetCellString(ColumnMaps.CableColMap.From),
+                        To = row.GetCellString(ColumnMaps.CableColMap.To),
+                        Conductors = row.GetCellString(ColumnMaps.CableColMap.Conductors),
+                        ConductorSize = row.GetCellString(ColumnMaps.CableColMap.ConductorSize),
                     };
                 }
                 else
@@ -302,13 +307,13 @@ namespace LoopDataAccessLayer
             
             titleBlockData = new ExcelTitleBlockData<string>()
             {
-                SiteNumber = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.SiteNumber),
-                Sheet = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.Sheet),
-                MaxSheets = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.MaxSheets),
-                Project = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.Project),
-                Scale = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.Scale),
-                CityTown = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.CityTown),
-                ProvinceState = ExcelHelper.GetRowString(row, ColumnMaps.TitleBlockColMap.ProvinceState),
+                SiteNumber = row.GetCellString(ColumnMaps.TitleBlockColMap.SiteNumber),
+                Sheet = row.GetCellString(ColumnMaps.TitleBlockColMap.Sheet),
+                MaxSheets = row.GetCellString(ColumnMaps.TitleBlockColMap.MaxSheets),
+                Project = row.GetCellString(ColumnMaps.TitleBlockColMap.Project),
+                Scale = row.GetCellString(ColumnMaps.TitleBlockColMap.Scale),
+                CityTown = row.GetCellString(ColumnMaps.TitleBlockColMap.CityTown),
+                ProvinceState = row.GetCellString(ColumnMaps.TitleBlockColMap.ProvinceState),
                 GeneralRevData = CreateExcelTitleBlockRevData(row, ColumnMaps.TitleBlockColMap.GeneralRevData),
                 RevBlockRevData = CreateExcelTitleBlockRevData(row, ColumnMaps.TitleBlockColMap.RevBlockRevData),
             };
@@ -323,12 +328,12 @@ namespace LoopDataAccessLayer
             string date = DateTime.Today.ToString("ddMMMyy").ToUpper();
             return new ExcelTitleBlockRevData<string>()
             {
-                Rev = ExcelHelper.GetRowString(row, revdata.Rev),
-                Description = ExcelHelper.GetRowString(row, revdata.Description),
+                Rev = row.GetCellString(revdata.Rev),
+                Description = row.GetCellString(revdata.Description),
                 Date = date,
-                DrawnBy = ExcelHelper.GetRowString(row, revdata.DrawnBy),
-                CheckedBy = ExcelHelper.GetRowString(row, revdata.CheckedBy),
-                ApprovedBy = ExcelHelper.GetRowString(row, revdata.ApprovedBy),
+                DrawnBy = row.GetCellString(revdata.DrawnBy),
+                CheckedBy = row.GetCellString(revdata.CheckedBy),
+                ApprovedBy = row.GetCellString(revdata.ApprovedBy),
             };
         }
 

@@ -29,7 +29,9 @@ namespace LoopDataAccessLayer
             PopulateAlarms(data);
 
             Attributes["DRAWING_NO"] = data.PidDrawingNumber;
-            Attributes["SYMBOL_TYPE"] = GetSymbolType(data.SystemType);
+            // Control the visibility of the dynamic block (symbol display)
+            //Attributes["SYMBOL_TYPE"] = GetSymbolType(data.SystemType);
+            Attributes["Visibility1"] = GetSymbolType(data.SystemType);
         }
 
         protected override void FetchExcelData()

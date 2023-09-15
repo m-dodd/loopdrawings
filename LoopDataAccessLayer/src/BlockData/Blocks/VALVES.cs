@@ -2,11 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Serilog;
 
 namespace LoopDataAccessLayer
 {
+    public abstract class BlockValveBase : BlockDataDB
+    {
+        public BlockValveBase(ILogger logger, IDataLoader dataLoader) : base(logger, dataLoader) { }
+
+        protected void PopulateValveDate(DBLoopData data)
+        {
+            PopulateTag1Tag2();
+            Attributes["SIZE/FAIL_POSITION"] = data.FailPosition;
+            // control the visibility of the dynamic block valve display
+            Attributes["Visibility1"] = GetValveType(data.InstrumentType);
+        }
+
+        protected static string GetValveType(string instrument)
+        {
+            Regex rg = new(@"ball|gate|globe|butterfly", RegexOptions.IgnoreCase);
+            Match m = rg.Match(instrument);
+
+            if (m.Success)
+            {
+                return m.Value.ToUpper() + "_DIAPHRAGM";
+            }
+            else
+            {
+                throw new NotImplementedException(instrument.ToUpper() + " has not been implemented.");
+            }
+        }
+    }
+
+
     public class VALVE_BODY : BlockValveBase
     {
         public VALVE_BODY(ILogger logger, IDataLoader dataLoader, BlockMapData blockMap, Dictionary<string, string> tagMap) : base(logger, dataLoader)
@@ -34,8 +64,8 @@ namespace LoopDataAccessLayer
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
-            Tag = tagMap[blockMap.Tags[1]];
-            Solenoid = tagMap[blockMap.Tags[0]];
+            Tag = GetTag(blockMap, tagMap, 1);
+            Solenoid = GetTag(blockMap, tagMap, 0);
         }
 
         protected override void FetchDBData()
@@ -58,9 +88,9 @@ namespace LoopDataAccessLayer
         {
             Name = blockMap.Name;
             UID = blockMap.UID;
-            Tag = tagMap[blockMap.Tags[2]];
-            SolenoidBPCS = tagMap[blockMap.Tags[0]];
-            SolenoidSIS = tagMap[blockMap.Tags[1]];
+            Tag = GetTag(blockMap, tagMap, 2);
+            SolenoidBPCS = GetTag(blockMap, tagMap, 0);
+            SolenoidSIS = GetTag(blockMap, tagMap, 1);
         }
 
         protected override void FetchDBData()

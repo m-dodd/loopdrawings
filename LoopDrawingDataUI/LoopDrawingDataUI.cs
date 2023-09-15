@@ -147,6 +147,17 @@ namespace LoopDrawingDataUI
             {
                 HandleException(ex, "Close Excel File");
             }
+            catch (ExcelColumnNotFoundException ex)
+            {
+                HandleException(ex, "Excel file missing column(s).");
+            }
+        }
+
+        private void HandleException(Exception ex, string errorMessage)
+        {
+            InitStatusDisplays();
+            Log.Error(ex.Message + errorMessage);
+            MessageBox.Show(ex.Message, errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void ReportProgress(object? sender, ProgressReportModel e)
@@ -162,12 +173,13 @@ namespace LoopDrawingDataUI
             }));
         }
 
-        private static void HandleException(Exception ex, string errorMessage)
+        private void InitStatusDisplays()
         {
-            Log.Error(ex.Message);
-            MessageBox.Show(ex.Message, errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            progressDrawingsComplete.Value = 0;
+            progressDrawingsComplete.Visible = false;
+            lblLastDrawingComplete.Text = string.Empty;
+            lblStatusInfo.Text = string.Empty;
         }
-
 
         private string TestOutputFileName(string outputResultPath)
         {
@@ -197,8 +209,7 @@ namespace LoopDrawingDataUI
             lblTemplatePath.Text = string.Empty;
             lblResultOutputPath.Text = string.Empty;
             lblExcelFile.Text = string.Empty;
-            lblLastDrawingComplete.Text = string.Empty;
-            lblStatusInfo.Text = string.Empty;
+            InitStatusDisplays();
         }
 
         private void btnConfigFile_Click(object sender, EventArgs e)
@@ -243,7 +254,7 @@ namespace LoopDrawingDataUI
             excelFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\2023.03.28 - Automation Wiring Data.xlsm";
             templatePath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\templates";
             outputResultPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\output_test_data.json";
-            outputDrawingPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output";
+            outputDrawingPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\drawings";
             logFilePath = Path.Combine(Path.GetDirectoryName(outputResultPath) ?? "", "logs");
 
             lblConfigFile.Text = GetShortPath(configDirectoryName);
