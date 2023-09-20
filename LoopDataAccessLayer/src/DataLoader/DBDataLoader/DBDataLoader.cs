@@ -249,7 +249,43 @@ namespace LoopDataAccessLayer
             {
                 data = db.Tblindices
                     .Where(t => t.Tag == tag)
-                    .Select( d => BuildLoopTagData(d))
+                    .Select( d => new DBLoopData
+                    {
+                        Tag = d.Tag,
+                        LoopNo = GetCleanString(d.Loopno),
+                        Description = GetCleanString(d.Controldescription),
+
+                        Manufacturer = FetchManufacturerModel(d.Tblbominstr, "Manufacturer"),
+                        Model = FetchManufacturerModel(d.Tblbominstr, "Model"),
+
+                        JB1Tag = GetCleanString(d.Jb1tag),
+                        JB2Tag = GetCleanString(d.Jb2tag),
+
+                        Rack = FetchRackSlotChannel(d, "rack"),
+                        Slot = FetchRackSlotChannel(d, "slot"),
+                        Channel = FetchRackSlotChannel(d, "channel"),
+
+                        PidDrawingNumber = GetCleanString(d.Pid),
+
+                        MinCalRange = FetchCalRange(d.Tblarss, "min"),
+                        MaxCalRange = FetchCalRange(d.Tblarss, "max"),
+                        RangeUnits = FetchCalRange(d.Tblarss, "units"),
+
+                        LoLoAlarm = FetchAlarmString(d.Tblarss, "ll"),
+                        LoAlarm = FetchAlarmString(d.Tblarss, "l"),
+                        HiAlarm = FetchAlarmString(d.Tblarss, "h"),
+                        HiHiAlarm = FetchAlarmString(d.Tblarss, "hh"),
+                        LoControl = FetchAlarmString(d.Tblarss, "lc"),
+                        HiControl = FetchAlarmString(d.Tblarss, "hc"),
+
+                        FailPosition = GetCleanString(d.Failposition),
+                        InstrumentType = GetCleanString(d.Instrumenttype),
+                        IoType = GetCleanString(d.Iotype),
+                        SignalLevel = GetCleanString(d.Signallevel),
+
+                        System = GetCleanString(d.System),
+                        SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
+                    })
                     .FirstOrDefault();
 
                 if (data is not null && data.IsMotorSD)
@@ -284,8 +320,43 @@ namespace LoopDataAccessLayer
                     .Where(t => tagsToFetch.Contains(t.Tag))
                     .ToDictionary(
                         t => t.Tag,
-                        d => BuildLoopTagData(d)
-                    );
+                        d => new DBLoopData
+                        {
+                            Tag = d.Tag,
+                            LoopNo = GetCleanString(d.Loopno),
+                            Description = GetCleanString(d.Controldescription),
+
+                            Manufacturer = FetchManufacturerModel(d.Tblbominstr, "Manufacturer"),
+                            Model = FetchManufacturerModel(d.Tblbominstr, "Model"),
+
+                            JB1Tag = GetCleanString(d.Jb1tag),
+                            JB2Tag = GetCleanString(d.Jb2tag),
+
+                            Rack = FetchRackSlotChannel(d, "rack"),
+                            Slot = FetchRackSlotChannel(d, "slot"),
+                            Channel = FetchRackSlotChannel(d, "channel"),
+
+                            PidDrawingNumber = GetCleanString(d.Pid),
+
+                            MinCalRange = FetchCalRange(d.Tblarss, "min"),
+                            MaxCalRange = FetchCalRange(d.Tblarss, "max"),
+                            RangeUnits = FetchCalRange(d.Tblarss, "units"),
+
+                            LoLoAlarm = FetchAlarmString(d.Tblarss, "ll"),
+                            LoAlarm = FetchAlarmString(d.Tblarss, "l"),
+                            HiAlarm = FetchAlarmString(d.Tblarss, "h"),
+                            HiHiAlarm = FetchAlarmString(d.Tblarss, "hh"),
+                            LoControl = FetchAlarmString(d.Tblarss, "lc"),
+                            HiControl = FetchAlarmString(d.Tblarss, "hc"),
+
+                            FailPosition = GetCleanString(d.Failposition),
+                            InstrumentType = GetCleanString(d.Instrumenttype),
+                            IoType = GetCleanString(d.Iotype),
+                            SignalLevel = GetCleanString(d.Signallevel),
+
+                            System = GetCleanString(d.System),
+                            SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
+                        });
 
                 foreach (var (tag, d) in dataDict)
                 {
@@ -297,7 +368,6 @@ namespace LoopDataAccessLayer
                     resultDict[tag] = d ?? new DBLoopData();
                 }
             }
-            #endregion DataLoaderMethods
 
 
             // Step 4: Populate resultDict with cached data
@@ -309,50 +379,9 @@ namespace LoopDataAccessLayer
             return resultDict;
 
         }
+        #endregion DataLoaderMethods
 
         #region PrivateHelperMethods
-        private static DBLoopData BuildLoopTagData(Tblindex d)
-        {
-            var data = new DBLoopData
-            {
-                Tag = d.Tag,
-                LoopNo = GetCleanString(d.Loopno),
-                Description = GetCleanString(d.Controldescription),
-
-                Manufacturer = FetchManufacturerModel(d.Tblbominstr, "Manufacturer"),
-                Model = FetchManufacturerModel(d.Tblbominstr, "Model"),
-
-                JB1Tag = GetCleanString(d.Jb1tag),
-                JB2Tag = GetCleanString(d.Jb2tag),
-
-                Rack = FetchRackSlotChannel(d, "rack"),
-                Slot = FetchRackSlotChannel(d, "slot"),
-                Channel = FetchRackSlotChannel(d, "channel"),
-
-                PidDrawingNumber = GetCleanString(d.Pid),
-
-                MinCalRange = FetchCalRange(d.Tblarss, "min"),
-                MaxCalRange = FetchCalRange(d.Tblarss, "max"),
-                RangeUnits = FetchCalRange(d.Tblarss, "units"),
-
-                LoLoAlarm = FetchAlarmString(d.Tblarss, "ll"),
-                LoAlarm = FetchAlarmString(d.Tblarss, "l"),
-                HiAlarm = FetchAlarmString(d.Tblarss, "h"),
-                HiHiAlarm = FetchAlarmString(d.Tblarss, "hh"),
-                LoControl = FetchAlarmString(d.Tblarss, "lc"),
-                HiControl = FetchAlarmString(d.Tblarss, "hc"),
-
-                FailPosition = GetCleanString(d.Failposition),
-                InstrumentType = GetCleanString(d.Instrumenttype),
-                IoType = GetCleanString(d.Iotype),
-                SignalLevel = GetCleanString(d.Signallevel),
-
-                System = GetCleanString(d.System),
-                SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
-            };
-            return data;
-        }
-
         private static string FetchRackSlotChannel(Tblindex index, string rackSlotChannel)
         {
             if (index is null)
