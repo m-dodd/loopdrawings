@@ -91,6 +91,7 @@ namespace LoopDataAccessLayer
         {
             return Tag.EndsWith(suffix, StringComparison.OrdinalIgnoreCase);
         }
+
         public bool EndsWith(params string[] suffixes)
         {
             bool endsWith = suffixes.Any(suffix => Tag.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));

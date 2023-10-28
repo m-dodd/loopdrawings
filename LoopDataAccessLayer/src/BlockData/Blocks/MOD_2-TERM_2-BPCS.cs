@@ -44,9 +44,13 @@ namespace LoopDataAccessLayer
             if (ZSCIOData is not null && ZSOIOData is not null)
             {
                 Attributes["MOD_TERM1"] = ZSCIOData.ModuleTerm01;
-                Attributes["MOD_TERM2"] = ZSOIOData.ModuleTerm01;
+                Attributes["MOD_TERM2"] = ZSCIOData.ModuleTerm02;
+                Attributes["MOD_TERM3"] = ZSOIOData.ModuleTerm01;
+                Attributes["MOD_TERM4"] = ZSOIOData.ModuleTerm02;
                 Attributes["WIRE_TAG_IO-1"] = ZSCIOData.ModuleWireTag01;
-                Attributes["WIRE_TAG_IO-2"] = ZSOIOData.ModuleWireTag01;
+                Attributes["WIRE_TAG_IO-2"] = ZSCIOData.ModuleWireTag02;
+                Attributes["WIRE_TAG_IO-3"] = ZSOIOData.ModuleWireTag01;
+                Attributes["WIRE_TAG_IO-4"] = ZSOIOData.ModuleWireTag02;
             }
         }
     }

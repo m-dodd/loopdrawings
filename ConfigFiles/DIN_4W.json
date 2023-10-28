@@ -70,8 +70,8 @@
                 ]
             },
             {
-                "Name": "PNL_2-TERM_24VDC",
-                "UID": "PNL_2-TERM_24VDC-1",
+                "Name": "PNL_2-TERM",
+                "UID": "PNL_2-TERM-1",
                 "Tags": [
                     "DI"
                 ]
@@ -84,8 +84,8 @@
                 ]
             },
             {
-                "Name": "MOD_1-TERM_1-PT_DYN",
-                "UID": "MOD_1-TERM_1-PT_DYN-1",
+                "Name": "MOD_2-TERM_1-PT_DYN",
+                "UID": "MOD_2-TERM_1-PT_DYN-1",
                 "Tags": [
                     "DI",
                     "DI"

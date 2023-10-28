@@ -35,6 +35,9 @@ namespace LoopDataAccessLayer
         string SystemType { get; set; }
         string Tag { get; set; }
         bool IsMotorSD { get; }
+        bool IsMotorStart { get; }
+        bool IsMotorStop { get; }
+        bool IsMotorStartStop { get; }
 
         static bool IsValidDatabaseString(string value)
         {
@@ -181,6 +184,22 @@ namespace LoopDataAccessLayer
                 return Regex.IsMatch(InstrumentType, @"motor[-_]sd", RegexOptions.IgnoreCase);
             }
         }
+
+        public bool IsMotorStart => EndsWith("ST");
+        public bool IsMotorStop => EndsWith("SP");
+        public bool IsMotorStartStop => IsMotorStart || IsMotorStop;
+
+        private bool EndsWith(string suffix)
+        {
+            return Tag.EndsWith(suffix, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool EndsWith(params string[] suffixes)
+        {
+            bool endsWith = suffixes.Any(suffix => Tag.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));
+            return endsWith;
+        }
+
 
         private bool IsCalRangeOK()
         {

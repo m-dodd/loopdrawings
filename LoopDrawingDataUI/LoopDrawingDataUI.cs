@@ -63,7 +63,7 @@ namespace LoopDrawingDataUI
             lblLastDrawingComplete.Text = string.Empty;
 
             string timestamp = DateTime.Now.ToString("yyyy.MM.dd-HHmmss");
-            string resultFile = TestOutputFileName(outputResultPath);
+            string resultFile = CreateOutputFileName(outputResultPath, timestamp);
 
             return (Timestamp: timestamp, ResultFile: resultFile);
         }
@@ -100,8 +100,9 @@ namespace LoopDrawingDataUI
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .MinimumLevel.Debug()
-                .WriteTo.File(new JsonFormatter(),
-                    Path.Combine(logFilePath, "important.json"), restrictedToMinimumLevel: LogEventLevel.Warning)
+                // is it important though? I don't think so...
+                //.WriteTo.File(new JsonFormatter(),
+                //    Path.Combine(logFilePath, "important.json"), restrictedToMinimumLevel: LogEventLevel.Warning)
                 .WriteTo.File(Path.Combine(logFilePath, logFileName))
                 .CreateLogger();
         }
@@ -181,12 +182,12 @@ namespace LoopDrawingDataUI
             lblStatusInfo.Text = string.Empty;
         }
 
-        private string TestOutputFileName(string outputResultPath)
+        private string CreateOutputFileName(string outputResultPath, string timestamp)
         {
-            return AppendDateToFileName(outputResultPath);
+            return AppendDateToFileName(outputResultPath, timestamp);
         }
 
-        public string AppendDateToFileName(string filePath)
+        public string AppendDateToFileName(string filePath, string timestamp)
         {
             // Get the directory path, file name, and file extension
             string directory = Path.GetDirectoryName(filePath) ?? string.Empty;
@@ -194,8 +195,8 @@ namespace LoopDrawingDataUI
             string extension = Path.GetExtension(filePath);
 
             // Append the current date to the file name
-            string date = DateTime.Now.ToString("yyyy-MM-dd");
-            string newFileName = $"{fileNameWithoutExtension}_{date}{extension}";
+            //string date = DateTime.Now.ToString("yyyy-MM-dd");
+            string newFileName = $"{fileNameWithoutExtension}_{timestamp}{extension}";
 
             // Combine the directory path and the new file name
             string newFilePath = Path.Combine(directory, newFileName);
@@ -251,7 +252,7 @@ namespace LoopDrawingDataUI
         {
             configDirectoryName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\code\DucoLoopDrawings\ConfigFiles\";
             //configFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\code\DucoLoopDrawings\ConfigFiles\loop_drawing_config.json";
-            excelFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\2023.03.28 - Automation Wiring Data.xlsm";
+            excelFileName = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\config\2023.06.14 - Automation Wiring Data.xlsm";
             templatePath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\templates";
             outputResultPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\output_test_data.json";
             outputDrawingPath = @"\\vmware-host\Shared Folders\Matalino\Projects\Duco Development\LoopDrawings\acadtesting\Working\output\drawings";

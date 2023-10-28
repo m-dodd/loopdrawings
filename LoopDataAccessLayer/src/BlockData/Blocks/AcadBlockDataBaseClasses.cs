@@ -76,19 +76,35 @@ namespace LoopDataAccessLayer
             PopulateTag1Tag2(tag1, tag2, "TAG1", "TAG2");
         }
 
-        protected string[] GetTag1Tag2(string tag)
+        protected static string[] ExtractInstrumentIdentifierAndLoopNumber(string tag)
         {
             if (string.IsNullOrEmpty(tag))
             {
                 throw new ArgumentException("Tag cannot be null or empty", nameof(tag));
             }
 
-             return tag.Split('-');
+            // Split the tag based on the dash character
+            string[] tagParts = tag.Split('-');
+
+            // Check if there are at least two parts
+            if (tagParts.Length >= 2)
+            {
+                // Extract the instrument identifier and instrument loop number
+                string instrumentIdentifier = tagParts[0];
+                string instrumentLoopNumber = string.Join("-", tagParts, 1, tagParts.Length - 1);
+
+                return new string[] { instrumentIdentifier, instrumentLoopNumber };
+            }
+            else
+            {
+                // Return an empty array if there are not enough parts
+                return Array.Empty<string>();
+            }
         }
 
         protected void PopulateTag1Tag2(string tag, string attribute1, string attribute2)
         {
-            string[] tagComponents = GetTag1Tag2(tag);
+            string[] tagComponents = ExtractInstrumentIdentifierAndLoopNumber(tag);
             if (tagComponents.Length == 2)
             {
                 PopulateTag1Tag2(tagComponents[0], tagComponents[1], attribute1, attribute2);

@@ -33,7 +33,7 @@ namespace LoopDataAccessLayer
             PopulateFourLineDescription(dataZSC);
             
             // we need to strip the C or O from teh ZSC upper tag
-            string[] tagComponents = GetTag1Tag2(ZSCTag);
+            string[] tagComponents = ExtractInstrumentIdentifierAndLoopNumber(ZSCTag);
             if (tagComponents.Length == 2)
             {
                 PopulateTag1Tag2(tagComponents[0][..^1], tagComponents[1]);

@@ -325,7 +325,8 @@ namespace LoopDataAccessLayer
 
         private static ExcelTitleBlockRevData<string> CreateExcelTitleBlockRevData(IXLRow row, IExcelTitleBlockRevData<int> revdata)
         {
-            string date = DateTime.Today.ToString("ddMMMyy").ToUpper();
+            string date = row.GetCellString(revdata.Date);
+            
             return new ExcelTitleBlockRevData<string>()
             {
                 Rev = row.GetCellString(revdata.Rev),

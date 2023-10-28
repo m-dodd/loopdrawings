@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using LoopDataAccessLayer.src.DataLoader;
+using Org.BouncyCastle.Security;
 using Serilog;
 
 namespace LoopDataAccessLayer
@@ -24,13 +27,9 @@ namespace LoopDataAccessLayer
 
         protected void PopulateFourAlarms(IDBLoopData data, string alarmSuffix)
         {
-            // discrete alarms? for zsc / zso? what format will they take
-            // not really built into the data structure atm
             Attributes["ALARM1" + alarmSuffix] = string.Empty;
-
             Attributes["ALARM2" + alarmSuffix] = data.HiControl;
             Attributes["ALARM3" + alarmSuffix] = data.LoControl;
-            
             Attributes["ALARM4" + alarmSuffix] = string.Empty;
         }
 
@@ -57,20 +56,40 @@ namespace LoopDataAccessLayer
         protected void PopulateLoopFields(DBLoopData data, string attribute1, string attribute2)
         {
             string tag = data.Tag;
-            if (data.IsMotorSD)
+            if (data.IsMotorSD && tag.Length >= 3)
             {
-                tag = Regex.Match(data.Tag, @"^.*?(?=SD|SZD)").Value;
+                tag = StripSDFromTag(tag);
             }
-            
-            string[] tagComponents = GetTag1Tag2(tag);
-            string upper = FixUpperLoopTag(data, tagComponents[0]);
-            string lower = tagComponents[1];
-            
+            if (data.IsMotorStartStop && tag.Length >= 2)
+            {
+                tag = tag[..^2];
+            }
+
+            string[] tagComponents = ExtractInstrumentIdentifierAndLoopNumber(tag);
             if (tagComponents.Length == 2)
             {
+                string upper = FixUpperLoopTag(data, tagComponents[0]);
+                string lower = tagComponents[1];
                 Attributes[attribute1] = upper;
                 Attributes[attribute2] = lower;
             }
+        }
+
+        private static string StripSDFromTag(string tag)
+        {
+            // Define the regex pattern to match and capture anything before "SZD" or "SD"
+            // also ensures it is in teh proper form for a tag of XXX-NNNSZD and allows for it to end in A or B
+            string pattern = @"^(.*?-.*?)(?:SZD|SD)";
+
+            // Use Regex.Match to find the match
+            Match match = Regex.Match(tag, pattern);
+
+            // return the preceeding characters - this handles cases wheere there is an A or a B at the end
+            if (match.Success)
+            {
+                return match.Groups[1].Value;
+            }
+            return tag;
         }
 
         private static string FixUpperLoopTag(DBLoopData data, string upper)
@@ -88,26 +107,31 @@ namespace LoopDataAccessLayer
             };
         }
 
+
         private static string FixDiscrete(string upper)
         {
-            if (Regex.IsMatch(upper, @"\bZS[CO]\b", RegexOptions.IgnoreCase))
-            {
-                return upper.Replace("s", "I", StringComparison.OrdinalIgnoreCase);
-            }
+            TagComponents tagComponents = TagComponents.ParseTagIdentifer(upper);
 
-            return upper.Replace("s", "A", StringComparison.OrdinalIgnoreCase);
+            // Check for specific cases and return the appropriate result
+            if (tagComponents.MeasureVariable == "Z")
+            {
+                return upper.Replace("S", "I", StringComparison.OrdinalIgnoreCase);
+            }
+            else if (tagComponents.MeasureVariable == "H")
+            {
+                return "HHS";
+            }
+            else
+            {
+                // Default: replace 's' with 'A' (e.g., LS -> LA, FS -> FA)
+                return upper.Replace("S", "A", StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         private static string FixAnalog(string upper)
         {
-            if (!upper.EndsWith("T", StringComparison.OrdinalIgnoreCase))
-            {
-                return upper;
-            }
-
-            return upper.EndsWith("IT", StringComparison.OrdinalIgnoreCase)
-                ? upper.Substring(0, upper.Length - 1)
-                : upper + "I";
+            TagComponents tagComponents = TagComponents.ParseTagIdentifer(upper);
+            return tagComponents.MeasureVariable.ToUpper() + "I";
         }
 
     }

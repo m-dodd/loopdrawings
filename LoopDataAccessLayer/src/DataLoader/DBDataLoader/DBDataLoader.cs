@@ -178,7 +178,8 @@ namespace LoopDataAccessLayer
                 // DEBUG TESTING
                 //"H-1800",
                 //"E-9000",
-                "P-1007",
+                "EFM-3",
+                //"CM-302",
                 //"E-9002",
                 //"A-1100F",
                 //"X-1210",
@@ -275,8 +276,8 @@ namespace LoopDataAccessLayer
                         LoAlarm = FetchAlarmString(d.Tblarss, "l"),
                         HiAlarm = FetchAlarmString(d.Tblarss, "h"),
                         HiHiAlarm = FetchAlarmString(d.Tblarss, "hh"),
-                        LoControl = FetchAlarmString(d.Tblarss, "lc"),
-                        HiControl = FetchAlarmString(d.Tblarss, "hc"),
+                        LoControl = FetchAlarmString(d.Tblarss, "cl"),
+                        HiControl = FetchAlarmString(d.Tblarss, "ch"),
 
                         FailPosition = GetCleanString(d.Failposition),
                         InstrumentType = GetCleanString(d.Instrumenttype),
@@ -288,10 +289,11 @@ namespace LoopDataAccessLayer
                     })
                     .FirstOrDefault();
 
-                if (data is not null && data.IsMotorSD)
+                if (data is not null)
                 {
-                    UpdateMotorSDAlarms(data);
+                    UpdateMotorAlarms(data);
                 }
+
                 loopDataCache[tag] = data ?? new DBLoopData();
 
                 return loopDataCache[tag];
@@ -346,8 +348,8 @@ namespace LoopDataAccessLayer
                             LoAlarm = FetchAlarmString(d.Tblarss, "l"),
                             HiAlarm = FetchAlarmString(d.Tblarss, "h"),
                             HiHiAlarm = FetchAlarmString(d.Tblarss, "hh"),
-                            LoControl = FetchAlarmString(d.Tblarss, "lc"),
-                            HiControl = FetchAlarmString(d.Tblarss, "hc"),
+                            LoControl = FetchAlarmString(d.Tblarss, "cl"),
+                            HiControl = FetchAlarmString(d.Tblarss, "ch"),
 
                             FailPosition = GetCleanString(d.Failposition),
                             InstrumentType = GetCleanString(d.Instrumenttype),
@@ -358,14 +360,14 @@ namespace LoopDataAccessLayer
                             SystemType = (d.Tblsystem == null) ? string.Empty : GetCleanString(d.Tblsystem.SystemType)
                         });
 
-                foreach (var (tag, d) in dataDict)
+                foreach (var (tag, data) in dataDict)
                 {
-                    if (d is not null && d.IsMotorSD)
+                    if (data is not null)
                     {
-                        UpdateMotorSDAlarms(d);
+                        UpdateMotorAlarms(data);
                     }
-                    loopDataCache[tag] = d ?? new DBLoopData();
-                    resultDict[tag] = d ?? new DBLoopData();
+                    loopDataCache[tag] = data ?? new DBLoopData();
+                    resultDict[tag] = data ?? new DBLoopData();
                 }
             }
 
@@ -420,21 +422,36 @@ namespace LoopDataAccessLayer
                 return string.Empty;
             }
 
-            return alarm.ToLower() switch
+            string alarmString = alarm.ToLower() switch
             {
-                "ll" => BuildAlarmString("LL", GetCleanString(tblarss.Llalarm)),
-                "l" => BuildAlarmString("L", GetCleanString(tblarss.Loalarm)),
-                "h" => BuildAlarmString("H", GetCleanString(tblarss.Hialarm)),
-                "hh" => BuildAlarmString("HH", GetCleanString(tblarss.Hhalarm)),
-                "lc" => BuildAlarmString("LL", GetCleanString(tblarss.Lowctrl)),
-                "hc" => BuildAlarmString("LL", GetCleanString(tblarss.Highctrl)),
+                "ll" => GetCleanString(tblarss.Llalarm),
+                "l" => GetCleanString(tblarss.Loalarm),
+                "h" => GetCleanString(tblarss.Hialarm),
+                "hh" => GetCleanString(tblarss.Hhalarm),
+                "cl" => GetCleanString(tblarss.Lowctrl),
+                "ch" => GetCleanString(tblarss.Highctrl),
                 _ => string.Empty,
             };
+
+            return BuildAlarmString(alarm.ToUpper(), alarmString);
+
         }
 
         private static string BuildAlarmString(string prefix, string value)
         {
             return IDBLoopData.IsValidDatabaseString(value) ? prefix + "=" + value : string.Empty;
+        }
+
+        private static void UpdateMotorAlarms(DBLoopData data)
+        {
+            if (data.IsMotorSD)
+            {
+                UpdateMotorSDAlarms(data);
+            }
+            if (data.IsMotorStartStop)
+            {
+                UpdateMotorStartStopAlarms(data);
+            }
         }
 
         private static void UpdateMotorSDAlarms(DBLoopData data)
@@ -444,6 +461,11 @@ namespace LoopDataAccessLayer
             {
                 data.LoAlarm = match.Value.ToUpper();
             }
+        }
+
+        private static void UpdateMotorStartStopAlarms(DBLoopData data)
+        {
+            data.LoAlarm = data.Tag[^2..];  // get the last two characters (ST or SP)
         }
 
         private static string FetchCalRange(Tblarss? tblarss, string alarm)
